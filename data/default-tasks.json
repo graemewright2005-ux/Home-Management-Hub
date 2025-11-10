@@ -1,1 +1,91 @@
 
+{
+  "cleaning": [
+    {
+      "name": "Vacuum living room",
+      "room": "living",
+      "frequency": "weekly",
+      "notes": "Include under furniture"
+    },
+    {
+      "name": "Clean bathroom",
+      "room": "bathroom",
+      "frequency": "weekly",
+      "notes": "Toilet, sink, shower, floor"
+    },
+    {
+      "name": "Kitchen surfaces",
+      "room": "kitchen",
+      "frequency": "daily",
+      "notes": "Wipe counters and hob"
+    },
+    {
+      "name": "Change bed sheets",
+      "room": "bedroom",
+      "frequency": "fortnightly",
+      "notes": "Wash at 60°C"
+    },
+    {
+      "name": "Mop floors",
+      "room": "general",
+      "frequency": "weekly",
+      "notes": "Kitchen, bathroom, hallway"
+    },
+    {
+      "name": "Clean oven",
+      "room": "kitchen",
+      "frequency": "monthly",
+      "notes": "Use oven cleaner, wipe racks"
+    },
+    {
+      "name": "Dust all rooms",
+      "room": "general",
+      "frequency": "weekly",
+      "notes": "Shelves, surfaces, skirting boards"
+    },
+    {
+      "name": "Clean windows",
+      "room": "general",
+      "frequency": "monthly",
+      "notes": "Inside and outside"
+    }
+  ],
+  "maintenance": [
+    {
+      "name": "Test smoke alarms",
+      "room": "general",
+      "frequency": "monthly",
+      "notes": "Press test button on each alarm"
+    },
+    {
+      "name": "Service boiler",
+      "room": "general",
+      "frequency": "yearly",
+      "notes": "Book qualified engineer"
+    },
+    {
+      "name": "Check gutters",
+      "room": "outdoor",
+      "frequency": "quarterly",
+      "notes": "Clear leaves and debris"
+    },
+    {
+      "name": "Replace HVAC filters",
+      "room": "general",
+      "frequency": "quarterly",
+      "notes": "Check heating/cooling system"
+    },
+    {
+      "name": "Check water pressure",
+      "room": "bathroom",
+      "frequency": "quarterly",
+      "notes": "Test taps and shower"
+    },
+    {
+      "name": "Garden maintenance",
+      "room": "outdoor",
+      "frequency": "monthly",
+      "notes": "Mow lawn, trim hedges"
+    }
+  ]
+}
