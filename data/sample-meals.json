@@ -1,1 +1,71 @@
-
+[
+  {
+    "id": "sample-1",
+    "title": "Spaghetti Bolognese",
+    "type": "dinner",
+    "ingredients": [
+      "500g spaghetti",
+      "500g beef mince",
+      "1 onion, diced",
+      "2 garlic cloves, minced",
+      "400g tinned tomatoes",
+      "2 tbsp tomato puree",
+      "Olive oil",
+      "Salt and pepper"
+    ],
+    "mainIngredients": ["pasta", "beef", "tomatoes"],
+    "instructions": "1. Cook pasta according to package. 2. Brown mince in pan. 3. Add onion and garlic, cook 5 mins. 4. Add tomatoes and puree, simmer 20 mins. 5. Season and serve over pasta.",
+    "equipment": "Large pot, frying pan, wooden spoon",
+    "dietary": [],
+    "servings": 4,
+    "calories": 520,
+    "favourite": false,
+    "image": null,
+    "dateAdded": "2024-01-01T12:00:00.000Z"
+  },
+  {
+    "id": "sample-2",
+    "title": "Vegetable Stir Fry",
+    "type": "dinner",
+    "ingredients": [
+      "200g rice noodles",
+      "2 bell peppers, sliced",
+      "1 broccoli head, florets",
+      "1 carrot, julienned",
+      "3 tbsp soy sauce",
+      "2 tbsp sesame oil",
+      "1 tbsp ginger, grated",
+      "2 garlic cloves, minced"
+    ],
+    "mainIngredients": ["noodles", "peppers", "broccoli"],
+    "instructions": "1. Cook noodles, drain. 2. Heat oil in wok. 3. Stir fry veg 5-7 mins. 4. Add ginger, garlic, soy sauce. 5. Toss with noodles and serve.",
+    "equipment": "Wok or large pan, pot",
+    "dietary": ["vegetarian", "vegan"],
+    "servings": 2,
+    "calories": 380,
+    "favourite": true,
+    "image": null,
+    "dateAdded": "2024-01-02T12:00:00.000Z"
+  },
+  {
+    "id": "sample-3",
+    "title": "Scrambled Eggs on Toast",
+    "type": "breakfast",
+    "ingredients": [
+      "4 eggs",
+      "2 slices bread",
+      "Knob of butter",
+      "Splash of milk",
+      "Salt and pepper"
+    ],
+    "mainIngredients": ["eggs", "bread"],
+    "instructions": "1. Toast bread. 2. Whisk eggs with milk, salt, pepper. 3. Melt butter in pan. 4. Cook eggs on low heat, stirring. 5. Serve on toast.",
+    "equipment": "Frying pan, toaster, whisk",
+    "dietary": ["vegetarian"],
+    "servings": 2,
+    "calories": 320,
+    "favourite": false,
+    "image": null,
+    "dateAdded": "2024-01-03T08:00:00.000Z"
+  }
+]
