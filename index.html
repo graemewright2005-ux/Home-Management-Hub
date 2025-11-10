@@ -1,1 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Home Management Hub - Manage meals, shopping, cleaning, and maintenance">
+    <title>Home Management Hub - Dashboard</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>🏠 Home Management Hub</h1>
+        <nav class="nav-tabs" role="navigation" aria-label="Main navigation">
+            <button class="nav-tab active" data-section="dashboard" onclick="window.location.href='index.html'">Dashboard</button>
+            <button class="nav-tab" data-section="meals" onclick="window.location.href='pages/meals.html'">Meals</button>
+            <button class="nav-tab" data-section="planner" onclick="window.location.href='pages/planner.html'">Planner</button>
+            <button class="nav-tab" data-section="shopping" onclick="window.location.href='pages/shopping.html'">Shopping</button>
+            <button class="nav-tab" data-section="cleaning" onclick="window.location.href='pages/cleaning.html'">Cleaning</button>
+            <button class="nav-tab" data-section="maintenance" onclick="window.location.href='pages/maintenance.html'">Maintenance</button>
+            <button class="nav-tab" data-section="settings" onclick="window.location.href='pages/settings.html'">Settings</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section id="dashboard" class="section active">
+            <h2 class="sr-only">Dashboard</h2>
+            
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Today's Overview -->
+                <div class="dashboard-card">
+                    <h2>Today's Overview</h2>
+                    <div id="todayOverview">
+                        <div class="dashboard-stat">
+                            <span class="stat-label">Meals Planned</span>
+                            <span class="stat-value" id="todayMealsCount">0</span>
+                        </div>
+                        <div class="dashboard-stat">
+                            <span class="stat-label">Tasks Due</span>
+                            <span class="stat-value" id="todayTasksCount">0</span>
+                        </div>
+                        <div class="dashboard-stat">
+                            <span class="stat-label">Shopping Items</span>
+                            <span class="stat-value" id="shoppingItemsCount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <h2>Quick Actions</h2>
+                    <div class="btn-group" style="flex-direction: column;">
+                        <button class="btn btn-primary btn-block" onclick="window.location.href='pages/meals.html'">
+                            ➕ Add Recipe
+                        </button>
+                        <button class="btn btn-secondary btn-block" onclick="window.location.href='pages/planner.html'">
+                            📅 Plan Week
+                        </button>
+                        <button class="btn btn-outline btn-block" onclick="window.location.href='pages/shopping.html'">
+                            🛒 Shopping List
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Tasks -->
+                <div class="dashboard-card">
+                    <h2>Upcoming Tasks</h2>
+                    <div id="upcomingTasks">
+                        <p style="padding: 1rem; text-align: center; color: var(--text-light);">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Meals -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Today's Meals</h3>
+                    <button class="btn btn-small btn-primary" onclick="window.location.href='pages/planner.html'">
+                        View Planner
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="todayMeals">
+                        <p class="empty-state">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Activity</h3>
+                </div>
+                <div class="card-body">
+                    <div id="recentActivity">
+                        <p style="color: var(--text-light); text-align: center;">No recent activity</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript Modules -->
+    <script type="module">
+        import { loadData, getData } from './js/storage.js';
+        import { initApp, formatDate, getDayOfWeek, getTodayISO } from './js/app.js';
+        import { initNotifications } from './js/notifications.js';
+
+        // Initialize app
+        initApp();
+        initNotifications();
+
+        // Load dashboard data
+        function loadDashboard() {
+            const data = loadData();
+            const today = getTodayISO();
+            const todayDay = getDayOfWeek();
+
+            // Today's stats
+            const todayMeals = data.weeklyPlan[todayDay] || [];
+            document.getElementById('todayMealsCount').textContent = todayMeals.length;
+
+            const dueTasks = [...data.cleaningTasks, ...data.maintenanceTasks].filter(task => 
+                task.dueDate === today && !task.completed
+            );
+            document.getElementById('todayTasksCount').textContent = dueTasks.length;
+
+            const uncheckedItems = data.shoppingList.filter(item => !item.checked);
+            document.getElementById('shoppingItemsCount').textContent = uncheckedItems.length;
+
+            // Today's meals
+            renderTodayMeals(todayMeals, data.meals);
+
+            // Upcoming tasks
+            renderUpcomingTasks(data);
+        }
+
+        function renderTodayMeals(mealIds, allMeals) {
+            const container = document.getElementById('todayMeals');
+            
+            if (mealIds.length === 0) {
+                container.innerHTML = '<p class="empty-state">No meals planned for today. <a href="pages/planner.html">Plan your meals</a></p>';
+                return;
+            }
+
+            const html = mealIds.map(id => {
+                const meal = allMeals.find(m => m.id === id);
+                if (!meal) return '';
+                
+                return `
+                    <div class="day-meal" style="margin-bottom: 0.5rem;">
+                        <div class="day-meal-type">${meal.type}</div>
+                        <div class="day-meal-name">${meal.title}</div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html || '<p class="empty-state">No meals found</p>';
+        }
+
+        function renderUpcomingTasks(data) {
+            const container = document.getElementById('upcomingTasks');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const allTasks = [...data.cleaningTasks, ...data.maintenanceTasks]
+                .filter(task => !task.completed && task.dueDate)
+                .map(task => ({
+                    ...task,
+                    dueDateObj: new Date(task.dueDate)
+                }))
+                .sort((a, b) => a.dueDateObj - b.dueDateObj)
+                .slice(0, 5);
+
+            if (allTasks.length === 0) {
+                container.innerHTML = '<p style="padding: 1rem; text-align: center; color: var(--text-light);">No tasks scheduled</p>';
+                return;
+            }
+
+            const html = allTasks.map(task => {
+                const isOverdue = task.dueDateObj < today;
+                const daysUntil = Math.ceil((task.dueDateObj - today) / (1000 * 60 * 60 * 24));
+
+                return `
+                    <div class="dashboard-stat">
+                        <span>${task.name}</span>
+                        <span style="color: ${isOverdue ? 'var(--danger)' : 'var(--text-light)'}; font-size: 0.75rem;">
+                            ${isOverdue ? 'Overdue' : daysUntil === 0 ? 'Today' : `${daysUntil}d`}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Load dashboard on page load
+        loadDashboard();
+
+        // Refresh every 5 minutes
+        setInterval(loadDashboard, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
 
