@@ -1,1 +1,429 @@
+/* ============================================
+   RESPONSIVE STYLES
+   Mobile-First Responsive Design
+   ============================================ */
 
+/* Base: Mobile styles are defined in main.css and components.css */
+
+/* Small Tablets and Large Phones (576px and up) */
+@media (min-width: 576px) {
+    .container {
+        padding: 0 var(--space-lg);
+    }
+    
+    .main-content {
+        padding: var(--space-lg);
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .meal-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Tablets (768px and up) */
+@media (min-width: 768px) {
+    html {
+        font-size: 17px;
+    }
+    
+    .header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .nav-tabs {
+        justify-content: flex-start;
+    }
+    
+    .nav-tab {
+        font-size: 0.9375rem;
+        padding: 0.625rem 1.25rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .meal-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    
+    .weekly-planner {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .filter-bar {
+        padding: var(--space-lg);
+    }
+    
+    .btn-group {
+        flex-wrap: nowrap;
+    }
+    
+    .modal-content {
+        max-width: 700px;
+    }
+}
+
+/* Desktops (992px and up) */
+@media (min-width: 992px) {
+    .main-content {
+        padding: var(--space-xl);
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .weekly-planner {
+        grid-template-columns: repeat(7, 1fr);
+    }
+    
+    .meal-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+}
+
+/* Large Desktops (1200px and up) */
+@media (min-width: 1200px) {
+    .container,
+    .main-content {
+        max-width: 1200px;
+    }
+    
+    .dashboard-grid {
+        gap: var(--space-lg);
+    }
+    
+    .meal-grid {
+        gap: var(--space-lg);
+    }
+}
+
+/* Mobile-Specific Adjustments */
+@media (max-width: 767px) {
+    /* Typography */
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.25rem; }
+    h3 { font-size: 1.125rem; }
+    
+    /* Header */
+    .header {
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .header h1 {
+        font-size: 1.25rem;
+    }
+    
+    /* Navigation */
+    .nav-tabs {
+        gap: var(--space-xs);
+    }
+    
+    .nav-tab {
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.875rem;
+    }
+    
+    /* Grids to single column */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .meal-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .weekly-planner {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Cards */
+    .card {
+        padding: var(--space-md);
+    }
+    
+    .dashboard-card {
+        padding: var(--space-md);
+    }
+    
+    /* Buttons */
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+    }
+    
+    /* Filter bar */
+    .filter-bar {
+        padding: var(--space-sm);
+        gap: var(--space-xs);
+    }
+    
+    .filter-btn {
+        font-size: 0.8125rem;
+        padding: 0.375rem 0.75rem;
+    }
+    
+    /* Modal */
+    .modal {
+        padding: var(--space-sm);
+        align-items: flex-start;
+    }
+    
+    .modal-content {
+        margin-top: var(--space-md);
+        max-height: calc(100vh - 2rem);
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: var(--space-md);
+    }
+    
+    /* Shopping list */
+    .shopping-item {
+        padding: var(--space-sm);
+        gap: var(--space-sm);
+    }
+    
+    .shopping-item-price {
+        font-size: 0.875rem;
+    }
+    
+    /* Task list */
+    .task-item {
+        padding: var(--space-sm);
+        gap: var(--space-sm);
+    }
+    
+    /* Day cards */
+    .day-card {
+        padding: var(--space-sm);
+    }
+    
+    /* Form controls */
+    .form-control {
+        font-size: 1rem; /* Prevents zoom on iOS */
+    }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.125rem;
+    }
+    
+    .nav-tab {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.625rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8125rem;
+    }
+    
+    .btn-small {
+        padding: 0.375rem 0.625rem;
+        font-size: 0.6875rem;
+    }
+    
+    .card h3 {
+        font-size: 1rem;
+    }
+    
+    .meal-card-title {
+        font-size: 1rem;
+    }
+}
+
+/* Landscape Phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    .modal {
+        align-items: flex-start;
+    }
+    
+    .modal-content {
+        margin: var(--space-sm) 0;
+        max-height: calc(100vh - 1rem);
+    }
+    
+    .header {
+        position: relative;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger tap targets */
+    .btn {
+        min-height: 44px;
+    }
+    
+    .nav-tab {
+        min-height: 44px;
+    }
+    
+    .filter-btn {
+        min-height: 36px;
+    }
+    
+    input[type="checkbox"],
+    input[type="radio"] {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    
+    /* Remove hover effects */
+    .btn:hover,
+    .nav-tab:hover,
+    .filter-btn:hover,
+    .meal-card:hover,
+    .day-meal:hover,
+    .shopping-item:hover,
+    .task-item:hover {
+        transform: none;
+    }
+    
+    /* Add active states instead */
+    .btn:active {
+        transform: scale(0.98);
+    }
+    
+    .meal-card:active {
+        transform: scale(0.99);
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Optimize for retina displays */
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+    /* Uncomment to enable dark mode
+    :root {
+        --bg: #0f172a;
+        --bg-alt: #1e293b;
+        --card-bg: #1e293b;
+        --text: #f1f5f9;
+        --text-light: #94a3b8;
+        --border: #334155;
+        --border-dark: #475569;
+    }
+    
+    .day-card.today {
+        background: #1e3a5f;
+    }
+    
+    .task-item.overdue {
+        background: #3f1f1f;
+    }
+    */
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    /* Hide UI elements */
+    .header,
+    .nav-tabs,
+    button,
+    .btn,
+    .filter-bar,
+    .modal {
+        display: none !important;
+    }
+    
+    /* Optimize for printing */
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .main-content {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .card,
+    .dashboard-card,
+    .meal-card,
+    .shopping-item,
+    .task-item {
+        box-shadow: none !important;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+    
+    .section {
+        display: block !important;
+    }
+    
+    /* Ensure all grids print properly */
+    .dashboard-grid,
+    .meal-grid,
+    .weekly-planner {
+        display: block;
+    }
+    
+    .dashboard-card,
+    .meal-card,
+    .day-card {
+        margin-bottom: 1rem;
+        page-break-inside: avoid;
+    }
+    
+    /* Links */
+    a {
+        text-decoration: underline;
+        color: black;
+    }
+    
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+    }
+}
+
+/* Screen Reader and Accessibility */
+@media speech {
+    /* Optimize for screen readers */
+    .empty-state-icon,
+    .badge::before,
+    .notification-badge::after {
+        speak: never;
+    }
+}
+
+/* Container Queries Support (Future-proofing) */
+@supports (container-type: inline-size) {
+    .meal-grid,
+    .dashboard-grid {
+        container-type: inline-size;
+    }
+}
