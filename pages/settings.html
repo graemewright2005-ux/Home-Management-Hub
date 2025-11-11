@@ -1,1 +1,338 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings & Data Management ⚙️ - Home Hub</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #cbd5e1;
+            --border: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .nav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+        .nav-menu a {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
+        .nav-menu a.active { background: var(--gradient); color: white; }
+        @media (max-width: 768px) {
+            .nav-toggle { display: block; }
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--card);
+                flex-direction: column;
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s;
+            }
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+            .nav-menu a { width: 100%; }
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem 1.2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0px 4px rgba(0,0,0,0.04);
+            transition: border 0.2s;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        input[type="checkbox"] { accent-color: var(--primary); }
+        .checks { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+        .check-label { display: flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary { background: var(--gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-secondary { background: var(--card); color: var(--primary); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--primary); color: white; }
+        .divider { height: 1px; background: var(--border); margin: 2rem 0; border-radius: 2px; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--border);
+            transition: .3s; border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 3px;
+            background: var(--primary); transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background: var(--primary-dark); }
+        input:checked + .slider:before { transform: translateX(18px); }
+        @media (max-width: 480px) {
+            .container { padding: 1.2rem 0.5rem; }
+            .card-actions { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-brand">🏠 Home Hub</div>
+            <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">📊 Dashboard</a></li>
+                <li><a href="meals.html">🍽️ Meals</a></li>
+                <li><a href="planner.html">📅 Planner</a></li>
+                <li><a href="shopping.html">🛒 Shopping</a></li>
+                <li><a href="cleaning.html">🧹 Cleaning</a></li>
+                <li><a href="maintenance.html">🛠️ Maintenance</a></li>
+                <li><a href="settings.html" class="active">⚙️ Settings</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>Settings & Data Management ⚙️</h1>
+        </div>
+        <div class="card">
+            <div class="card-title">Notification Preferences</div>
+            <div class="form-group">
+                <label class="check-label"><input type="checkbox" id="notifGeneral"> Smart reminders (all)</label>
+            </div>
+            <div class="checks">
+                <label class="check-label"><input type="checkbox" id="notifMeals"> Meals</label>
+                <label class="check-label"><input type="checkbox" id="notifPlanner"> Planner</label>
+                <label class="check-label"><input type="checkbox" id="notifShopping"> Shopping</label>
+                <label class="check-label"><input type="checkbox" id="notifCleaning"> Cleaning</label>
+                <label class="check-label"><input type="checkbox" id="notifMaintenance"> Maintenance</label>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Prices & Preferences</div>
+            <div class="form-group">
+                <label for="currency">Preferred Currency</label>
+                <select id="currency">
+                    <option value="GBP">£ GBP</option>
+                    <option value="USD">$ USD</option>
+                    <option value="EUR">€ EUR</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="priceRange">Budget Range (per week)</label>
+                <input type="number" id="priceRange" min="0" max="9999" placeholder="Enter budget (e.g. 100)">
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Display Preferences</div>
+            <div class="form-group">
+                <label for="darkMode">Dark Mode</label>
+                <label class="switch">
+                    <input type="checkbox" id="darkMode" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="accentColor">Accent Color</label>
+                <input type="color" id="accentColor" value="#667eea" style="width:50px; height:36px; border:none;">
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Data Management</div>
+            <div class="card-actions">
+                <button class="btn btn-primary" onclick="exportData()">⬇️ Export as JSON Backup</button>
+                <label class="btn btn-secondary" for="importData" style="cursor:pointer;">⬆️ Import Backup</label>
+                <input type="file" id="importData" accept=".json" style="display:none;" onchange="importData(event)">
+                <button class="btn btn-danger" onclick="clearData()">🗑️ Clear All Data</button>
+            </div>
+        </div>
+    </div>
+    <script>
+function exportData() {
+    // Gather all localStorage keys used by app
+    const keys = ['hubMeals', 'hubPlanner', 'hubShopping', 'hubCleaning', 'hubMaintenance', 'hubSettings'];
+    const data = {};
+    keys.forEach(k => {
+        try {
+            data[k] = JSON.parse(localStorage.getItem(k));
+        } catch {
+            data[k] = localStorage.getItem(k);
+        }
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'home-hub-backup.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    alert('Backup exported!');
+}
+function importData(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        try {
+            const imported = JSON.parse(ev.target.result);
+            for (const k in imported) {
+                localStorage.setItem(k, JSON.stringify(imported[k]));
+            }
+            alert('Backup imported! Reloading page...');
+            location.reload();
+        } catch {
+            alert('Import failed. Invalid JSON.');
+        }
+    };
+    reader.readAsText(file);
+}
+function clearData() {
+    if (!confirm('Are you sure you want to clear ALL Home Hub data? This cannot be undone!')) return;
+    const keys = ['hubMeals', 'hubPlanner', 'hubShopping', 'hubCleaning', 'hubMaintenance', 'hubSettings'];
+    keys.forEach(k => localStorage.removeItem(k));
+    alert('All data cleared! Reloading page...');
+    location.reload();
+}
+// Save settings preferences
+function saveSettings() {
+    localStorage.setItem('hubSettings', JSON.stringify({
+        notifGeneral: document.getElementById('notifGeneral').checked,
+        notifMeals: document.getElementById('notifMeals').checked,
+        notifPlanner: document.getElementById('notifPlanner').checked,
+        notifShopping: document.getElementById('notifShopping').checked,
+        notifCleaning: document.getElementById('notifCleaning').checked,
+        notifMaintenance: document.getElementById('notifMaintenance').checked,
+        currency: document.getElementById('currency').value,
+        priceRange: document.getElementById('priceRange').value,
+        darkMode: document.getElementById('darkMode').checked,
+        accentColor: document.getElementById('accentColor').value
+    }));
+}
+[...document.querySelectorAll('#notifGeneral,#notifMeals,#notifPlanner,#notifShopping,#notifCleaning,#notifMaintenance,#currency,#priceRange,#darkMode,#accentColor')]
+.forEach(el => el && el.addEventListener('change', saveSettings));
+// Load settings preferences
+function loadSettings() {
+    try {
+        const s = JSON.parse(localStorage.getItem('hubSettings'));
+        if (!s) return;
+        document.getElementById('notifGeneral').checked = !!s.notifGeneral;
+        document.getElementById('notifMeals').checked = !!s.notifMeals;
+        document.getElementById('notifPlanner').checked = !!s.notifPlanner;
+        document.getElementById('notifShopping').checked = !!s.notifShopping;
+        document.getElementById('notifCleaning').checked = !!s.notifCleaning;
+        document.getElementById('notifMaintenance').checked = !!s.notifMaintenance;
+        if (s.currency) document.getElementById('currency').value = s.currency;
+        if (s.priceRange) document.getElementById('priceRange').value = s.priceRange;
+        document.getElementById('darkMode').checked = !!s.darkMode;
+        if (s.accentColor) document.getElementById('accentColor').value = s.accentColor;
+        document.documentElement.style.setProperty('--primary', s.accentColor || '#667eea');
+    } catch {}
+}
+document.getElementById('accentColor').addEventListener('input', e => {
+    document.documentElement.style.setProperty('--primary', e.target.value);
+    saveSettings();
+});
+// Dark mode logic
+document.getElementById('darkMode').addEventListener('change', e => {
+    if(e.target.checked) {
+        document.body.style.background = 'var(--bg)';
+    } else {
+        document.body.style.background = '#f1f5f9';
+    }
+});
+window.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>
