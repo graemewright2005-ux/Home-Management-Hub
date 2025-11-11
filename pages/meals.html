@@ -16,139 +16,28 @@
             --border: #334155;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6;}
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .nav-toggle { display: none; background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; padding:0.5rem;}
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
+        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem; transition:all 0.2s;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color:white;}
+        @media(max-width:768px){
+            .nav-toggle{display:block;}
+            .nav-menu{position:fixed;top:70px;left:0;right:0;background:var(--card);flex-direction:column;padding:1rem;transform:translateY(-100%);opacity:0;pointer-events:none;transition:all 0.3s;}
+            .nav-menu.active{transform:translateY(0);opacity:1;pointer-events:all;}
+            .nav-menu a{width:100%;}
         }
-        
-        /* FIXED NAVIGATION */
-        .nav {
-            background: var(--card);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        .nav-menu {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-        }
-        .nav-menu a {
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-        .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
-        .nav-menu a.active { background: var(--gradient); color: white; }
-        
-        /* Mobile nav fix */
-        @media (max-width: 768px) {
-            .nav-toggle { display: block; }
-            .nav-menu {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: var(--card);
-                flex-direction: column;
-                padding: 1rem;
-                transform: translateY(-100%);
-                opacity: 0;
-                pointer-events: none;
-                transition: all 0.3s;
-            }
-            .nav-menu.active {
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: all;
-            }
-            .nav-menu a { width: 100%; }
-        }
-        
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        
-        .filters { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
-        .filter-group { margin-bottom: 1.5rem; }
-        .filter-group:last-child { margin-bottom: 0; }
-        .filter-label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .filter-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .filter-btn {
-            padding: 0.6rem 1.2rem;
-            border: 2px solid var(--border);
-            background: transparent;
-            border-radius: 8px;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .filter-btn.active { background: var(--gradient); color: white; border-color: transparent; }
-        
-        input, select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
-        
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-primary { background: var(--gradient); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); }
-        
-        .count { color: var(--text-dim); margin-bottom: 1rem; font-weight: 600; }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;}
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor:pointer; transition:all 0.2s;}
+        .btn-primary { background: var(--gradient); color:white;}
+        .btn-primary:hover{transform:translateY(-2px);}
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:1.5rem; margin-bottom:2rem;}
         .card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -158,392 +47,223 @@
             transition: all 0.2s;
             position: relative;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card-img {
-            width: 100%;
-            height: 200px;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-        }
-        .card-img img { width: 100%; height: 100%; object-fit: cover; }
-        .fav { position: absolute; top: 1rem; right: 1rem; font-size: 1.8rem; z-index: 10; }
-        .card-body { padding: 1.2rem; }
-        .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .tag {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 0.3rem 0.3rem 0.3rem 0;
-        }
-        .tag-type { background: rgba(102, 126, 234, 0.15); color: #93c5fd; border: 1px solid rgba(102, 126, 234, 0.3); text-transform: capitalize; }
-        .tag-meat { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .tag-fish { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .tag-vegetarian { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .tag-vegan { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .tag-dairy-free { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .tag-gluten-free { background: rgba(168, 85, 247, 0.15); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
-        .cal { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.5rem; }
-        .cal::before { content: '🔥 '; }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--card); border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h2 { margin: 0; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .modal-close { background: none; border: none; font-size: 2rem; color: var(--text-dim); cursor: pointer; }
-        .modal-body { padding: 1.5rem; }
-        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; justify-content: flex-end; }
-        
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
-        textarea { 
-            width: 100%; 
-            min-height: 150px; 
-            resize: vertical; 
-            font-family: inherit;
-            padding: 0.8rem 1rem;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        textarea:focus { outline: none; border-color: var(--primary); }
-        #ingredients { min-height: 200px; }
-        #instructions { min-height: 250px; }
-        .img-preview { max-width: 100%; height: auto; margin-top: 0.5rem; border-radius: 8px; display: none; }
-        .img-preview.show { display: block; }
-        .checks { display: flex; flex-wrap: wrap; gap: 0.8rem; }
-        .check-label { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
-        .check-label input { accent-color: var(--primary); cursor: pointer; }
-        
-        .empty { text-align: center; padding: 3rem 1rem; color: var(--text-dim); }
-        .empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.4; }
-        
-        @media (max-width: 480px) {
+        .card:hover { transform: translateY(-5px); border-color: var(--primary);}
+        .card-img { width:100%; height:200px; background: var(--gradient); display: flex; align-items:center; justify-content:center; font-size:5rem;}
+        .card-img img { width:100%; height:100%; object-fit: cover;}
+        .fav { position:absolute;top:1rem;right:1rem; font-size:1.8rem; z-index:10;}
+        .card-body { padding:1.2rem;}
+        .card-title { font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;}
+        .tag { display:inline-block; padding:0.3rem 0.8rem; border-radius:6px; font-size:0.85rem; font-weight:600; margin:0.3rem 0.3rem 0.3rem 0;}
+        .tag-type { background: rgba(102,126,234,0.15); color:#93c5fd; border:1px solid rgba(102,126,234,0.3);}
+        .empty {text-align:center; padding:3rem 1rem; color:var(--text-dim);}
+        .empty-icon {font-size:4rem; margin-bottom:1rem; opacity:0.4;}
+        @media(max-width:480px){
             .grid { grid-template-columns: 1fr; }
-            .modal-footer { flex-direction: column; }
-            .modal-footer .btn { width: 100%; }
+            .header { flex-direction:column; align-items:flex-start;}
         }
+        /* Modal styles */
+        .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; align-items: center; justify-content: center; padding: 1rem;}
+        .modal.active { display: flex;}
+        .modal-content { background: var(--card); border-radius: 16px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto;}
+        .modal-header { padding:1.4rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+        .modal-header h2 { margin: 0; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+        .modal-close { background:none; border:none; font-size:2rem; color:var(--text-dim); cursor:pointer;}
+        .modal-body { padding:1.5rem;}
+        .modal-footer { padding:1rem 1.5rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; justify-content:flex-end;}
+        .meal-plan-add { margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border);}
+        .form-group { margin-bottom:1rem;}
+        .form-group label { display:block; font-weight:600; margin-bottom:0.33rem;}
+        .checks{display:flex; flex-wrap:wrap; gap:0.8rem;}
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-content">
-            <div class="nav-brand">🏠 Home Hub</div>
-            <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="../index.html">📊 Dashboard</a></li>
-                <li><a href="meals.html" class="active">🍽️ Meals</a></li>
-                <li><a href="planner.html">📅 Planner</a></li>
-                <li><a href="shopping.html">🛒 Shopping</a></li>
-                <li><a href="cleaning.html">🧹 Cleaning</a></li>
-                <li><a href="maintenance.html">🛠️ Maintenance</a></li>
-                <li><a href="settings.html">⚙️ Settings</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="header">
-            <h1>Meal Recipes</h1>
-            <button class="btn btn-primary" onclick="openModal('add')">➕ Add Recipe</button>
-        </div>
-
-        <div class="filters">
-            <div class="filter-group">
-                <div class="filter-label">Meal Type</div>
-                <div class="filter-btns" id="typeFilters"></div>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Dietary</div>
-                <div class="filter-btns" id="dietFilters"></div>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Main Ingredient</div>
-                <select id="ingFilter" onchange="applyFilters()"><option value="all">All Ingredients</option></select>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Search</div>
-                <input type="search" id="search" placeholder="Search recipes..." oninput="applyFilters()">
-            </div>
-            <div class="filter-group">
-                <button class="filter-btn" id="favBtn" onclick="toggleFavFilter()">⭐ Favourites Only</button>
-            </div>
-        </div>
-
-        <div class="count" id="count"></div>
-        <div class="grid" id="grid"></div>
-        <div class="empty" id="empty" style="display:none;">
-            <div class="empty-icon">🍽️</div>
-            <h3>No meals found</h3>
-            <p>Try adjusting your filters</p>
-        </div>
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-brand">🏠 Home Hub</div>
+        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="../index.html">📊 Dashboard</a></li>
+            <li><a href="meals.html" class="active">🍽️ Meals</a></li>
+            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="shopping.html">🛒 Shopping</a></li>
+            <li><a href="cleaning.html">🧹 Cleaning</a></li>
+            <li><a href="maintenance.html">🛠️ Maintenance</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+        </ul>
     </div>
-
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add Recipe</h2>
-                <button class="modal-close" onclick="closeModal('add')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="form" onsubmit="saveRecipe(event)">
-                    <div class="form-group">
-                        <label>Recipe Photo</label>
-                        <input type="file" id="photo" accept="image/*" onchange="previewImage(event)">
-                        <img id="photoPreview" class="img-preview" alt="Recipe preview">
-                        <div style="margin-top:0.3rem;font-size:0.85rem;color:var(--text-dim);">
-                            💡 Upload a photo of the recipe for future text extraction
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Title *</label>
-                        <input type="text" id="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Type *</label>
-                        <select id="type" required>
-                            <option value="">Select type</option>
-                            <option value="breakfast">Breakfast</option>
-                            <option value="lunch">Lunch</option>
-                            <option value="dinner">Dinner</option>
-                            <option value="snack">Snack</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Ingredients (one per line) *</label>
-                        <textarea id="ingredients" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Main Ingredients (comma-separated)</label>
-                        <input type="text" id="mainIng">
-                    </div>
-                    <div class="form-group">
-                        <label>Instructions *</label>
-                        <textarea id="instructions" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Equipment</label>
-                        <input type="text" id="equipment">
-                    </div>
-                    <div class="form-group">
-                        <label>Dietary Tags</label>
-                        <div class="checks">
-                            <label class="check-label"><input type="checkbox" value="meat"> Meat</label>
-                            <label class="check-label"><input type="checkbox" value="fish"> Fish</label>
-                            <label class="check-label"><input type="checkbox" value="vegetarian"> Vegetarian</label>
-                            <label class="check-label"><input type="checkbox" value="vegan"> Vegan</label>
-                            <label class="check-label"><input type="checkbox" value="dairy-free"> Dairy-Free</label>
-                            <label class="check-label"><input type="checkbox" value="gluten-free"> Gluten-Free</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Servings</label>
-                        <input type="number" id="servings" value="2" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label>Calories</label>
-                        <input type="number" id="calories" min="0" step="10">
-                    </div>
-                    <div class="form-group">
-                        <label class="check-label"><input type="checkbox" id="fav"> ⭐ Favourite</label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('add')">Cancel</button>
-                <button class="btn btn-primary" type="submit" form="form">Save</button>
-            </div>
-        </div>
+</nav>
+<div class="container">
+    <div class="header">
+        <h1>Meal Recipes</h1>
+        <button class="btn btn-primary" onclick="openModal('add')">➕ Add Recipe</button>
     </div>
-
-    <div class="modal" id="viewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="viewTitle"></h2>
-                <button class="modal-close" onclick="closeModal('view')">&times;</button>
-            </div>
-            <div class="modal-body" id="viewBody"></div>
-            <div class="modal-footer">
-                <button class="btn" style="background:#ef4444;color:white;" onclick="deleteRecipe()">Delete</button>
-                <button class="btn" id="viewFavBtn" onclick="toggleFav()">⭐</button>
-                <button class="btn btn-primary" onclick="closeModal('view')">Close</button>
-            </div>
-        </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none;">
+        <div class="empty-icon">🍽️</div>
+        <h3>No meals found</h3>
+        <p>Try adding a recipe or adjusting your filters</p>
     </div>
-
-    <script>
-const MEALS=[{t:"Full English",type:"breakfast",ing:["2 eggs","2 bacon","1 sausage","Beans","Mushrooms","Tomato","Toast"],main:["eggs","bacon"],inst:"Grill bacon & sausage. Fry eggs. Warm beans. Sauté mushrooms. Grill tomatoes. Toast bread.",eq:"Grill, pan",diet:["meat"],s:1,c:850,e:"🍳"},{t:"Porridge",type:"breakfast",ing:["Oats","Milk","Berries","Honey"],main:["oats"],inst:"Cook oats with milk. Top with berries & honey.",eq:"Pan",diet:["vegetarian"],s:1,c:320,e:"🥣"},{t:"Avocado Toast",type:"breakfast",ing:["Bread","Avocado","Eggs","Tomato"],main:["avocado"],inst:"Toast bread. Mash avocado. Poach eggs. Assemble.",eq:"Toaster",diet:["vegetarian"],s:1,c:420,e:"🥑"},{t:"Salmon Bagel",type:"breakfast",ing:["Bagel","Salmon","Cream cheese","Onion"],main:["salmon"],inst:"Toast bagel. Spread cheese. Add salmon & onion.",eq:"Toaster",diet:["fish"],s:1,c:450,e:"🥯"},{t:"Smoothie Bowl",type:"breakfast",ing:["Banana","Berries","Yogurt","Granola"],main:["banana"],inst:"Blend fruit. Pour in bowl. Add toppings.",eq:"Blender",diet:["vegetarian"],s:1,c:320,e:"🥤"},{t:"Greek Parfait",type:"breakfast",ing:["Yogurt","Granola","Berries","Honey"],main:["yogurt"],inst:"Layer yogurt & granola. Top with berries & honey.",eq:"Glass",diet:["vegetarian"],s:1,c:380,e:"🥄"},{t:"Scrambled Eggs",type:"breakfast",ing:["3 eggs","Butter","Milk","Toast"],main:["eggs"],inst:"Beat eggs with milk. Cook slowly stirring. Serve on toast.",eq:"Pan",diet:["vegetarian"],s:1,c:340,e:"🍳"},{t:"Pancakes",type:"breakfast",ing:["Flour","Eggs","Milk","Syrup","Berries"],main:["flour"],inst:"Mix batter. Cook circles. Flip when bubbles form. Stack & serve.",eq:"Pan",diet:["vegetarian"],s:2,c:480,e:"🥞"},{t:"French Toast",type:"breakfast",ing:["Bread","Eggs","Milk","Cinnamon","Syrup"],main:["bread"],inst:"Beat eggs & milk. Dip bread. Fry both sides. Serve with syrup.",eq:"Pan",diet:["vegetarian"],s:2,c:380,e:"🍞"},{t:"Overnight Oats",type:"breakfast",ing:["Oats","Almond milk","Chia","Banana"],main:["oats"],inst:"Mix oats, milk & chia. Refrigerate overnight. Top with banana.",eq:"Jar",diet:["vegan","dairy-free"],s:1,c:340,e:"🥣"},{t:"Eggs Benedict",type:"breakfast",ing:["Muffin","Ham","Eggs","Hollandaise"],main:["eggs"],inst:"Toast muffin. Poach eggs. Warm ham. Make hollandaise. Assemble.",eq:"Pan",diet:["meat"],s:1,c:520,e:"🍳"},{t:"Shakshuka",type:"breakfast",ing:["Eggs","Tomatoes","Peppers","Onion","Spices"],main:["eggs"],inst:"Sauté veg. Add tomatoes & spices. Crack eggs in. Cover & cook.",eq:"Pan",diet:["vegetarian"],s:2,c:320,e:"🍳"},{t:"Breakfast Burrito",type:"breakfast",ing:["Tortilla","Eggs","Beans","Cheese","Salsa"],main:["eggs"],inst:"Scramble eggs. Warm beans. Fill tortilla. Roll tight.",eq:"Pan",diet:["vegetarian"],s:1,c:520,e:"🌯"},{t:"Acai Bowl",type:"breakfast",ing:["Acai","Banana","Berries","Granola","Coconut"],main:["acai"],inst:"Blend acai. Pour in bowl. Arrange toppings.",eq:"Blender",diet:["vegan","dairy-free"],s:1,c:420,e:"🥣"},{t:"Spinach Omelette",type:"breakfast",ing:["3 eggs","Spinach","Feta","Tomatoes"],main:["eggs"],inst:"Beat eggs. Wilt spinach. Pour eggs. Add feta. Fold.",eq:"Pan",diet:["vegetarian"],s:1,c:380,e:"🍳"},{t:"Muffins",type:"breakfast",ing:["Flour","Eggs","Sugar","Butter","Blueberries"],main:["blueberries"],inst:"Mix dry. Mix wet. Combine. Add berries. Bake 20min.",eq:"Oven",diet:["vegetarian"],s:12,c:180,e:"🧁"},{t:"Protein Smoothie",type:"breakfast",ing:["Banana","Protein","Milk","Peanut butter"],main:["banana"],inst:"Blend all. Add ice. Blend again. Pour & drink.",eq:"Blender",diet:["vegetarian"],s:1,c:340,e:"🥤"},{t:"Chia Pudding",type:"breakfast",ing:["Chia","Coconut milk","Vanilla","Mango"],main:["chia"],inst:"Mix chia & milk. Refrigerate 4h. Top with mango.",eq:"Jar",diet:["vegan","dairy-free"],s:2,c:280,e:"🥥"},{t:"Breakfast Hash",type:"breakfast",ing:["Potatoes","Eggs","Peppers","Onion","Chorizo"],main:["potatoes"],inst:"Fry chorizo. Add veg. Cook golden. Add eggs.",eq:"Pan",diet:["meat"],s:2,c:480,e:"🥔"},{t:"Granola Bowl",type:"breakfast",ing:["Granola","Yogurt","Berries","Banana","Nuts"],main:["granola"],inst:"Add yogurt. Top with granola & fruit. Drizzle honey.",eq:"Bowl",diet:["vegetarian"],s:1,c:420,e:"🥣"},
-{t:"Caesar Salad",type:"lunch",ing:["Chicken","Lettuce","Parmesan","Croutons","Dressing"],main:["chicken"],inst:"Grill chicken. Chop lettuce. Add croutons. Dress. Top with chicken.",eq:"Grill",diet:["meat"],s:2,c:420,e:"🥗"},{t:"BLT",type:"lunch",ing:["Bacon","Lettuce","Tomato","Bread","Mayo"],main:["bacon"],inst:"Grill bacon. Toast bread. Spread mayo. Layer & serve.",eq:"Grill",diet:["meat"],s:2,c:520,e:"🥪"},{t:"Tomato Soup",type:"lunch",ing:["Tomatoes","Onion","Garlic","Stock","Cream"],main:["tomatoes"],inst:"Sauté onion. Add tomatoes & stock. Simmer 20min. Blend. Add cream.",eq:"Pan",diet:["vegetarian"],s:4,c:280,e:"🍲"},{t:"Falafel Wrap",type:"lunch",ing:["Falafel","Flatbread","Hummus","Salad","Tahini"],main:["falafel"],inst:"Heat falafel. Warm bread. Spread hummus. Add salad & falafel.",eq:"Oven",diet:["vegan","dairy-free"],s:2,c:420,e:"🌯"},{t:"Jacket Potato",type:"lunch",ing:["Potato","Beans","Butter","Cheese"],main:["potato"],inst:"Bake potato. Heat beans. Split potato. Add butter & beans. Top with cheese.",eq:"Oven",diet:["vegetarian"],s:1,c:480,e:"🥔"},{t:"Greek Salad",type:"lunch",ing:["Tomatoes","Cucumber","Feta","Olives","Onion"],main:["tomatoes"],inst:"Chop veg. Add olives. Crumble feta. Dress with oil.",eq:"Bowl",diet:["vegetarian","gluten-free"],s:2,c:280,e:"🥗"},{t:"Tuna Niçoise",type:"lunch",ing:["Tuna","Beans","Potatoes","Eggs","Olives"],main:["tuna"],inst:"Cook potatoes. Boil eggs. Prepare tuna. Arrange on plate.",eq:"Pan",diet:["fish","gluten-free"],s:2,c:450,e:"🐟"},{t:"Ploughman's",type:"lunch",ing:["Cheese","Ham","Pickles","Apple","Bread","Chutney"],main:["cheese"],inst:"Slice cheese. Arrange ham. Add pickles. Serve with bread.",eq:"None",diet:["meat"],s:1,c:620,e:"🧀"},{t:"Buddha Bowl",type:"lunch",ing:["Quinoa","Chickpeas","Avocado","Sweet potato","Tahini"],main:["quinoa"],inst:"Cook quinoa. Roast veg. Arrange in bowl. Drizzle tahini.",eq:"Oven",diet:["vegan","dairy-free"],s:2,c:480,e:"🥗"},{t:"Pizza",type:"lunch",ing:["Base","Tomato sauce","Mozzarella","Basil"],main:["pizza base"],inst:"Spread sauce. Add cheese. Bake hot. Add basil.",eq:"Oven",diet:["vegetarian"],s:2,c:520,e:"🍕"},{t:"Chicken Soup",type:"lunch",ing:["Chicken","Noodles","Carrots","Celery","Stock"],main:["chicken"],inst:"Cook chicken. Sauté veg. Add stock & noodles. Simmer.",eq:"Pot",diet:["meat"],s:4,c:320,e:"🍜"},{t:"Halloumi Salad",type:"lunch",ing:["Halloumi","Salad","Tomatoes","Cucumber","Dressing"],main:["halloumi"],inst:"Grill halloumi. Prepare salad. Add veg. Top with hot halloumi.",eq:"Grill",diet:["vegetarian"],s:2,c:420,e:"🧀"},{t:"Prawn Stir-Fry",type:"lunch",ing:["Prawns","Veg","Noodles","Soy sauce","Ginger"],main:["prawns"],inst:"Cook noodles. Stir-fry prawns. Add veg. Add noodles & sauce.",eq:"Wok",diet:["fish"],s:2,c:380,e:"🍤"},{t:"Veggie Soup",type:"lunch",ing:["Vegetables","Stock","Onion","Garlic","Herbs"],main:["vegetables"],inst:"Sauté onion. Add veg & stock. Simmer 30min. Blend if desired.",eq:"Pot",diet:["vegan","dairy-free"],s:6,c:220,e:"🍲"},{t:"Club Sandwich",type:"lunch",ing:["Toast","Chicken","Bacon","Lettuce","Tomato","Mayo"],main:["chicken"],inst:"Cook chicken & bacon. Toast bread. Spread mayo. Layer & stack.",eq:"Grill",diet:["meat"],s:1,c:680,e:"🥪"},{t:"Pesto Pasta",type:"lunch",ing:["Pasta","Pesto","Tomatoes","Mozzarella","Pine nuts"],main:["pasta"],inst:"Cook pasta. Mix with pesto. Add tomatoes & mozzarella. Toast nuts.",eq:"Pan",diet:["vegetarian"],s:4,c:420,e:"🍝"},{t:"Fish Fingers",type:"lunch",ing:["Fish fingers","Bread","Butter","Ketchup","Lettuce"],main:["fish fingers"],inst:"Cook fish fingers. Butter bread. Add lettuce & fish. Add sauce.",eq:"Oven",diet:["fish"],s:1,c:420,e:"🐟"},{t:"Coronation Chicken",type:"lunch",ing:["Chicken","Mayo","Curry powder","Chutney","Sultanas"],main:["chicken"],inst:"Dice chicken. Mix mayo, curry & chutney. Combine with chicken.",eq:"Bowl",diet:["meat"],s:4,c:380,e:"🍗"},{t:"Caprese",type:"lunch",ing:["Ciabatta","Mozzarella","Tomato","Basil","Balsamic"],main:["mozzarella"],inst:"Slice ciabatta. Layer mozzarella & tomato. Add basil. Drizzle balsamic.",eq:"None",diet:["vegetarian"],s:2,c:380,e:"🥪"},{t:"Couscous Salad",type:"lunch",ing:["Couscous","Tomatoes","Cucumber","Feta","Mint"],main:["couscous"],inst:"Prepare couscous. Dice veg. Mix with couscous. Add feta & mint.",eq:"Bowl",diet:["vegetarian"],s:4,c:320,e:"🥗"},
-{t:"Roast Chicken",type:"dinner",ing:["Chicken","Potatoes","Carrots","Onions","Rosemary"],main:["chicken"],inst:"Season chicken. Arrange veg. Roast 1.5h basting. Rest & carve.",eq:"Oven",diet:["meat","gluten-free"],s:4,c:650,e:"🍗"},{t:"Lasagne",type:"dinner",ing:["Mince","Pasta","Tomato sauce","Béchamel","Cheese"],main:["beef"],inst:"Make meat sauce. Make béchamel. Layer. Top with cheese. Bake 40min.",eq:"Oven",diet:["meat"],s:6,c:580,e:"🍝"},{t:"Salmon",type:"dinner",ing:["Salmon","Potatoes","Beans","Dill butter","Lemon"],main:["salmon"],inst:"Boil potatoes. Steam beans. Pan-fry salmon. Serve with dill butter.",eq:"Pan",diet:["fish","gluten-free"],s:2,c:520,e:"🐟"},{t:"Carbonara",type:"dinner",ing:["Spaghetti","Pancetta","Eggs","Parmesan","Pepper"],main:["pasta"],inst:"Cook pasta. Fry pancetta. Beat eggs & cheese. Toss hot pasta.",eq:"Pan",diet:["meat"],s:4,c:620,e:"🍝"},{t:"Chicken Curry",type:"dinner",ing:["Chicken","Curry paste","Coconut milk","Onion","Rice"],main:["chicken"],inst:"Fry onion. Add paste. Add chicken. Pour coconut milk. Simmer 30min.",eq:"Pan",diet:["meat","dairy-free"],s:4,c:580,e:"🍛"},{t:"Shepherd's Pie",type:"dinner",ing:["Lamb","Onion","Carrots","Gravy","Mashed potato"],main:["lamb"],inst:"Brown mince. Add veg & gravy. Top with mash. Bake golden.",eq:"Oven",diet:["meat"],s:4,c:620,e:"🥧"},{t:"Veggie Stir-Fry",type:"dinner",ing:["Veg","Tofu","Noodles","Soy sauce","Ginger"],main:["vegetables"],inst:"Cook noodles. Heat wok. Stir-fry tofu. Add veg & sauce. Toss.",eq:"Wok",diet:["vegetarian"],s:2,c:420,e:"🥘"},{t:"Fish & Chips",type:"dinner",ing:["Fish","Potatoes","Batter","Peas","Lemon"],main:["fish"],inst:"Cut chips. Make batter. Heat oil. Fry fish & chips. Serve with peas.",eq:"Fryer",diet:["fish"],s:2,c:820,e:"🐟"},{t:"Beef Stroganoff",type:"dinner",ing:["Beef","Mushrooms","Onion","Sour cream","Rice"],main:["beef"],inst:"Fry beef. Fry mushrooms. Add cream. Season. Serve with rice.",eq:"Pan",diet:["meat"],s:4,c:580,e:"🥩"},{t:"Veggie Chilli",type:"dinner",ing:["Beans","Tomatoes","Onion","Peppers","Chilli powder"],main:["beans"],inst:"Sauté veg. Add spices. Add tomatoes & beans. Simmer 30min.",eq:"Pan",diet:["vegan","dairy-free"],s:4,c:380,e:"🌶️"},{t:"Pork Chops",type:"dinner",ing:["Pork chops","Apples","Onion","Mashed potato","Beans"],main:["pork"],inst:"Season & fry chops. Make apple sauce. Prepare mash. Steam beans.",eq:"Pan",diet:["meat"],s:2,c:680,e:"🍖"},{t:"Fajitas",type:"dinner",ing:["Chicken","Peppers","Onion","Tortillas","Sour cream","Guac"],main:["chicken"],inst:"Slice chicken & veg. Fry with seasoning. Warm tortillas. Serve with toppings.",eq:"Pan",diet:["meat"],s:4,c:520,e:"🌮"},{t:"Cod Parsley Sauce",type:"dinner",ing:["Cod","Butter","Flour","Milk","Parsley","Potatoes"],main:["cod"],inst:"Poach cod. Make white sauce. Add parsley. Boil potatoes. Serve together.",eq:"Pan",diet:["fish"],s:2,c:450,e:"🐟"},{t:"Moussaka",type:"dinner",ing:["Lamb","Aubergine","Potato","Tomatoes","Béchamel","Cheese"],main:["lamb"],inst:"Fry aubergine. Make meat sauce. Layer. Top with béchamel. Bake 45min.",eq:"Oven",diet:["meat"],s:6,c:620,e:"🍆"},{t:"Tikka Masala",type:"dinner",ing:["Chicken","Tikka paste","Yogurt","Tomatoes","Cream","Rice"],main:["chicken"],inst:"Marinate chicken. Grill. Make sauce with tomatoes & cream. Simmer.",eq:"Grill",diet:["meat"],s:4,c:580,e:"🍛"},{t:"Sausage Casserole",type:"dinner",ing:["Sausages","Onion","Carrots","Tomatoes","Beans","Stock"],main:["sausages"],inst:"Brown sausages. Sauté veg. Add tomatoes & stock. Add beans. Simmer 30min.",eq:"Pan",diet:["meat"],s:4,c:520,e:"🌭"},{t:"Pad Thai",type:"dinner",ing:["Noodles","Prawns","Eggs","Sprouts","Peanuts","Lime"],main:["noodles"],inst:"Soak noodles. Stir-fry prawns. Scramble egg. Add noodles & sauce. Add sprouts.",eq:"Wok",diet:["fish"],s:2,c:580,e:"🍜"},{t:"Lamb Shanks",type:"dinner",ing:["Lamb shanks","Red wine","Tomatoes","Rosemary","Garlic","Carrots"],main:["lamb"],inst:"Brown shanks. Sauté veg. Add wine & tomatoes. Cover. Cook slow 3h.",eq:"Casserole",diet:["meat","dairy-free"],s:4,c:720,e:"🍖"},{t:"Chicken Kiev",type:"dinner",ing:["Chicken","Garlic butter","Breadcrumbs","Flour","Eggs","Chips"],main:["chicken"],inst:"Flatten chicken. Place butter in center. Roll. Coat & fry.",eq:"Fryer",diet:["meat"],s:2,c:680,e:"🍗"},{t:"Prawn Curry",type:"dinner",ing:["Prawns","Curry paste","Coconut milk","Tomatoes","Coriander","Rice"],main:["prawns"],inst:"Fry paste. Add coconut milk & tomatoes. Add prawns. Cook 5min.",eq:"Pan",diet:["fish","dairy-free"],s:4,c:450,e:"🍤"},
-{t:"Hummus",type:"snack",ing:["Chickpeas","Tahini","Lemon","Carrots","Cucumber"],main:["chickpeas"],inst:"Blend chickpeas, tahini & lemon. Cut veg into sticks. Serve together.",eq:"Blender",diet:["vegan","dairy-free"],s:4,c:180,e:"🥕"},{t:"Yogurt Bowl",type:"snack",ing:["Yogurt","Honey","Nuts","Berries"],main:["yogurt"],inst:"Spoon yogurt. Drizzle honey. Add nuts & berries. Mix & enjoy.",eq:"Bowl",diet:["vegetarian"],s:1,c:220,e:"🥄"},{t:"Apple PB",type:"snack",ing:["Apple","Peanut butter"],main:["apple"],inst:"Slice apple. Spread peanut butter. Simple!",eq:"None",diet:["vegan","dairy-free"],s:1,c:220,e:"🍎"},{t:"Popcorn",type:"snack",ing:["Kernels","Oil","Salt"],main:["popcorn"],inst:"Heat oil. Add kernels. Cover. Shake. Season with salt.",eq:"Pan",diet:["vegan","dairy-free"],s:2,c:120,e:"🍿"},{t:"Trail Mix",type:"snack",ing:["Nuts","Dried fruit","Chocolate","Seeds"],main:["nuts"],inst:"Mix all ingredients. Portion into bags. Grab & go!",eq:"Bowl",diet:["vegetarian"],s:8,c:180,e:"🥜"},{t:"Smoothie",type:"snack",ing:["Banana","Berries","Yogurt","Honey","Milk"],main:["banana"],inst:"Add all to blender. Blend smooth. Pour & drink fresh.",eq:"Blender",diet:["vegetarian"],s:1,c:240,e:"🥤"},{t:"Bruschetta",type:"snack",ing:["Baguette","Tomatoes","Garlic","Basil","Oil"],main:["bread"],inst:"Toast bread. Rub garlic. Dice tomatoes. Top bread. Drizzle oil.",eq:"Toaster",diet:["vegan"],s:4,c:160,e:"🍅"},{t:"Energy Balls",type:"snack",ing:["Dates","Oats","Peanut butter","Cocoa","Coconut"],main:["dates"],inst:"Blend dates. Add oats & PB. Mix. Roll into balls. Refrigerate.",eq:"Processor",diet:["vegan","dairy-free"],s:12,c:120,e:"🍫"},{t:"Guacamole",type:"snack",ing:["Avocados","Lime","Tomato","Onion","Chips"],main:["avocado"],inst:"Mash avocados. Add lime. Dice veg. Mix. Serve with chips.",eq:"Bowl",diet:["vegan","dairy-free"],s:4,c:220,e:"🥑"},{t:"Stuffed Dates",type:"snack",ing:["Dates","Cream cheese","Walnuts"],main:["dates"],inst:"Remove pits. Fill with cheese. Top with walnut. Chill & serve.",eq:"None",diet:["vegetarian"],s:6,c:140,e:"🌰"},{t:"Rice Cakes",type:"snack",ing:["Rice cakes","Avocado","Tomatoes","Seeds","Feta"],main:["rice cakes"],inst:"Lay out cakes. Mash avocado. Add tomatoes. Crumble feta. Sprinkle seeds.",eq:"None",diet:["vegetarian"],s:2,c:180,e:"🍘"},{t:"Edamame",type:"snack",ing:["Edamame","Salt","Chilli"],main:["edamame"],inst:"Boil edamame 5min. Drain. Sprinkle salt & chilli. Serve warm.",eq:"Pan",diet:["vegan","dairy-free"],s:2,c:120,e:"🫛"},{t:"Banana Bread",type:"snack",ing:["Banana bread","Butter","Honey"],main:["banana bread"],inst:"Slice bread. Toast if desired. Spread butter. Drizzle honey.",eq:"None",diet:["vegetarian"],s:1,c:280,e:"🍌"},{t:"Cucumber Bites",type:"snack",ing:["Cucumber","Cream cheese","Salmon","Dill"],main:["cucumber"],inst:"Slice cucumber. Spread cheese. Top with salmon. Garnish dill.",eq:"None",diet:["fish"],s:4,c:120,e:"🥒"},{t:"Olives & Feta",type:"snack",ing:["Olives","Feta","Oil","Oregano","Lemon"],main:["olives"],inst:"Drain olives. Cube feta. Combine. Drizzle oil. Add oregano & lemon.",eq:"Bowl",diet:["vegetarian"],s:4,c:160,e:"🫒"},{t:"Fruit Kebabs",type:"snack",ing:["Strawberries","Grapes","Pineapple","Melon","Skewers"],main:["fruit"],inst:"Cut fruit. Thread onto skewers. Arrange. Chill & serve fresh.",eq:"Skewers",diet:["vegan","dairy-free"],s:4,c:80,e:"🍓"},{t:"Protein Shake",type:"snack",ing:["Protein","Banana","Milk","Ice","PB"],main:["protein"],inst:"Add all to blender. Blend smooth. Add ice. Blend again. Drink.",eq:"Blender",diet:["vegetarian"],s:1,c:320,e:"🥤"},{t:"Caprese Skewers",type:"snack",ing:["Tomatoes","Mozzarella","Basil","Balsamic","Skewers"],main:["tomatoes"],inst:"Thread tomatoes, mozzarella & basil. Drizzle balsamic. Serve.",eq:"Skewers",diet:["vegetarian"],s:4,c:140,e:"🍅"},{t:"Veggie Crisps",type:"snack",ing:["Sweet potato","Beetroot","Parsnip","Oil","Salt"],main:["vegetables"],inst:"Slice thin. Toss in oil. Bake until crispy. Sprinkle salt. Cool.",eq:"Oven",diet:["vegan","dairy-free"],s:4,c:120,e:"🥔"},{t:"Cheese & Crackers",type:"snack",ing:["Cheeses","Crackers","Grapes","Chutney"],main:["cheese"],inst:"Slice cheeses. Arrange with crackers. Add grapes & chutney.",eq:"Board",diet:["vegetarian"],s:4,c:280,e:"🧀"}];
-
-let meals=[],filters={t:'all',d:'all',i:'all',s:'',f:false},curr=null;
-
-function init(){
-const d=localStorage.getItem('hubMeals');
-meals=d?JSON.parse(d):MEALS.map((m,i)=>({id:`m${Date.now()}${i}`,title:m.t,type:m.type,ing:m.ing,main:m.main,inst:m.inst,eq:m.eq,diet:m.diet,serv:m.s,cal:m.c,emoji:m.e,fav:false,img:null}));
-if(!d)save();
-buildFilters();
-render();
-}
-
-function save(){localStorage.setItem('hubMeals',JSON.stringify(meals))}
-
-function buildFilters(){
-const types=['all','breakfast','lunch','dinner','snack'];
-const diets=['all','meat','fish','vegetarian','vegan','dairy-free','gluten-free'];
-const typeF=document.getElementById('typeFilters');
-const dietF=document.getElementById('dietFilters');
-typeF.innerHTML=types.map(t=>`<button class="filter-btn ${t==='all'?'active':''}" onclick="setFilter('t','${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('');
-dietF.innerHTML=diets.map(d=>`<button class="filter-btn ${d==='all'?'active':''}" onclick="setFilter('d','${d}')">${d.charAt(0).toUpperCase()+d.slice(1).replace('-',' ')}</button>`).join('');
-const ings=new Set();
-meals.forEach(m=>m.main.forEach(i=>ings.add(i)));
-document.getElementById('ingFilter').innerHTML='<option value="all">All Ingredients</option>'+[...ings].sort().map(i=>`<option value="${i}">${i.charAt(0).toUpperCase()+i.slice(1)}</option>`).join('');
-}
-
-function setFilter(k,v){
-filters[k]=v;
-document.querySelectorAll(`#${k==='t'?'type':'diet'}Filters .filter-btn`).forEach(b=>b.classList.remove('active'));
-event.target.classList.add('active');
-render();
-}
-
-function toggleFavFilter(){
-filters.f=!filters.f;
-document.getElementById('favBtn').classList.toggle('active');
-render();
-}
-
-function applyFilters(){
-filters.i=document.getElementById('ingFilter').value;
-filters.s=document.getElementById('search').value;
-render();
-}
-
-function render(){
-const f=meals.filter(m=>{
-if(filters.t!=='all'&&m.type!==filters.t)return false;
-if(filters.d!=='all'&&!m.diet.includes(filters.d))return false;
-if(filters.i!=='all'&&!m.main.some(i=>i.includes(filters.i)))return false;
-if(filters.s&&!m.title.toLowerCase().includes(filters.s.toLowerCase())&&!m.ing.some(i=>i.toLowerCase().includes(filters.s.toLowerCase())))return false;
-if(filters.f&&!m.fav)return false;
-return true;
-});
-const grid=document.getElementById('grid');
-const empty=document.getElementById('empty');
-document.getElementById('count').textContent=`Showing ${f.length} recipe${f.length!==1?'s':''}`;
-if(f.length===0){
-grid.style.display='none';
-empty.style.display='block';
-}else{
-grid.style.display='grid';
-empty.style.display='none';
-grid.innerHTML=f.map(m=>`
-<div class="card" onclick="view('${m.id}')">
-${m.fav?'<div class="fav">⭐</div>':''}
-<div class="card-img">${m.img?`<img src="${m.img}" alt="${m.title}">`  :m.emoji}</div>
-<div class="card-body">
-<div class="card-title">${m.title}</div>
-<span class="tag tag-type">${m.type}</span>
-${m.diet.map(d=>`<span class="tag tag-${d}">${d.replace('-',' ')}</span>`).join('')}
-${m.cal?`<div class="cal">${m.cal} cal/serving</div>`:''}
 </div>
+
+<div class="modal" id="viewModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="viewTitle"></h2>
+            <button class="modal-close" onclick="closeModal('view')">&times;</button>
+        </div>
+        <div class="modal-body" id="viewBody"></div>
+        <div class="meal-plan-add" id="mealPlanAdd"></div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="closeModal('view')">Close</button>
+        </div>
+    </div>
 </div>
-`).join('');
-}
-}
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Recipe</h2>
+            <button class="modal-close" onclick="closeModal('add')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="form" onsubmit="saveRecipe(event)">
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label>Type *</label>
+                    <select id="type" required>
+                        <option value="">Select type</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ingredients (one per line) *</label>
+                    <textarea id="ingredients" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Instructions *</label>
+                    <textarea id="instructions" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="check-label"><input type="checkbox" id="fav"> ⭐ Favourite</label>
+                </div>
+                <button class="btn btn-primary" type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-function view(id){
-curr=meals.find(m=>m.id===id);
-if(!curr)return;
-document.getElementById('viewTitle').textContent=curr.title;
-document.getElementById('viewBody').innerHTML=`
-<div class="card-img" style="height:250px;margin-bottom:1rem;">${curr.img?`<img src="${curr.img}" alt="${curr.title}">`:curr.emoji}</div>
-<div><span class="tag tag-type">${curr.type}</span> ${curr.diet.map(d=>`<span class="tag tag-${d}">${d.replace('-',' ')}</span>`).join('')}</div>
-${curr.serv||curr.cal?`<div style="margin:1rem 0;color:var(--text-dim);">
-${curr.serv?`<div><strong>Servings:</strong> ${curr.serv}</div>`:''}
-${curr.cal?`<div><strong>Calories:</strong> ${curr.cal}/serving</div>`:''}
-</div>`:''}
-<div style="margin-bottom:1rem;"><strong>Ingredients:</strong><ul style="margin-top:0.5rem;">${curr.ing.map(i=>`<li>${i}</li>`).join('')}</ul></div>
-<div style="margin-bottom:1rem;"><strong>Instructions:</strong><p style="white-space:pre-line;margin-top:0.5rem;">${curr.inst}</p></div>
-${curr.eq?`<div><strong>Equipment:</strong> ${curr.eq}</div>`:''}
-`;
-document.getElementById('viewFavBtn').textContent=curr.fav?'⭐ Unfavourite':'⭐ Favourite';
-openModal('view');
+<script>
+const MEALS = JSON.parse(localStorage.getItem('hubMeals')||"[]");
+function renderGrid(){
+    const grid=document.getElementById('grid');
+    const empty=document.getElementById('empty');
+    grid.innerHTML = '';
+    if(MEALS.length===0){
+        grid.style.display='none';
+        empty.style.display='block';
+    }else{
+        grid.style.display='grid';
+        empty.style.display='none';
+        grid.innerHTML = MEALS.map((m,idx)=>`
+            <div class="card" onclick="viewMeal(${idx})">
+                ${m.fav?'<div class="fav">⭐</div>':''}
+                <div class="card-img">${m.emoji||'🍽️'}</div>
+                <div class="card-body">
+                    <div class="card-title">${m.title}</div>
+                    <span class="tag tag-type">${m.type}</span>
+                    ${m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-type">${d.replace('-',' ')}</span>`).join(''):""}
+                </div>
+            </div>
+        `).join('');
+    }
 }
-
-function toggleFav(){
-if(!curr)return;
-curr.fav=!curr.fav;
-save();
-render();
-view(curr.id);
+function viewMeal(idx){
+    let m = MEALS[idx];
+    document.getElementById("viewTitle").textContent = m.title;
+    document.getElementById("viewBody").innerHTML = `
+        <div style="font-size:2em;margin-bottom:0.4em;">${m.emoji||'🍽️'}</div>
+        <div><span class="tag tag-type">${m.type}</span>
+            ${m.diet ? m.diet.map(d=>`<span class="tag tag-type">${d.replace('-',' ')}</span>`).join(''):''}
+            ${m.fav ? '<span class="tag" style="background:gold;color:#222;">⭐ Favourite</span>':''}
+        </div>
+        <div style="margin-top:1em;"><strong>Ingredients:</strong><ul>${(m.ing||[]).map(i=>`<li>${i}</li>`).join('')}</ul></div>
+        <div><strong>Instructions:</strong><p style="white-space:pre-wrap;">${m.instructions||""}</p></div>
+    `;
+    renderMealPlanAdd(idx);
+    openModal('view');
 }
-
-function deleteRecipe(){
-if(!curr||!confirm('Delete this recipe?'))return;
-meals=meals.filter(m=>m.id!==curr.id);
-save();
-closeModal('view');
-render();
+function renderMealPlanAdd(mealIdx){
+    const m = MEALS[mealIdx];
+    // Add to meal plan + time selection
+    document.getElementById('mealPlanAdd').innerHTML = `
+        <form onsubmit="addMealToPlanner(event,${mealIdx})">
+            <div style="font-weight:600;margin-bottom:0.5em;">Add to Weekly Meal Plan</div>
+            <label for="daySelect">Day</label>
+            <select id="daySelect" required style="margin-bottom:0.3em;">
+                <option value="">Select Day</option>
+                <option>Sunday</option><option>Monday</option><option>Tuesday</option>
+                <option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option>
+            </select>
+            <label for="timeSelect">Meal Time</label>
+            <select id="timeSelect" required style="margin-bottom:0.4em;">
+                <option value="">Select</option>
+                <option>Breakfast</option>
+                <option>Lunch</option>
+                <option>Dinner</option>
+                <option>Snack</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Add to Meal Plan</button>
+        </form>
+        <div style="margin-top:0.6em; font-size:0.97em; color: var(--text-dim);">Tip: You can assign any recipe to any meal/time for the week!</div>
+    `;
 }
-
-function saveRecipe(e){
-e.preventDefault();
-const diet=[...document.querySelectorAll('.checks input:checked')].map(c=>c.value);
-const preview=document.getElementById('photoPreview');
-meals.unshift({
-id:`m${Date.now()}${Math.random()}`,
-title:document.getElementById('title').value,
-type:document.getElementById('type').value,
-ing:document.getElementById('ingredients').value.split('\n').filter(x=>x.trim()),
-main:document.getElementById('mainIng').value.split(',').map(x=>x.trim()).filter(x=>x),
-inst:document.getElementById('instructions').value,
-eq:document.getElementById('equipment').value,
-diet,
-serv:parseInt(document.getElementById('servings').value)||2,
-cal:parseInt(document.getElementById('calories').value)||null,
-fav:document.getElementById('fav').checked,
-img:preview.classList.contains('show')?preview.src:null,
-emoji:'🍽️'
+function addMealToPlanner(e, mealIdx){
+    e.preventDefault();
+    const day = document.getElementById('daySelect').value;
+    const time = document.getElementById('timeSelect').value;
+    if(!day || !time) return;
+    const m = MEALS[mealIdx];
+    let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
+    // Ensure full week structure (see planner.html data model)
+    while(planner.length < 7){ planner.push({slots:{}});}
+    let dayIdx = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].indexOf(day);
+    if(dayIdx<0) return alert("Invalid day selected!");
+    if(!planner[dayIdx].slots) planner[dayIdx].slots={};
+    planner[dayIdx].slots[time] = {...m};
+    localStorage.setItem('hubPlanner', JSON.stringify(planner));
+    alert(`Added "${m.title}" to ${day} / ${time}!`);
+}
+function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
+function closeModal(id){ document.getElementById(id+'Modal').classList.remove('active'); }
+function saveRecipe(event){
+    event.preventDefault();
+    const newMeal = {
+        id: "m"+Date.now()+Math.random().toString(16).slice(2),
+        title: document.getElementById('title').value.trim(),
+        type: document.getElementById('type').value,
+        ing: document.getElementById('ingredients').value.split('\n').filter(x=>x.trim()),
+        instructions: document.getElementById('instructions').value,
+        fav: document.getElementById('fav').checked,
+        emoji: "🍽️",
+        diet: [],
+    };
+    MEALS.push(newMeal);
+    localStorage.setItem('hubMeals', JSON.stringify(MEALS));
+    document.getElementById('form').reset();
+    closeModal('add');
+    renderGrid();
+    alert('Recipe added!');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+    renderGrid();
 });
-save();
-document.getElementById('form').reset();
-preview.classList.remove('show');
-preview.src='';
-closeModal('add');
-buildFilters();
-render();
-alert('Recipe added!');
-}
-
-function previewImage(e){
-const file=e.target.files[0];
-if(file){
-const reader=new FileReader();
-reader.onload=function(ev){
-const preview=document.getElementById('photoPreview');
-preview.src=ev.target.result;
-preview.classList.add('show');
-};
-reader.readAsDataURL(file);
-}
-}
-
-function openModal(id){document.getElementById(id+'Modal').classList.add('active')}
-function closeModal(id){document.getElementById(id+'Modal').classList.remove('active')}
-
 document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active')}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active'))});
-
-init();
 </script>
 </body>
 </html>
