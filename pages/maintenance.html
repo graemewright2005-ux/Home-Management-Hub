@@ -1,1 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance & Home Tasks Dashboard - Home Hub</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #cbd5e1;
+            --border: #334155;
+            --seasonal: #f59e42;
+            --overdue: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .nav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+        .nav-menu a {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
+        .nav-menu a.active { background: var(--gradient); color: white; }
+        @media (max-width: 768px) {
+            .nav-toggle { display: block; }
+            .nav-menu {
+                position: fixed; top: 70px; left: 0; right: 0;
+                background: var(--card);
+                flex-direction: column; padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none; transition: all 0.3s;
+            }
+            .nav-menu.active {
+                transform: translateY(0); opacity: 1; pointer-events: all;
+            }
+            .nav-menu a { width: 100%; }
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 
+        .dashboard {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .dashboard-title {
+            font-size: 1.2rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .tasks-today, .tasks-overdue {
+            margin-bottom: 0.8rem;
+        }
+        .calendar {
+            background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .calendar-table th, .calendar-table td {
+            padding: 0.5rem 0.6rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.98rem;
+        }
+        .calendar-table th {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1rem;
+        }
+        .seasonal { color: var(--seasonal); }
+        .overdue { color: var(--overdue); font-weight:700;}
+        .area-tag {
+            display: inline-block;
+            padding: 0.3rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.2rem 0.3rem 0 0;
+            background: rgba(102,126,234,0.1); color: #93c5fd; border: 1px solid rgba(102,126,234,0.25);
+            text-transform: capitalize;
+        }
+        .seasonal-tag {
+            background: rgba(245,158,66,0.16); color: #f59e42; border: 1px solid rgba(245,158,66,0.3);
+        }
+        .service-tag {
+            background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.22);
+        }
+        .appliance-tag {
+            background: rgba(168,85,247,0.15); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.23);
+        }
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            margin-right: 0.3rem;
+            margin-bottom:0.4rem;
+            background: var(--gradient); color: #fff; transition: all 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px);}
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--card); border-radius: 16px; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { margin: 0; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modal-close { background: none; border: none; font-size: 2rem; color: var(--text-dim); cursor: pointer; }
+        .modal-body { padding: 1.5rem; }
+        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; justify-content: flex-end;}
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
+        textarea, input[type=text], input[type=number], select {
+            width: 100%; padding: 0.7rem 1rem; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem;
+        }
+        textarea { min-height: 90px; resize: vertical; font-family: inherit;}
+        .checks { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .check-label { display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
+        .empty { text-align: center; padding: 2rem 1rem; color: var(--text-dim);}
+        .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4;}
+        @media (max-width: 480px) {
+            .container { padding: 1.2rem 0.5rem; }
+            .calendar-table th, .calendar-table td { font-size: 0.91rem;}
+            .modal-footer { flex-direction: column;}
+            .modal-footer .btn { width:100%;}
+        }
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-brand">🏠 Home Hub</div>
+        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="../index.html">📊 Dashboard</a></li>
+            <li><a href="meals.html">🍽️ Meals</a></li>
+            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="shopping.html">🛒 Shopping</a></li>
+            <li><a href="cleaning.html">🧹 Cleaning</a></li>
+            <li><a href="maintenance.html" class="active">🛠️ Maintenance</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="header">
+        <h1>Maintenance & Home Tasks Dashboard</h1>
+        <button class="btn" onclick="openModal('add')">➕ Add Task</button>
+    </div>
+    <div class="dashboard">
+        <div class="dashboard-title">Tasks Due Today</div>
+        <ul class="tasks-today" id="tasksToday"></ul>
+        <div class="dashboard-title" style="margin-top:1rem;">Overdue Tasks</div>
+        <ul class="tasks-overdue overdue" id="tasksOverdue"></ul>
+    </div>
+    <div class="calendar">
+        <div style="margin-bottom:0.5rem;font-weight:600;">Maintenance Calendar: Upcoming & Seasonal Activities</div>
+        <table class="calendar-table" id="calendarTable">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Area</th>
+                    <th>Type</th>
+                    <th>Due Date</th>
+                    <th>Frequency</th>
+                    <th>Equipment</th>
+                    <th>Est. Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Maintenance Task</h2>
+            <button class="modal-close" onclick="closeModal('add')">&times;</button>
+        </div>
+        <form id="form" onsubmit="saveTask(event)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="title">Task Name *</label>
+                    <input id="title" type="text" required />
+                </div>
+                <div class="form-group">
+                    <label for="area">Area *</label>
+                    <select id="area" required>
+                        <option value="">Select area</option>
+                        <option>Kitchen</option>
+                        <option>Bathroom</option>
+                        <option>Bedroom</option>
+                        <option>Living</option>
+                        <option>Conservatory</option>
+                        <option>Garage</option>
+                        <option>Loft</option>
+                        <option>Garden</option>
+                        <option>Office</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type">Task Type *</label>
+                    <select id="type" required>
+                        <option value="">Select type</option>
+                        <option>Appliance</option>
+                        <option>General</option>
+                        <option>Service</option>
+                        <option>Seasonal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="frequency">Regularity *</label>
+                    <select id="frequency" required>
+                        <option value="">Select regularity</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="seasonal">Each Season</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="once">Once</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="due">Due Date *</label>
+                    <input type="date" id="due" required />
+                </div>
+                <div class="form-group">
+                    <label for="equipment">Equipment Needed</label>
+                    <input type="text" id="equipment" placeholder="E.g. Ladder, gloves, mower" />
+                </div>
+                <div class="form-group">
+                    <label for="estTime">Estimated Length of Time</label>
+                    <input type="number" id="estTime" min="1" placeholder="Minutes (e.g. 30)" />
+                </div>
+                <div class="form-group">
+                    <label for="instructions">Checklist/Instructions</label>
+                    <textarea id="instructions" placeholder="Anything to remember, or checklist steps"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="check-label">
+                        <input type="checkbox" id="active" checked /> Add to Calendar & Routine
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" type="button" onclick="closeModal('add')">Cancel</button>
+                <button class="btn" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+const MAINTENANCE_DATA = [
+    {
+        title:"Tree Pruning",
+        area:"Garden",
+        type:"Seasonal",
+        frequency:"seasonal",
+        due:yearMonthDayString(new Date(new Date().getFullYear(), 2, 15)), // March 15
+        equipment:"Pruning saw, gloves, ladder",
+        estTime:60,
+        active:true,
+        instructions:["Prune fruit and deciduous trees before budding","Remove dead wood"],
+        history:[]
+    },
+    {
+        title:"Hedge Trimming",
+        area:"Garden",
+        type:"Seasonal",
+        frequency:"seasonal",
+        due:yearMonthDayString(new Date(new Date().getFullYear(), 8, 20)), // September 20
+        equipment:"Hedge trimmer, rake",
+        estTime:45,
+        active:true,
+        instructions:["Trim hedges after main growth","Remove cuttings"],
+        history:[]
+    },
+    {
+        title:"Window Cleaning",
+        area:"Conservatory",
+        type:"General",
+        frequency:"monthly",
+        due:yearMonthDayString(new Date()),
+        equipment:"Window cleaner, squeegee, cloth",
+        estTime:30,
+        active:true,
+        instructions:["Clean inside and outside glass","Check for leaks"],
+        history:[]
+    },
+    {
+        title:"Gutter Clearing",
+        area:"Garden",
+        type:"Seasonal",
+        frequency:"seasonal",
+        due:yearMonthDayString(new Date(new Date().getFullYear(), 9, 10)), // October 10
+        equipment:"Ladder, gloves, scoop",
+        estTime:30,
+        active:true,
+        instructions:["Clear leaves and debris","Flush with water"],
+        history:[]
+    },
+    {
+        title:"Boiler Service",
+        area:"Loft",
+        type:"Service",
+        frequency:"yearly",
+        due:yearMonthDayString(new Date(new Date().getFullYear(), 10, 1)), // Nov 1
+        equipment:"None",
+        estTime:90,
+        active:true,
+        instructions:["Book certified engineer","Check pressure & safety valves"],
+        history:[]
+    },
+    {
+        title:"Vegetable Bed - Compost",
+        area:"Garden",
+        type:"Seasonal",
+        frequency:"seasonal",
+        due:yearMonthDayString(new Date(new Date().getFullYear(), 3, 5)), // April 5
+        equipment:"Garden fork, compost",
+        estTime:25,
+        active:true,
+        instructions:["Spread compost on vegetable bed"],
+        history:[]
+    },
+    {
+        title:"Garage Door - Oil Hinges",
+        area:"Garage",
+        type:"General",
+        frequency:"monthly",
+        due:yearMonthDayString(new Date()),
+        equipment:"Oil, cloth",
+        estTime:10,
+        active:true,
+        instructions:["Check and oil hinges"],
+        history:[]
+    },
+    {
+        title:"Bathroom Extractor Clean",
+        area:"Bathroom",
+        type:"Appliance",
+        frequency:"monthly",
+        due:yearMonthDayString(new Date()),
+        equipment:"Vacuum, cloth",
+        estTime:15,
+        active:true,
+        instructions:["Remove cover","Vacuum dust","Wipe surfaces"],
+        history:[]
+    },
+    {
+        title:"Smoke Detector Test",
+        area:"Living",
+        type:"Appliance",
+        frequency:"monthly",
+        due:yearMonthDayString(new Date()),
+        equipment:"None",
+        estTime:5,
+        active:true,
+        instructions:["Press test button","Replace battery if needed"],
+        history:[]
+    }
+];
+let maintenance = [], current=null;
+
+function yearMonthDayString(d) {
+    return d.toISOString().split("T")[0];
+}
+function init(){
+    const d = localStorage.getItem('hubMaintenance');
+    if(d) {
+        try {
+            maintenance = JSON.parse(d);
+        } catch { maintenance = JSON.parse(JSON.stringify(MAINTENANCE_DATA)); }
+    } else {
+        maintenance = JSON.parse(JSON.stringify(MAINTENANCE_DATA));
+        save();
+    }
+    renderDashboard();
+    renderCalendar();
+}
+function save(){
+    localStorage.setItem('hubMaintenance', JSON.stringify(maintenance));
+}
+function renderDashboard(){
+    const todayStr = yearMonthDayString(new Date());
+    let tasksToday = maintenance.filter(t=>t.active && t.due===todayStr && !t.history.includes(todayStr));
+    let overdue = maintenance.filter(t=>{
+        return t.active && !t.history.includes(t.due) && new Date(t.due).getTime() < new Date().getTime();
+    });
+    document.getElementById('tasksToday').innerHTML = tasksToday.length ?
+        tasksToday.map(t=>`<li><span class="area-tag">${t.area}</span><b>${t.title}</b></li>`).join('') :
+        "<li class='empty'><span class='empty-icon'>🟢</span>No maintenance tasks due today</li>";
+    document.getElementById('tasksOverdue').innerHTML = overdue.length ?
+        overdue.map(t=>`<li><span class="area-tag overdue">${t.area}</span><b>${t.title}</b> <span class='overdue'>Overdue!</span></li>`).join('') :
+        "<li class='empty'>Nothing overdue 🎉</li>";
+}
+function renderCalendar(){
+    let tbody = document.querySelector('#calendarTable tbody');
+    tbody.innerHTML = "";
+    maintenance.filter(t=>t.active).sort((a,b)=>new Date(a.due)-new Date(b.due)).forEach((t,idx)=>{
+        let status = t.history.includes(t.due) ? "✅ Done" :
+            (new Date(t.due).getTime() < new Date().getTime() ? "<span class='overdue'>Overdue</span>" : "🔄 Pending");
+        tbody.innerHTML += `
+        <tr>
+            <td style="cursor:pointer;" onclick="viewTask(${idx})">${t.title}</td>
+            <td>
+                <span class="area-tag${t.type==='Seasonal'?' seasonal-tag':''}${t.type==='Service'?' service-tag':''}${t.type==='Appliance'?' appliance-tag':''}">${t.area}</span>
+            </td>
+            <td>${t.type}</td>
+            <td>${t.due}</td>
+            <td>${t.frequency.charAt(0).toUpperCase()+t.frequency.slice(1)}</td>
+            <td>${t.equipment ? t.equipment : "-"}</td>
+            <td>${t.estTime ? t.estTime + " min" : "-"}</td>
+            <td>${status}</td>
+        </tr>
+        `;
+    });
+}
+function viewTask(idx){
+    current = idx;
+    let t = maintenance[idx];
+    let modal = document.createElement('div');
+    modal.innerHTML = `
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>${t.title}</h2>
+            <button class="modal-close" onclick="document.body.removeChild(document.querySelector('.modal.active'))">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <b>Area:</b> <span class="area-tag">${t.area}</span><br>
+                <b>Task Type:</b> ${t.type}<br>
+                <b>Next Due:</b> ${t.due}
+                ${new Date(t.due).getTime() < new Date().getTime() && !t.history.includes(t.due) ? " <span class='overdue'>Overdue!</span>" : ""}
+            </div>
+            <div style="margin-top:1em;">
+                <b>Frequency:</b> ${t.frequency.charAt(0).toUpperCase()+t.frequency.slice(1)}
+            </div>
+            <div style="margin-top:1em;">
+                <b>Equipment:</b> ${t.equipment||"-"}
+            </div>
+            <div style="margin-top:1em;">
+                <b>Estimated Time:</b> ${t.estTime ? t.estTime+" min" : "-"}
+            </div>
+            <div style="margin-top:1em;">
+                <b>Instructions:</b>
+                <ul>
+                  ${t.instructions.map(i=>`<li>${i}</li>`).join('')}
+                </ul>
+            </div>
+            <div style="margin-top:1em;">
+                <b>History:</b>
+                ${t.history.length ?
+                    `<ul>${t.history.map(h=>`<li>${h}</li>`).join('')}</ul>`
+                    : "<div>No completion history yet.</div>"}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" onclick="completeTaskModal();document.body.removeChild(document.querySelector('.modal.active'))">Mark Complete</button>
+            <button class="btn" onclick="deleteTaskModal();document.body.removeChild(document.querySelector('.modal.active'))">Delete</button>
+            <button class="btn" onclick="document.body.removeChild(document.querySelector('.modal.active'))">Close</button>
+        </div>
+    </div>
+    `;
+    modal.className = "modal active";
+    document.body.appendChild(modal);
+}
+function completeTaskModal(){
+    if(current!=null){
+        let t = maintenance[current];
+        if(!t.history.includes(t.due)){
+            t.history.push(t.due);
+            // next due logic
+            let freqMap = { "weekly":7, "monthly":30, "seasonal":90, "yearly":365 };
+            if(freqMap[t.frequency]){
+                let nextDue=new Date(t.due);
+                nextDue.setDate(nextDue.getDate()+freqMap[t.frequency]);
+                t.due=yearMonthDayString(nextDue);
+            }
+            save();
+            renderDashboard();
+            renderCalendar();
+        }
+    }
+}
+function deleteTaskModal(){
+    if(current!=null){
+        if(confirm("Delete this maintenance task?")){
+            maintenance.splice(current,1);
+            save();
+            renderDashboard();
+            renderCalendar();
+        }
+    }
+}
+function saveTask(e){
+    e.preventDefault();
+    let title = document.getElementById('title').value.trim();
+    let area = document.getElementById('area').value;
+    let type = document.getElementById('type').value;
+    let frequency = document.getElementById('frequency').value;
+    let due = document.getElementById('due').value;
+    let equipment = document.getElementById('equipment').value;
+    let estTime = parseInt(document.getElementById('estTime').value)||null;
+    let instructions = document.getElementById('instructions').value.split('\n').filter(l=>l.trim());
+    let active = document.getElementById('active').checked;
+    maintenance.unshift({
+        title,area,type,frequency,due,equipment,estTime,active,instructions,history:[]
+    });
+    save();
+    document.getElementById('form').reset();
+    closeModal('add');
+    renderDashboard();
+    renderCalendar();
+    alert('Maintenance task added!');
+}
+function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
+function closeModal(id){ document.getElementById(id+'Modal').classList.remove('active'); }
+window.addEventListener('DOMContentLoaded',init);
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active'))});
+</script>
+</body>
+</html>
