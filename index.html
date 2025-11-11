@@ -3,212 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Home Management Hub - Manage meals, shopping, cleaning, and maintenance">
-    <title>Home Management Hub - Dashboard</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    <title>Home Dashboard - Home Hub</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #cbd5e1;
+            --border: #334155;
+            --accent: #f59e42;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box;}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .nav {background: var(--card);border-bottom: 1px solid var(--border);padding: 1rem 1.5rem;position: sticky;top: 0;z-index: 100;}
+        .nav-content {max-width: 1400px;margin: 0 auto;display: flex;justify-content: space-between;align-items: center;}
+        .nav-brand {font-size: 1.5rem;font-weight: 800;background: var(--gradient);-webkit-background-clip: text;-webkit-text-fill-color: transparent;}
+        .nav-toggle {display: none;background: none;border: none;color: var(--primary);font-size: 1.5rem;cursor:pointer;padding: 0.5rem;}
+        .nav-menu {display: flex;gap: 0.5rem;list-style: none;}
+        .nav-menu a {padding: 0.6rem 1.2rem;border-radius: 8px;text-decoration: none;color: var(--text-dim);font-weight: 600;font-size: 0.95rem;transition: all 0.2s;}
+        .nav-menu a:hover {background: rgba(102,126,234,0.1);color: var(--primary);}
+        .nav-menu a.active {background: var(--gradient);color: white;}
+        @media (max-width: 768px) {
+            .nav-toggle {display: block;}
+            .nav-menu {
+                position: fixed;top: 70px;left: 0;right: 0;
+                background: var(--card);flex-direction: column;padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;pointer-events: none;transition: all 0.3s;
+            }
+            .nav-menu.active {transform: translateY(0);opacity: 1;pointer-events: all;}
+            .nav-menu a {width: 100%;}
+        }
+        .container {max-width: 1400px;margin: 0 auto;padding: 2rem 1.5rem;}
+        .header {display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:2rem;margin-bottom:2rem;}
+        h1 {font-size:2rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;}
+        .todays-date {font-size:1.09rem;color:var(--text-dim);font-weight:500;margin-bottom:6px;}
+        .dashboard-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:2rem;}
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.4rem 1.2rem 1rem 1.2rem;
+            box-shadow: 0 0 6px rgba(0,0,0,0.03);
+            min-height: 215px;
+            position: relative;
+        }
+        .card-title {
+            font-size: 1.13rem;font-weight: 700; margin-bottom: 0.7rem;background: var(--gradient);-webkit-background-clip: text;-webkit-text-fill-color: transparent;
+        }
+        .card-link {float:right;text-decoration:none;color: var(--accent);font-size:1.04rem;}
+        .list-group {margin-bottom:1rem;}
+        .list-group li {margin-bottom:0.57rem;}
+        .empty {color:var(--text-dim); font-size:1.04rem;}
+        .meal-title {font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+        .tag {
+            display:inline-block; padding:0.20em 0.8em; border-radius:6px; 
+            font-size:0.92em; background:rgba(102,126,234,0.09);color:var(--primary);
+            margin:0 0.25em 0.27em 0; text-transform:capitalize;border:1px solid var(--border);
+        }
+        .tag-type {background:rgba(102,126,234,0.17);color:#93c5fd;border:1px solid rgba(102,126,234,0.26);}
+        .tag-area {background:rgba(245,158,66,0.13);color:#f59e42;border:1px solid rgba(245,158,66,0.25);}
+        .btn {
+            padding: 0.65rem 1.2rem;
+            border-radius: 7px;
+            font-weight: 600;
+            cursor:pointer;
+            border: none;
+            background: var(--gradient); color: white;
+            transition: all 0.2s;
+        }
+        .btn:hover {transform:translateY(-1px);}
+        .quick-add-form {display: flex; gap:0.25em; flex-wrap:wrap;align-items:center;margin-top:0.4em;}
+        .quick-add-form input[type=text], .quick-add-form input[type=number], .quick-add-form select {
+            padding:0.46rem 0.85rem; border:2px solid var(--border); border-radius:7px; background:var(--bg);color:var(--text);font-size:1rem;}
+        .quick-add-form input[type=number]{max-width:65px;}
+        .quick-add-form .btn {padding:0.5rem 1.3rem;}
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <h1>🏠 Home Management Hub</h1>
-        <nav class="nav-tabs" role="navigation" aria-label="Main navigation">
-            <button class="nav-tab active" data-section="dashboard" onclick="window.location.href='index.html'">Dashboard</button>
-            <button class="nav-tab" data-section="meals" onclick="window.location.href='pages/meals.html'">Meals</button>
-            <button class="nav-tab" data-section="planner" onclick="window.location.href='pages/planner.html'">Planner</button>
-            <button class="nav-tab" data-section="shopping" onclick="window.location.href='pages/shopping.html'">Shopping</button>
-            <button class="nav-tab" data-section="cleaning" onclick="window.location.href='pages/cleaning.html'">Cleaning</button>
-            <button class="nav-tab" data-section="maintenance" onclick="window.location.href='pages/maintenance.html'">Maintenance</button>
-            <button class="nav-tab" data-section="settings" onclick="window.location.href='pages/settings.html'">Settings</button>
-        </nav>
-    </header>
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-brand">🏠 Home Hub</div>
+        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="index.html" class="active">📊 Dashboard</a></li>
+            <li><a href="meals.html">🍽️ Meals</a></li>
+            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="shopping.html">🛒 Shopping</a></li>
+            <li><a href="cleaning.html">🧹 Cleaning</a></li>
+            <li><a href="maintenance.html">🛠️ Maintenance</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="header">
+        <h1>Home Hub Dashboard</h1>
+        <div class="todays-date" id="dateToday"></div>
+    </div>
+    <div class="dashboard-grid">
+        <div class="card">
+            <div class="card-title">🍽️ Meals Today <a href="meals.html" class="card-link">View meals</a></div>
+            <ul class="list-group" id="mealsToday"></ul>
+        </div>
+        <div class="card">
+            <div class="card-title">🧹 Cleaning Tasks Today <a href="cleaning.html" class="card-link">View cleaning</a></div>
+            <ul class="list-group" id="cleaningToday"></ul>
+        </div>
+        <div class="card">
+            <div class="card-title">🛠️ Maintenance Tasks Today <a href="maintenance.html" class="card-link">View maintenance</a></div>
+            <ul class="list-group" id="maintenanceToday"></ul>
+        </div>
+        <div class="card">
+            <div class="card-title">🛒 Shopping List <a href="shopping.html" class="card-link">View shopping</a></div>
+            <ul class="list-group" id="shoppingPreview"></ul>
+            <form class="quick-add-form" onsubmit="addQuickShopping(event)">
+                <input type="text" id="quickItem" placeholder="Item (e.g. Apples)" required>
+                <input type="number" id="quickQty" min="1" value="1" required>
+                <select id="quickUnit" style="width:auto">
+                    <option value="">x</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="ml">ml</option>
+                    <option value="l">l</option>
+                </select>
+                <button class="btn" type="submit">Add to Shopping</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function formatToday(){
+    let d=new Date(), day=WEEKDAYS[d.getDay()], date=d.getDate(), month=MONTHS[d.getMonth()], year=d.getFullYear();
+    return `${day}, ${date} ${month} ${year}`;
+}
+document.getElementById("dateToday").textContent = formatToday();
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <section id="dashboard" class="section active">
-            <h2 class="sr-only">Dashboard</h2>
-            
-            <!-- Dashboard Grid -->
-            <div class="dashboard-grid">
-                <!-- Today's Overview -->
-                <div class="dashboard-card">
-                    <h2>Today's Overview</h2>
-                    <div id="todayOverview">
-                        <div class="dashboard-stat">
-                            <span class="stat-label">Meals Planned</span>
-                            <span class="stat-value" id="todayMealsCount">0</span>
-                        </div>
-                        <div class="dashboard-stat">
-                            <span class="stat-label">Tasks Due</span>
-                            <span class="stat-value" id="todayTasksCount">0</span>
-                        </div>
-                        <div class="dashboard-stat">
-                            <span class="stat-label">Shopping Items</span>
-                            <span class="stat-value" id="shoppingItemsCount">0</span>
-                        </div>
-                    </div>
-                </div>
+// Meals today
+function renderMealsToday(){
+    let plannerData = JSON.parse(localStorage.getItem('hubPlanner')||"[]");
+    let today = new Date();
+    let idx = today.getDay(); // Assuming 0=Sunday, 1=Monday, etc
+    let mealEls = document.getElementById("mealsToday");
+    mealEls.innerHTML = '';
+    if(plannerData && plannerData[idx] && plannerData[idx].meal){
+        let meal = plannerData[idx].meal;
+        mealEls.innerHTML = `<li>
+            <span class="meal-title">${meal.t||meal.title||"Meal"}</span>
+            ${meal.type?`<span class="tag tag-type">${meal.type}</span>`:""}
+            ${meal.diet && meal.diet.length ? meal.diet.map(d=>`<span class="tag tag-type">${d.replace('-',' ')}</span>`).join(''):''}
+            <br>
+            <small style="color:var(--text-dim);">Ingredients: ${meal.ing?meal.ing.join(", "):"N/A"}</small>
+        </li>`;
+    } else {
+        mealEls.innerHTML = '<li class="empty">No meal planned for today.</li>';
+    }
+}
 
-                <!-- Quick Actions -->
-                <div class="dashboard-card">
-                    <h2>Quick Actions</h2>
-                    <div class="btn-group" style="flex-direction: column;">
-                        <button class="btn btn-primary btn-block" onclick="window.location.href='pages/meals.html'">
-                            ➕ Add Recipe
-                        </button>
-                        <button class="btn btn-secondary btn-block" onclick="window.location.href='pages/planner.html'">
-                            📅 Plan Week
-                        </button>
-                        <button class="btn btn-outline btn-block" onclick="window.location.href='pages/shopping.html'">
-                            🛒 Shopping List
-                        </button>
-                    </div>
-                </div>
+// Cleaning today
+function renderCleaningToday(){
+    let cleaningData = JSON.parse(localStorage.getItem('hubCleaning')||"[]");
+    let tasksToday = cleaningData.filter(t=>{
+        // For simplicity, just assuming daily tasks, can be improved:
+        if(!t.active) return false;
+        if(t.freq=="daily") return true;
+        // Weekly: show on task day (assumes Monday start)
+        let today=new Date(), weekday=WEEKDAYS[today.getDay()].toLowerCase();
+        if(t.freq=="weekly" && t.day && t.day.toLowerCase()==weekday) return true;
+        return false;
+    });
+    let cleaningEls = document.getElementById("cleaningToday");
+    cleaningEls.innerHTML = '';
+    if(tasksToday.length){
+        cleaningEls.innerHTML = tasksToday.map(t=>
+            `<li>
+                <span>${t.title}</span>
+                ${t.room?`<span class="tag tag-area">${t.room}</span>`:""}
+            </li>`
+        ).join('');
+    } else {
+        cleaningEls.innerHTML = '<li class="empty">No cleaning tasks due today.</li>';
+    }
+}
 
-                <!-- Upcoming Tasks -->
-                <div class="dashboard-card">
-                    <h2>Upcoming Tasks</h2>
-                    <div id="upcomingTasks">
-                        <p style="padding: 1rem; text-align: center; color: var(--text-light);">Loading...</p>
-                    </div>
-                </div>
-            </div>
+// Maintenance today
+function renderMaintenanceToday(){
+    let maintenanceData = JSON.parse(localStorage.getItem('hubMaintenance')||"[]");
+    let todayStr = (new Date()).toISOString().split("T")[0];
+    let mtEls = document.getElementById("maintenanceToday");
+    let tasksToday = maintenanceData.filter(t=>t.active && t.due===todayStr && !t.history.includes(todayStr));
+    mtEls.innerHTML = '';
+    if(tasksToday.length){
+        mtEls.innerHTML = tasksToday.map(t=>`
+            <li>
+                <span>${t.title}</span>
+                ${t.area?`<span class="tag tag-area">${t.area}</span>`:""}
+            </li>
+        `).join('');
+    } else {
+        mtEls.innerHTML = '<li class="empty">No maintenance tasks due today.</li>';
+    }
+}
 
-            <!-- Today's Meals -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Today's Meals</h3>
-                    <button class="btn btn-small btn-primary" onclick="window.location.href='pages/planner.html'">
-                        View Planner
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div id="todayMeals">
-                        <p class="empty-state">Loading...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Recent Activity</h3>
-                </div>
-                <div class="card-body">
-                    <div id="recentActivity">
-                        <p style="color: var(--text-light); text-align: center;">No recent activity</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- JavaScript Modules -->
-    <script type="module">
-        import { loadData, getData } from './js/storage.js';
-        import { initApp, formatDate, getDayOfWeek, getTodayISO } from './js/app.js';
-        import { initNotifications } from './js/notifications.js';
-
-        // Initialize app
-        initApp();
-        initNotifications();
-
-        // Load dashboard data
-        function loadDashboard() {
-            const data = loadData();
-            const today = getTodayISO();
-            const todayDay = getDayOfWeek();
-
-            // Today's stats
-            const todayMeals = data.weeklyPlan[todayDay] || [];
-            document.getElementById('todayMealsCount').textContent = todayMeals.length;
-
-            const dueTasks = [...data.cleaningTasks, ...data.maintenanceTasks].filter(task => 
-                task.dueDate === today && !task.completed
-            );
-            document.getElementById('todayTasksCount').textContent = dueTasks.length;
-
-            const uncheckedItems = data.shoppingList.filter(item => !item.checked);
-            document.getElementById('shoppingItemsCount').textContent = uncheckedItems.length;
-
-            // Today's meals
-            renderTodayMeals(todayMeals, data.meals);
-
-            // Upcoming tasks
-            renderUpcomingTasks(data);
+// Shopping preview
+function renderShoppingPreview(){
+    let shoppingData = JSON.parse(localStorage.getItem('hubShopping')||"[]");
+    let list = document.getElementById("shoppingPreview");
+    let preview = shoppingData.slice(0,5); // Show top 5 items
+    list.innerHTML = '';
+    if(preview.length){
+        list.innerHTML = preview.map(i=>`
+            <li>
+                <span>${i.name}</span>
+                ${i.qty>1?`<span class="tag">x${i.qty}${i.unit?i.unit:''}</span>`:""}
+                ${i.fav?'<span class="item-fav" title="Favourite">⭐</span>':''}
+            </li>
+        `).join('');
+        if(shoppingData.length>5){
+            list.innerHTML += `<li class="empty"><a href="shopping.html" style="color:var(--accent);text-decoration:underline;">View all items...</a></li>`;
         }
+    } else {
+        list.innerHTML = '<li class="empty">Shopping list is empty.</li>';
+    }
+}
 
-        function renderTodayMeals(mealIds, allMeals) {
-            const container = document.getElementById('todayMeals');
-            
-            if (mealIds.length === 0) {
-                container.innerHTML = '<p class="empty-state">No meals planned for today. <a href="pages/planner.html">Plan your meals</a></p>';
-                return;
-            }
-
-            const html = mealIds.map(id => {
-                const meal = allMeals.find(m => m.id === id);
-                if (!meal) return '';
-                
-                return `
-                    <div class="day-meal" style="margin-bottom: 0.5rem;">
-                        <div class="day-meal-type">${meal.type}</div>
-                        <div class="day-meal-name">${meal.title}</div>
-                    </div>
-                `;
-            }).join('');
-
-            container.innerHTML = html || '<p class="empty-state">No meals found</p>';
+// Quick add shopping
+function addQuickShopping(e){
+    e.preventDefault();
+    let name = document.getElementById("quickItem").value.trim();
+    let qty = parseInt(document.getElementById("quickQty").value)||1;
+    let unit = document.getElementById("quickUnit").value;
+    if(name){
+        let shoppingData = JSON.parse(localStorage.getItem('hubShopping')||"[]");
+        let idx = shoppingData.findIndex(i=>i.name.toLowerCase()===name.toLowerCase() && ((i.unit||"")==unit));
+        if(idx>=0){
+            shoppingData[idx].qty = (shoppingData[idx].qty||1) + qty;
+            shoppingData[idx].unit = unit;
+        } else {
+            shoppingData.push({name, qty, unit, fav:false, checked:false});
         }
+        localStorage.setItem('hubShopping', JSON.stringify(shoppingData));
+        renderShoppingPreview();
+    }
+    document.getElementById("quickItem").value = '';
+    document.getElementById("quickQty").value = 1;
+    document.getElementById("quickUnit").value = '';
+}
 
-        function renderUpcomingTasks(data) {
-            const container = document.getElementById('upcomingTasks');
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const allTasks = [...data.cleaningTasks, ...data.maintenanceTasks]
-                .filter(task => !task.completed && task.dueDate)
-                .map(task => ({
-                    ...task,
-                    dueDateObj: new Date(task.dueDate)
-                }))
-                .sort((a, b) => a.dueDateObj - b.dueDateObj)
-                .slice(0, 5);
-
-            if (allTasks.length === 0) {
-                container.innerHTML = '<p style="padding: 1rem; text-align: center; color: var(--text-light);">No tasks scheduled</p>';
-                return;
-            }
-
-            const html = allTasks.map(task => {
-                const isOverdue = task.dueDateObj < today;
-                const daysUntil = Math.ceil((task.dueDateObj - today) / (1000 * 60 * 60 * 24));
-
-                return `
-                    <div class="dashboard-stat">
-                        <span>${task.name}</span>
-                        <span style="color: ${isOverdue ? 'var(--danger)' : 'var(--text-light)'}; font-size: 0.75rem;">
-                            ${isOverdue ? 'Overdue' : daysUntil === 0 ? 'Today' : `${daysUntil}d`}
-                        </span>
-                    </div>
-                `;
-            }).join('');
-
-            container.innerHTML = html;
-        }
-
-        // Load dashboard on page load
-        loadDashboard();
-
-        // Refresh every 5 minutes
-        setInterval(loadDashboard, 5 * 60 * 1000);
-    </script>
+// Initial render
+renderMealsToday();
+renderCleaningToday();
+renderMaintenanceToday();
+renderShoppingPreview();
+</script>
 </body>
 </html>
-
