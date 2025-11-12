@@ -15,7 +15,6 @@
             --text-dim: #cbd5e1;
             --border: #334155;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
@@ -26,504 +25,398 @@
             background: var(--card);
             border-bottom: 1px solid var(--border);
             padding: 1rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
         }
         .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1400px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        .nav-menu {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-        }
-        .nav-menu a {
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-toggle { display: none; background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; }
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none; }
+        .nav-menu a { padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; color: var(--text-dim); font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
         .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
         .nav-menu a.active { background: var(--gradient); color: white; }
         @media (max-width: 768px) {
             .nav-toggle { display: block; }
-            .nav-menu {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: var(--card);
-                flex-direction: column;
-                padding: 1rem;
-                transform: translateY(-100%);
-                opacity: 0;
-                pointer-events: none;
-                transition: all 0.3s;
-            }
-            .nav-menu.active {
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: all;
-            }
+            .nav-menu { position: fixed; top: 70px; left: 0; right: 0; background: var(--card); flex-direction: column; padding: 1rem; transform: translateY(-100%); opacity: 0; pointer-events: none; transition: all 0.3s; }
+            .nav-menu.active { transform: translateY(0); opacity: 1; pointer-events: all; }
             .nav-menu a { width: 100%; }
         }
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .filters {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 1rem 0; }
+        .calendar-section { background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .calendar-head-month { font-size: 1.3rem; font-weight: 600; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .calendar-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.97rem; }
+        .calendar-table th, .calendar-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
+        .calendar-table th { background: var(--gradient); color: white; }
+        .calendar-table .am, .calendar-table .pm { width: 30%; vertical-align: top; }
+        .calendar-table .weekday { width: 90px; font-weight: 600; }
+        .calendar-table .date { width: 80px; color: var(--text-dim);}
+        .calendar-table .tick-task { display: flex; align-items: center; gap: 0.7em; }
+        .calendar-table .completed { text-decoration: line-through; color: gray; }
+        .calendar-table .slot-btn { background: var(--primary); color: white; padding: 2px 8px; border-radius: 7px; border: none; font-size: 0.98em; cursor: pointer; margin-top:2px;}
+        .calendar-table .slot-btn:active { background: var(--primary-dark);}
+        .calendar-table .taskcard-in-slot { margin-bottom: 5px;}
+        .calendar-table input[type="checkbox"] { accent-color: var(--primary); }
+        @media (max-width: 950px) {
+            .calendar-table, .calendar-table thead, .calendar-table tbody, .calendar-table th, .calendar-table td { display: block; width: 100%; }
+            .calendar-table tr { margin-bottom: 12px; border-radius: 7px; background: var(--card); }
+            .calendar-table th, .calendar-table td { padding: 7px !important; min-height: 36px;}
         }
-        .filter-group { margin-bottom: 1.2rem; }
-        .filter-label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .filter-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .filter-btn {
-            padding: 0.6rem 1.2rem;
-            border: 2px solid var(--border);
-            background: transparent;
-            border-radius: 8px;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .filter-btn.active { background: var(--gradient); color: white; border-color: transparent; }
-        select, input[type="search"], input[type="number"], input[type="text"] {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-primary { background: var(--gradient); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn-danger:hover { background: #dc2626; }
-        .room-filter { margin-top: 1.2rem; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            transition: all 0.2s;
-            padding: 1rem 1.2rem 1rem 1.2rem;
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 0.5rem;
-        }
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-        .overdue { color: #ef4444; font-weight: 700; font-size: 0.95rem; margin-top: 0.3rem; }
-        .task-list { margin: 0.7rem 0; padding-left: 1.2rem; }
-        .task-list li { margin-bottom: 0.3rem; }
-        .task-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.5rem; }
-        .check-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-        .assign-dropdown { margin-left: 0.2rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.92rem;}
-        .card-history {
-            color: var(--text-dim); font-size: 0.9rem; margin-top: 0.5rem;
-        }
-        .add-task-btn {margin-bottom: 1rem;}
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--card); border-radius: 16px; max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h2 { margin: 0; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-        .modal-close { background: none; border: none; font-size: 2rem; color: var(--text-dim); cursor: pointer; }
-        .modal-body { padding: 1.5rem; }
-        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; justify-content: flex-end;}
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
-        textarea {
-            width: 100%;
-            min-height: 80px;
-            resize: vertical;
-            padding: 0.8rem 1rem;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-            font-family: inherit;
-        }
-        .checks { display: flex; flex-wrap: wrap; gap: 0.8rem; }
-        .empty { text-align: center; padding: 3rem 1rem; color: var(--text-dim); }
+        .filters-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+        .filter-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 8px;}
+        .filter-label { font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.93em; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        select, input[type="search"], input[type="text"] { padding: 0.7em 1em; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; }
+        .taskcards-section { margin-bottom: 36px;}
+        .cards-list { display: flex; flex-wrap: wrap; gap: 1.2em; }
+        .task-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; min-width: 240px; max-width:330px; padding: 1em 1em 1em 1.2em; display: flex; flex-direction: column; cursor: pointer; }
+        .task-card-title { font-weight: 600; font-size: 1.08rem; margin-bottom: 0.45em; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .task-card-details { color: var(--text-dim); font-size: 0.98em;}
+        .task-card-freq {font-weight:600;}
+        .task-card-btn { margin-top: 8px; align-self: flex-end; background: var(--gradient); color: white; border: none; padding: 4px 13px; border-radius: 6px; font-size: 0.96em; cursor: pointer;}
+        .task-card-btn:active { background: var(--primary-dark);}
+        .hidden { display:none!important;}
+        .manual-section { background: var(--card); border-radius: 10px; border: 1px solid var(--border); padding: 1.4em 1.1em; margin-bottom: 2em;}
+        .manual-row { display: flex; flex-wrap: wrap; gap: 1.1em; margin-bottom:0.6em;}
+        .manual-label { font-weight:600; margin-right:0.5em;}
+        .manual-input { padding:6px 1em; border-radius:8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);}
+        .manual-btn { background: var(--gradient); color: white; border: none; border-radius: 7px; padding: 6px 25px; font-size: 1em; font-weight:600; margin-top:8px; cursor:pointer; }
+        .manual-btn:active { background: var(--primary-dark);}
+        .manual-section h3 { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom:5px;}
+        .shopping-section { background: var(--card); border-radius: 10px; border: 1px solid var(--border); padding: 1em 1.1em; margin-bottom: 2em;}
+        .shopping-section h3 { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom:4px;}
+        .shopping-row { display:flex; gap:0.7em; margin-bottom:8px;}
+        .shopping-input { padding:6px 1em; border-radius:8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);}
+        .shopping-btn { background: var(--gradient); color: white; border: none; border-radius: 7px; padding: 5px 16px; font-size: 0.98em; cursor:pointer; }
+        .shopping-btn:active { background: var(--primary-dark);}
+        .shopping-list { list-style:none; padding: 0; margin: 0;}
+        .shopping-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 2px;}
+        .shopping-delete { background: #ef4444; color: white; border: none; border-radius: 4px; font-size: 0.92em; padding: 0 8px; cursor: pointer;}
+        .shopping-delete:active { background:#dc2626;}
+        .empty { text-align: center; padding: 2.2rem 1rem; color: var(--text-dim); }
         .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
-        @media (max-width: 480px) {
-            .grid { grid-template-columns: 1fr; }
-            .modal-footer { flex-direction: column; }
-            .modal-footer .btn { width: 100%; }
-            .container { padding: 1.2rem 0.5rem; }
+        @media (max-width: 550px) {
+            h1 { font-size: 1.3rem;}
+            .calendar-header {flex-direction:column;}
+            .manual-row,.shopping-row,.filter-row { flex-direction:column;}
+            .task-card { min-width:180px; max-width:98vw;}
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-content">
-            <div class="nav-brand">🏠 Home Hub</div>
-            <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="../index.html">📊 Dashboard</a></li>
-                <li><a href="meals.html">🍽️ Meals</a></li>
-                <li><a href="planner.html">📅 Planner</a></li>
-                <li><a href="shopping.html">🛒 Shopping</a></li>
-                <li><a href="cleaning.html" class="active">🧹 Cleaning</a></li>
-                <li><a href="maintenance.html">🛠️ Maintenance</a></li>
-                <li><a href="settings.html">⚙️ Settings</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="header">
-            <h1>Cleaning & Home Management Schedule</h1>
-            <button class="btn btn-primary add-task-btn" onclick="openModal('add')">➕ Add Task</button>
-        </div>
-        <div class="filters">
-            <div class="filter-group">
-                <div class="filter-label">Frequency</div>
-                <div class="filter-btns" id="freqFilters"></div>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Room/Area</div>
-                <div class="filter-btns" id="roomFilters"></div>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Search</div>
-                <input type="search" id="search" placeholder="Search tasks..." oninput="applyFilters()">
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-brand">🏠 Home Hub</div>
+        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="../index.html">📊 Dashboard</a></li>
+            <li><a href="meals.html">🍽️ Meals</a></li>
+            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="shopping.html">🛒 Shopping</a></li>
+            <li><a href="cleaning.html" class="active">🧹 Cleaning</a></li>
+            <li><a href="maintenance.html">🛠️ Maintenance</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+
+    <h1>Cleaning & Home Management Schedule</h1>
+    <div class="calendar-section">
+        <div class="calendar-header">
+            <div class="calendar-head-month" id="calendarMonth"></div>
+            <div>
+                <button class="manual-btn" onclick="prevMonth()">&lt; Prev</button>
+                <button class="manual-btn" onclick="nextMonth()">Next &gt;</button>
             </div>
         </div>
-        <div class="grid" id="grid"></div>
-        <div class="empty" id="empty" style="display:none;">
+        <table class="calendar-table" id="calendar-table">
+            <!-- Calendar will be rendered here -->
+        </table>
+    </div>
+
+    <!-- "Tasks to add" section, appears below calendar FIRST upon loading -->
+    <div class="taskcards-section">
+        <h3 class="filter-label">Tasks to Add to Calendar</h3>
+        <div class="filters-section">
+            <div class="filter-row">
+                <div>
+                    <span class="filter-label">Filter by Room</span>
+                    <select id="taskFilterRoom" onchange="updateTaskCards()">
+                        <option value="">Select...</option>
+                        <option value="kitchen">Kitchen</option>
+                        <option value="bathroom">Bathroom</option>
+                        <option value="living">Living Area</option>
+                        <option value="bedroom">Bedroom</option>
+                        <option value="outdoor">Outdoor/Garden</option>
+                        <option value="car">Car</option>
+                    </select>
+                </div>
+                <div>
+                    <span class="filter-label">Filter by Frequency</span>
+                    <select id="taskFilterFreq" onchange="updateTaskCards()">
+                        <option value="">Select...</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="fortnightly">Bi-Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="seasonal">Seasonal</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="taskCards" class="cards-list"></div>
+        <div id="emptyCards" class="empty hidden">
             <div class="empty-icon">🧹</div>
-            <h3>No cleaning tasks found</h3>
-            <p>Try adjusting your filters or add a new task</p>
+            <h3>No tasks found for your filter.</h3>
         </div>
     </div>
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add Cleaning Task</h2>
-                <button class="modal-close" onclick="closeModal('add')">&times;</button>
+
+    <!-- Manual Add -->
+    <div class="manual-section">
+        <h3>Manual Add Cleaning Task</h3>
+        <form id="manualForm" onsubmit="addManualTask(event)">
+            <div class="manual-row">
+                <label class="manual-label">Task Name:
+                    <input required type="text" name="manualTaskName" class="manual-input" id="manualTaskName" placeholder="E.g. Clean vents"/>
+                </label>
+                <label class="manual-label">Room:
+                    <select name="manualTaskRoom" id="manualTaskRoom" class="manual-input">
+                        <option value="kitchen">Kitchen</option>
+                        <option value="bathroom">Bathroom</option>
+                        <option value="living">Living Area</option>
+                        <option value="bedroom">Bedroom</option>
+                        <option value="outdoor">Outdoor/Garden</option>
+                        <option value="car">Car</option>
+                    </select>
+                </label>
+                <label class="manual-label">Frequency:
+                    <select name="manualTaskFreq" id="manualTaskFreq" class="manual-input">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="fortnightly">Bi-Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="seasonal">Seasonal</option>
+                    </select>
+                </label>
+                <input type="text" id="manualTaskDetail" class="manual-input" placeholder="One detail per line (optional)">
             </div>
-            <form id="form" onsubmit="saveTask(event)">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="title">Task Name *</label>
-                        <input id="title" type="text" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="frequency">Frequency *</label>
-                        <select id="frequency" required>
-                            <option value="">Select frequency</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="fortnightly">Fortnightly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="seasonal">Seasonal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="room">Room/Area *</label>
-                        <select id="room" required>
-                            <option value="">Select room/area</option>
-                            <option value="kitchen">Kitchen</option>
-                            <option value="bathroom">Bathroom</option>
-                            <option value="bedroom">Bedroom</option>
-                            <option value="living">Living Area</option>
-                            <option value="outdoor">Outdoor/Garden</option>
-                            <option value="car">Car Maintenance</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="instructions">Instructions/Checklist</label>
-                        <textarea id="instructions" placeholder="Instructions or checklist (one item per line)"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="member">Assign to Member</label>
-                        <input id="member" type="text" placeholder="Household member name (optional)">
-                    </div>
-                    <div class="form-group">
-                        <label class="check-label">
-                            <input type="checkbox" id="active" checked> Enabled
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn" type="button" onclick="closeModal('add')">Cancel</button>
-                    <button class="btn btn-primary" type="submit" form="form">Save</button>
-                </div>
-            </form>
-        </div>
+            <button class="manual-btn" type="submit">Add Task</button>
+        </form>
     </div>
-    <div class="modal" id="viewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="viewTitle"></h2>
-                <button class="modal-close" onclick="closeModal('view')">&times;</button>
+
+    <!-- Shopping List Add -->
+    <div class="shopping-section">
+        <h3>Add Equipment / Cleaning Supplies to Shopping List</h3>
+        <form onsubmit="addShoppingItem(event)">
+            <div class="shopping-row">
+                <input required type="text" id="shoppingInput" class="shopping-input" placeholder="E.g. Toilet Duck, Cleaner...">
+                <button class="shopping-btn" type="submit">Add</button>
             </div>
-            <div class="modal-body" id="viewBody"></div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" onclick="deleteTask()">Delete</button>
-                <button class="btn btn-primary" onclick="toggleComplete()">Mark Complete</button>
-                <button class="btn" onclick="closeModal('view')">Close</button>
-            </div>
-        </div>
+        </form>
+        <ul class="shopping-list" id="shoppingList"></ul>
     </div>
-    <script>
+</div>
+
+<script>
 const PREPOPULATED_TASKS = [
-    {title:"Wash the dishes", freq:"daily", room:"kitchen", active:true, instructions:["Rinse dishes","Load dishwasher or handwash"], member:"", history:[], overdue:false},
-    {title:"Wipe counters", freq:"daily", room:"kitchen", active:true, instructions:["Wipe surfaces","Clean crumbs"], member:"", history:[], overdue:false},
-    {title:"Make bed", freq:"daily", room:"bedroom", active:true, instructions:["Straighten sheets","Fluff pillows"], member:"", history:[], overdue:false},
-    {title:"Vacuum floors", freq:"weekly", room:"living", active:true, instructions:["Vacuum all rooms"], member:"", history:[], overdue:false},
-    {title:"Clean bathrooms", freq:"weekly", room:"bathroom", active:true, instructions:["Scrub toilet","Clean shower"], member:"", history:[], overdue:false},
-    {title:"Bins out", freq:"weekly", room:"outdoor", active:true, instructions:["Take bins out"], member:"", history:[], overdue:false},
-    {title:"Mop floors", freq:"fortnightly", room:"kitchen", active:true, instructions:["Sweep before mopping","Mop with cleaner"], member:"", history:[], overdue:false},
-    {title:"Clean fridge", freq:"fortnightly", room:"kitchen", active:true, instructions:["Remove old food","Wipe shelves"], member:"", history:[], overdue:false},
-    {title:"Oven clean", freq:"monthly", room:"kitchen", active:true, instructions:["Remove racks","Scrub inside"], member:"", history:[], overdue:false},
-    {title:"Wash windows", freq:"monthly", room:"living", active:true, instructions:["Wipe glass","Dry with towel"], member:"", history:[], overdue:false},
-    {title:"Deep clean whole home", freq:"monthly", room:"living", active:true, instructions:["Move furniture","Clean under"], member:"", history:[], overdue:false},
-    {title:"Gutters", freq:"seasonal", room:"outdoor", active:true, instructions:["Check gutters","Remove debris"], member:"", history:[], overdue:false},
-    {title:"Boiler service", freq:"seasonal", room:"outdoor", active:true, instructions:["Book service","Check pressure"], member:"", history:[], overdue:false},
-    {title:"Garden maintenance", freq:"seasonal", room:"outdoor", active:true, instructions:["Mow lawn","Trim hedges"], member:"", history:[], overdue:false},
-    {title:"Car service", freq:"seasonal", room:"car", active:true, instructions:["Check oil","Inspect tyres"], member:"", history:[], overdue:false},
+    {title:"Wash dishes", freq:"daily", room:"kitchen", details:["Rinse dishes","Use dishwasher or handwash"]},
+    {title:"Wipe kitchen counters", freq:"daily", room:"kitchen", details:["Clear surfaces","Disinfect thoroughly"]},
+    {title:"Clean bathroom sink", freq:"daily", room:"bathroom", details:["Wipe with cleaner","Rinse well"]},
+    {title:"Make beds", freq:"daily", room:"bedroom", details:["Straighten sheets","Fluff pillows"]},
+    {title:"Vacuum floors", freq:"weekly", room:"living", details:["Vacuum main living area","Edges and corners"]},
+    {title:"Clean bathrooms", freq:"weekly", room:"bathroom", details:["Scrub toilet","Wipe shower/tub surfaces"]},
+    {title:"Bins out", freq:"weekly", room:"outdoor", details:["Collect all bins","Move to kerb"]},
+    {title:"Mop floors", freq:"fortnightly", room:"kitchen", details:["Sweep before mopping","Use mop and cleaner"]},
+    {title:"Clean fridge", freq:"fortnightly", room:"kitchen", details:["Remove old food","Wipe shelves/compartments"]},
+    {title:"Oven clean", freq:"monthly", room:"kitchen", details:["Remove racks","Scrub interior"]},
+    {title:"Wash windows", freq:"monthly", room:"living", details:["Spray windows","Dry with towel"]},
+    {title:"Deep clean", freq:"monthly", room:"living", details:["Move furniture","Clean under"]},
+    {title:"Gutters clear", freq:"seasonal", room:"outdoor", details:["Check gutters","Remove leaves/debris"]},
+    {title:"Garden maintenance", freq:"seasonal", room:"outdoor", details:["Mow lawn","Trim hedges"]},
+    {title:"Car service", freq:"seasonal", room:"car", details:["Check oil","Inspect tyres"]},
 ];
-let tasks=[], filters={f:'all', r:'all', s:''}, current=null, members=["Me","Partner","Child"];
-function init(){
-    const d = localStorage.getItem('hubCleaning');
-    tasks = d ? JSON.parse(d) : structuredClone(PREPOPULATED_TASKS);
-    if (!d) save();
-    buildFilters();
-    render();
+let calendarTasks=[]; // {date,part:["AM"|"PM"],tasks:[array of task objects]}
+let allTasks=[];
+let shoppingList=[];
+
+function saveAll(){
+    localStorage.setItem('hmhCleaningAllTasks', JSON.stringify(allTasks));
+    localStorage.setItem('hmhCleaningCalendarTasks', JSON.stringify(calendarTasks));
+    localStorage.setItem('hmhShoppingList', JSON.stringify(shoppingList));
 }
-function save(){ localStorage.setItem('hubCleaning', JSON.stringify(tasks)); }
-function buildFilters() {
-    const freqs = ['all','daily','weekly','fortnightly','monthly','seasonal'];
-    const rooms = ['all','kitchen','bathroom','bedroom','living','outdoor','car'];
-    document.getElementById('freqFilters').innerHTML = freqs.map(f =>
-        `<button class="filter-btn ${filters.f===f?'active':''}" onclick="setFilter('f','${f}',event)">${f.charAt(0).toUpperCase()+f.slice(1)}</button>`
-    ).join('');
-    document.getElementById('roomFilters').innerHTML = rooms.map(r =>
-        `<button class="filter-btn ${filters.r===r?'active':''}" onclick="setFilter('r','${r}',event)">${r.charAt(0).toUpperCase()+r.slice(1).replace('living','Living Area').replace('outdoor','Outdoor/Garden').replace('car','Car')}</button>`
-    ).join('');
+function loadAll(){
+    let d = localStorage.getItem('hmhCleaningAllTasks');
+    allTasks = d ? JSON.parse(d) : [...PREPOPULATED_TASKS];
+    let c = localStorage.getItem('hmhCleaningCalendarTasks');
+    calendarTasks = c ? JSON.parse(c) : [];
+    let sl = localStorage.getItem('hmhShoppingList');
+    shoppingList = sl ? JSON.parse(sl): [];
 }
-function setFilter(k,v,e){
-    filters[k]=v;
-    document.querySelectorAll(`#${k==='f'?'freq':'room'}Filters .filter-btn`).forEach(b=>b.classList.remove('active'));
-    e.target.classList.add('active');
-    render();
+function addManualTask(e){
+    e.preventDefault();
+    let name = document.getElementById("manualTaskName").value.trim();
+    let room = document.getElementById("manualTaskRoom").value;
+    let freq = document.getElementById("manualTaskFreq").value;
+    let details = document.getElementById("manualTaskDetail").value.trim().split('\n').filter(d=>d.trim());
+    if(!name) return;
+    allTasks.push({title:name, freq:freq, room:room, details:details});
+    saveAll(); updateTaskCards();
+    document.getElementById("manualForm").reset();
 }
-function applyFilters(){
-    filters.s = document.getElementById('search').value;
-    render();
+function addShoppingItem(e){
+    e.preventDefault();
+    let val = document.getElementById("shoppingInput").value.trim();
+    if(!val) return;
+    shoppingList.push(val); saveAll(); renderShoppingList();
+    document.getElementById("shoppingInput").value="";
 }
-function render(){
-    const now = Date.now();
-    tasks.forEach(t=>{
-        // Overdue detection: if task not completed in longest interval, mark as overdue
-        let lastDone = t.history.length ? new Date(t.history[t.history.length-1]) : null;
-        t.overdue = false;
-        if(t.active && lastDone){
-            let intervalDays = t.freq=="daily"?1:t.freq=="weekly"?7:t.freq=="fortnightly"?14:t.freq=="monthly"?30:90;
-            let nextDue = new Date(lastDone.getTime() + intervalDays*24*3600*1000);
-            if(now > nextDue.getTime()) t.overdue=true;
-        } else if(t.active && !lastDone) {
-            // Never completed, overdue if older than schedule
-            t.overdue = false;
-        }
-    });
-    let f = tasks.filter(t=>{
-        if (filters.f!=='all' && t.freq!==filters.f) return false;
-        if (filters.r!=='all' && t.room!==filters.r) return false;
-        if (filters.s && !t.title.toLowerCase().includes(filters.s.toLowerCase()) &&
-            !t.instructions.some(i=>i.toLowerCase().includes(filters.s.toLowerCase()))
-        ) return false;
-        if (!t.active) return false;
+function removeShoppingItem(idx){
+    shoppingList.splice(idx,1); saveAll(); renderShoppingList();
+}
+function renderShoppingList(){
+    let list = document.getElementById('shoppingList');
+    list.innerHTML = shoppingList.map((item,i)=>`<li class="shopping-item">${item} <button class="shopping-delete" onclick="removeShoppingItem(${i})">Remove</button></li>`).join('');
+}
+
+function updateTaskCards(){
+    let cards = document.getElementById('taskCards');
+    let room = document.getElementById('taskFilterRoom').value;
+    let freq = document.getElementById('taskFilterFreq').value;
+    let filtered = allTasks.filter(t=>{
+        if(room && t.room !== room) return false;
+        if(freq && ((freq==='fortnightly'?"bi-weekly":freq)!==t.freq && freq!=="bi-weekly")) return false;
         return true;
     });
-    let grid = document.getElementById('grid');
-    let empty = document.getElementById('empty');
-    if (f.length===0) {
-        grid.style.display='none';
-        empty.style.display='block';
-    } else {
-        grid.style.display='grid';
-        empty.style.display='none';
-        grid.innerHTML = f.map((t,i)=>`
-        <div class="card" onclick="viewTask(${tasks.indexOf(t)})">
-            <div class="card-header">
-                <div>
-                    <div class="card-title">${t.title} ${t.member?'<span style="font-size:0.89rem;color:var(--text-dim);">👤 '+t.member+'</span>':''}</div>
-                    <div style="font-size:0.93rem;color:var(--text-dim);margin-bottom:0.2rem;">
-                        <span>⏳${t.freq.charAt(0).toUpperCase()+t.freq.slice(1)}</span>
-                        • <span>🏠 ${t.room.charAt(0).toUpperCase()+t.room.slice(1).replace('living','Living Area').replace('outdoor','Outdoor/Garden').replace('car','Car')}</span>
-                    </div>
-                </div>
-                ${t.overdue?'<div class="overdue">Overdue!</div>':''}
+    cards.innerHTML = filtered.map((t,i)=>`
+        <div class="task-card" onclick="openAddToCalendarModal(${i})">
+            <div class="task-card-title">${t.title}</div>
+            <div class="task-card-details">
+                <span class="task-card-freq">${t.freq.charAt(0).toUpperCase()+t.freq.slice(1)}</span> • 
+                ${t.room.charAt(0).toUpperCase()+t.room.slice(1).replace('living','Living Area').replace('outdoor','Outdoor/Garden').replace('car','Car')}
             </div>
-            <ul class="task-list">
-                ${t.instructions.map(i=>`<li>${i}</li>`).join('')}
+            <ul style="margin:0.7em 0 0 0.6em;">
+                ${t.details.map(d=>`<li>${d}</li>`).join("")}
             </ul>
-            <div class="task-actions">
-                <label class="check-label"><input type="checkbox" onchange="toggleCompleteTask(event,${tasks.indexOf(t)})" ${t.history.length&&new Date(t.history[t.history.length-1]).toDateString()===new Date().toDateString()?'checked':''}> Done today</label>
-                <select class="assign-dropdown" onchange="assignMember(event,${tasks.indexOf(t)})">
-                    <option value="">Assign</option>
-                    ${members.map(m=>`<option value="${m}" ${t.member===m?'selected':''}>${m}</option>`).join('')}
-                </select>
-                <button class="btn" style="padding:0.5rem 1rem;" onclick="event.stopPropagation();deleteTask(${tasks.indexOf(t)},true)">Delete</button>
-            </div>
-            <div class="card-history">
-                Last done: ${t.history.length?new Date(t.history[t.history.length-1]).toLocaleDateString():'Never'}
-            </div>
-        </div>`).join('');
-    }
+            <button class="task-card-btn" onclick="event.stopPropagation();openAddToCalendarModal(${i});">Add to Calendar</button>
+        </div>
+    `).join('');
+    document.getElementById('emptyCards').classList.toggle('hidden', filtered.length>0);
 }
-function viewTask(idx){
-    current = idx;
-    let t = tasks[idx];
-    document.getElementById('viewTitle').textContent = t.title;
-    document.getElementById('viewBody').innerHTML = `
-        <div style="color:var(--text-dim);margin-bottom:1rem;">
-            <span>📅 Frequency:</span> <span>${t.freq.charAt(0).toUpperCase()+t.freq.slice(1)}</span><br>
-            <span>🏠 Room/Area:</span> <span>${t.room.charAt(0).toUpperCase()+t.room.slice(1).replace('living','Living Area').replace('outdoor','Outdoor/Garden').replace('car','Car')}</span><br>
-            ${t.member?`<span>👤 Assigned:</span> <span>${t.member}</span><br>`:''}
-            ${t.overdue?'<span class="overdue">Overdue!</span><br>':''}
-        </div>
-        <div><strong>Instructions/Checklist:</strong><ul style="margin-top:0.5rem;">
-            ${t.instructions.map(i=>`<li>${i}</li>`).join('')}
-        </ul></div>
-        <div style="margin-top:1rem;">
-            <strong>History:</strong>
-            ${t.history.length ? `<ul style="margin-top:0.5rem;">${t.history.map(h=>`<li>${new Date(h).toLocaleDateString()}</li>`).join('')}</ul>` : "<div>No completion history yet.</div>"}
-        </div>
+
+function openAddToCalendarModal(idx){
+    let t = allTasks[idx];
+    let day = prompt("Enter calendar day (1-30):", new Date().getDate());
+    if(!day || isNaN(day)||day<1||day>31)return;
+    let part = prompt("Assign to AM or PM?", "AM");
+    part = part.toUpperCase()=="PM" ? "PM":"AM";
+    // Find calendarTask entry for the date/part
+    let dateStr = `${calendarYear}-${String(calendarMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    let found = calendarTasks.find(c=>c.date==dateStr&&c.part==part);
+    if(!found){
+        found = {date:dateStr,part:part,tasks:[]}; calendarTasks.push(found);
+    }
+    found.tasks.push(t);
+    saveAll(); renderCalendar();
+}
+
+let calendarMonth = 10; // November idx
+let calendarYear = 2025;
+
+function prevMonth(){
+    if(calendarMonth==0){calendarMonth=11;calendarYear-=1;}
+    else calendarMonth--;
+    renderCalendar();
+}
+
+function nextMonth(){
+    if(calendarMonth==11){calendarMonth=0;calendarYear+=1;}
+    else calendarMonth++;
+    renderCalendar();
+}
+
+function renderCalendar(){
+    let table = document.getElementById("calendar-table");
+    // Force November 2025 by default
+    let monthIdx = calendarMonth;
+    let year = calendarYear;
+    document.getElementById("calendarMonth").innerHTML = 
+        new Date(year,monthIdx,1).toLocaleString('default',{month:'long',year:'numeric'});
+    // Generate: down left = day + date (e.g. Wed / 12th)
+    // Across top: AM Tasks / PM Tasks
+    let daysInMonth = new Date(year,monthIdx+1,0).getDate();
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th class="weekday">Day</th>
+                <th class="date">Date</th>
+                <th class="am">AM Tasks</th>
+                <th class="pm">PM Tasks</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${Array.from({length: daysInMonth}, (_,i)=>{
+                let dt = new Date(year,monthIdx,i+1);
+                let dateStr = `${year}-${String(monthIdx+1).padStart(2,"0")}-${String(i+1).padStart(2,"0")}`;
+                let am = (calendarTasks.find(ct=>ct.date==dateStr&&ct.part=="AM")||{tasks:[]}).tasks;
+                let pm = (calendarTasks.find(ct=>ct.date==dateStr&&ct.part=="PM")||{tasks:[]}).tasks;
+                return `
+                <tr>
+                    <td class="weekday">${dt.toLocaleString('default',{weekday:'short'})}</td>
+                    <td class="date">${dt.getDate()}${ordinal(dt.getDate())}</td>
+                    <td class="am">${am.map((task,j)=>renderTaskInSlot(task,dateStr,"AM",j)).join('')}</td>
+                    <td class="pm">${pm.map((task,j)=>renderTaskInSlot(task,dateStr,"PM",j)).join('')}</td>
+                </tr>
+                `
+            }).join("")}
+        </tbody>
     `;
-    openModal('view');
 }
-function toggleCompleteTask(e, idx){
-    e.stopPropagation();
-    let todayStr = new Date().toDateString();
-    let t = tasks[idx];
-    if(e.target.checked){
-        // Only add if not already marked today
-        if(!t.history.length || new Date(t.history[t.history.length-1]).toDateString()!==todayStr){
-            t.history.push(Date.now());
-            t.overdue=false;
-        }
-    } else {
-        // Remove today's completion
-        t.history = t.history.filter(h=>new Date(h).toDateString()!==todayStr);
-    }
-    save();
-    render();
-}
-function toggleComplete(){
-    let t = tasks[current];
-    let todayStr = new Date().toDateString();
-    if(!t.history.length || new Date(t.history[t.history.length-1]).toDateString()!==todayStr){
-        t.history.push(Date.now());
-        t.overdue=false;
-        save();
-        render();
-        viewTask(current);
+
+function ordinal(n){
+    if (n>3&&n<21) return "th";
+    switch(n%10){
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
     }
 }
-function assignMember(e, idx){
-    e.stopPropagation();
-    tasks[idx].member = e.target.value;
-    save();
-    render();
+function renderTaskInSlot(task,date,part,idx){
+    let completed = getCompletion(date,part,idx);
+    return `<div class="taskcard-in-slot">
+        <label class="tick-task"><input type="checkbox" ${completed?'checked':''} onclick="tickTask('${date}','${part}',${idx},this)"> <span class="${completed?'completed':''}">${task.title}</span></label>
+        <div style="color:var(--text-dim);margin-left:1.2em; font-size:0.95em;">${task.details.join(", ")}</div>
+    </div>`;
 }
-function deleteTask(idx, fromGrid){
-    if(!fromGrid && !confirm('Delete this cleaning task?')) return;
-    tasks.splice(idx, 1);
-    save();
-    closeModal('view');
-    render();
+function tickTask(date,part,idx,el){
+    let key = `done_${date}_${part}_${idx}`;
+    localStorage.setItem(key, el.checked?"yes":"");
+    renderCalendar();
 }
-function saveTask(e){
-    e.preventDefault();
-    let title = document.getElementById('title').value;
-    let freq = document.getElementById('frequency').value;
-    let room = document.getElementById('room').value;
-    let instructions = document.getElementById('instructions').value.split('\n').filter(l=>l.trim());
-    let member = document.getElementById('member').value;
-    let active = document.getElementById('active').checked;
-    tasks.unshift({
-        title,
-        freq,
-        room,
-        instructions,
-        member,
-        active,
-        history:[],
-        overdue:false
-    });
-    save();
-    document.getElementById('form').reset();
-    closeModal('add');
-    buildFilters();
-    render();
-    alert('Task added!');
+function getCompletion(date,part,idx){
+    let key = `done_${date}_${part}_${idx}`;
+    return localStorage.getItem(key)=="yes";
 }
-function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
-function closeModal(id){ document.getElementById(id+'Modal').classList.remove('active'); }
-document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active')}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active'))});
-init();
-    </script>
+
+// Dashboard fetch for Today's tasks — makes available via window.todayCleaningTasks
+(function pushTodaysTasksToDashboard(){
+    let today = new Date();
+    if(today.getFullYear()!=calendarYear || today.getMonth()!=calendarMonth) return;
+    let todayStr = `${calendarYear}-${String(calendarMonth+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+    let am = (calendarTasks.find(ct=>ct.date==todayStr&&ct.part=="AM")||{tasks:[]}).tasks;
+    let pm = (calendarTasks.find(ct=>ct.date==todayStr&&ct.part=="PM")||{tasks:[]}).tasks;
+    window.todayCleaningTasks = am.concat(pm).map(t=>t.title);
+})();
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    loadAll();
+    updateTaskCards();
+    renderCalendar();
+    renderShoppingList();
+});
+</script>
 </body>
 </html>
