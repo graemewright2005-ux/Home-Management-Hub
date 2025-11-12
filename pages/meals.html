@@ -92,7 +92,6 @@
         .tag { display:inline-block; padding:0.3rem 0.8rem; border-radius:6px; font-size:0.95em; font-weight:600; margin-right:0.3rem; margin-bottom:0.3rem; }
         .tag-type { background: rgba(102,126,234,0.15); color:#93c5fd; border:1px solid rgba(102,126,234,0.3);}
         .tag-diet { background: rgba(245,158,66,0.13); color: #ea580c; border: 1px solid #f59e42;}
-        .tag-nutri{ background:rgba(59,130,246,0.13); color:#38bdf8;}
         .card-servings { font-size:1.03em; color:var(--text-dim); margin-bottom:0.35em;}
         .card-qtys { font-size:1.03em; color:var(--accent); margin-bottom:0.23em;}
         .card-actions {
@@ -149,7 +148,6 @@
 </nav>
 <div class="container">
     <h1>Meals & Recipes</h1>
-    <!-- Only one manual button -->
     <div class="top-controls">
         <button class="btn btn-primary" onclick="openModal('add')">➕ Add Recipe</button>
     </div>
@@ -258,20 +256,9 @@
     </div>
 </div>
 <script>
-const NUTRI_DB = {
-    "chicken breast": {cal:165, protein:31, carb:0, fat:4, unit:"100g", time:20},
-    "egg": {cal:78, protein:6, carb:0.6, fat:5, unit:"1", time:5},
-    "flour": {cal:364, protein:10, carb:76, fat:1, unit:"100g", time:0},
-    "milk": {cal:42, protein:3.4, carb:5, fat:1, unit:"100ml", time:0},
-    "butter": {cal:717, protein:1, carb:1, fat:81, unit:"100g", time:0},
-    "rice": {cal:130, protein:2.7, carb:28, fat:0.3, unit:"100g", time:18},
-    "cod": {cal:82, protein:19, carb:0, fat:0.7, unit:"100g", time:10},
-    // Add more!
-};
 const LS_KEY = 'hubMeals';
 let MEALS = JSON.parse(localStorage.getItem(LS_KEY)||"[]");
 
-// Photo preview and encoding
 let photoDataUrl = '';
 function previewPhoto(event){
     const file = event.target.files[0];
@@ -320,7 +307,6 @@ function renderGrid(){
         empty.style.display='none';
         grid.innerHTML =
         mealsFiltered.map((m,idx)=>{
-            let nutrition = calcNutrition(m.ing, m.servings||1);
             let servingsFront = `<div class="card-servings">Serves: ${m.servings||1} adult${(m.servings||1)>1?'s':''}</div>`;
             let qtysView = m.ing && m.ing.length ? m.ing.map(i=>`<span>${ingredientQtyString(i)}</span>`).join(', ') : '';
             let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photocard" style="width:100%;height:100%;object-fit:cover;">` : m.emoji||'🍽️';
@@ -354,7 +340,6 @@ function renderGrid(){
                     <button class="btn btn-primary" onclick="addMealToPlannerDirect(${MEALS.indexOf(m)}, ${idx});event.stopPropagation()">Add to Planner</button>
                 </div>
             `;
-            let nutritionFront = `<span class="tag tag-nutri">Kcal: ${nutrition.calories}</span>`;
             return `
             <div class="card" onclick="viewMeal(${MEALS.indexOf(m)})">
                 ${m.fav?'<div class="fav">⭐</div>':''}
@@ -365,14 +350,12 @@ function renderGrid(){
                     ${mealTime} ${dietaryView}
                     ${servingsFront}
                     ${qtysView?'<div class="card-qtys">Ingredient quantities: '+qtysView+'</div>':''}
-                    <div>${nutritionFront}</div>
                     ${plannerPanel}
                 </div>
             </div>
         `}).join('');
     }
 }
-// Clean up split words (no "egg s", "baco n")
 function ingredientQtyString(ingredient){
     let cleaned = ingredient.replace(/\b(\w)\s+(\w)\b/g, '$1$2');
     cleaned = cleaned.replace(/\begg s\b/gi,"eggs").replace(/\bbaco n\b/gi,"bacon").replace(/\bsausag e\b/gi,"sausage");
@@ -383,51 +366,18 @@ function ingredientQtyString(ingredient){
     }
     return cleaned;
 }
-function calcNutrition(ingredients, servings){
-    let totals = {cal:0, protein:0, carbs:0, fat:0};
-    ingredients.forEach(line=>{
-        let lc = line.toLowerCase();
-        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|kg|ml|l|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
-        let qty=1, unit="g", food="";
-        if(match){
-            qty = parseFloat(match[1]);
-            unit = match[2]||"g";
-            food = match[3].replace(/s$/,"");
-        } else {
-            food = lc.replace(/s$/,"");
-        }
-        let nutri = NUTRI_DB[food.trim()];
-        if(nutri){
-            let adj = 1;
-            if(unit==="kg") adj = qty*10; // 1kg = 10x100g
-            else if(unit==="g"||unit==="ml") adj = qty/100;
-            else if(unit==="egg"||unit==="eggs") adj = qty;
-            else if(unit==="l") adj = qty*10; // 1l = 10x100ml
-            totals.cal += nutri.cal*adj;
-            totals.protein += nutri.protein*adj;
-            totals.carbs += nutri.carb*adj;
-            totals.fat += nutri.fat*adj;
-        }
-    });
-    return {
-        calories: Math.round(totals.cal/servings),
-        protein: Math.round(totals.protein/servings),
-        carbs: Math.round(totals.carbs/servings),
-        fat: Math.round(totals.fat/servings)
-    };
-}
 function estimateMealTime(ingredients) {
     let timeTotal = 0;
+    if (!ingredients) return 10;
     ingredients.forEach(line => {
         let lc = line.toLowerCase();
         let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|kg|ml|l|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
-        let food = match ? match[3].replace(/s$/,"") : lc.replace(/s$/,"");
-        let nutri = NUTRI_DB[food.trim()];
-        if(nutri && nutri.time) timeTotal += nutri.time;
+        // Heuristic: +5 min per ingredient, +10 for meats, +10 for oven/boil
+        timeTotal += 5;
+        if (lc.includes("chicken") || lc.includes("lamb") || lc.includes("beef") || lc.includes("pork")) timeTotal += 10;
+        if (lc.includes("oven") || lc.includes("roast") || lc.includes("boil")) timeTotal += 10;
     });
-    if(timeTotal===0 && ingredients.length) timeTotal = Math.ceil(ingredients.length/3)*10;
-    timeTotal = Math.ceil(timeTotal/10)*10;
-    return timeTotal || 10;
+    return Math.ceil(timeTotal/10)*10;
 }
 function addMealToPlannerDirect(mealIdx, idx){
     const day = document.getElementById(`plannerDay${idx}`).value;
@@ -442,10 +392,9 @@ function addMealToPlannerDirect(mealIdx, idx){
     localStorage.setItem('hubPlanner', JSON.stringify(planner));
     alert(`Added "${MEALS[mealIdx].title}" to planner for ${day} / ${time}`);
 }
-// View Meal
+
 function viewMeal(idx){
     let m = MEALS[idx];
-    let nutrition = calcNutrition(m.ing, m.servings||1);
     let servings = m.servings||1;
     let timeEstimate = typeof m.time === 'number'
         ? Math.ceil(m.time/10)*10
@@ -461,9 +410,6 @@ function viewMeal(idx){
         <div class="meal-photo-preview">${photo}</div>
         ${mealTime} ${dietaryView}
         <div class="modal-time">Estimated time: ${timeEstimate} mins</div>
-        <div class="modal-nutrition"><strong>Nutrition (per portion):</strong>
-            <div>Kcal: ${nutrition.calories}, Protein: ${nutrition.protein}g, Carbs: ${nutrition.carbs}g, Fat: ${nutrition.fat}g</div>
-        </div>
         ${urlView}
         <div style="margin-top:1em;">
             <strong>Ingredients and Quantities:</strong>
@@ -478,13 +424,11 @@ function viewMeal(idx){
     openModal('view');
 }
 
-// Save Recipe from Modal
 function saveRecipe(event){
     event.preventDefault();
     let title = document.getElementById('title').value.trim();
     let type = document.getElementById('type').value;
     let dietArray = Array.from(document.getElementById('diet').selectedOptions).map(opt=>opt.value);
-    // Accept commas, split into array, cleanup and remove empty values
     let ingRaw = document.getElementById('ingredients').value.split(',').flatMap(s=>s.split('\n')).map(t=>t.trim()).filter(t=>t);
     let instructions = document.getElementById('instructions').value;
     let servings = parseInt(document.getElementById('servings').value)||1;
