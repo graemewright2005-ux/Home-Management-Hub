@@ -1,79 +1,330 @@
-<!-- ... existing HTML ... -->
-<div class="task-cards-container" id="maintenanceCards"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meals & Recipes | Home Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.1/dist/tesseract.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #cbd5e1;
+            --border: #334155;
+            --accent: #f59e42;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6;}
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .nav-toggle { display: none; background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; padding:0.5rem;}
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
+        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem; transition:all 0.2s;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color:white;}
+        @media(max-width:768px){
+            .nav-toggle{display:block;}
+            .nav-menu{position:fixed;top:70px;left:0;right:0;background:var(--card);flex-direction:column;padding:1rem;transform:translateY(-100%);opacity:0;pointer-events:none;transition:all 0.3s;}
+            .nav-menu.active{transform:translateY(0);opacity:1;pointer-events:all;}
+            .nav-menu a{width:100%;}
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;}
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor:pointer; transition:all 0.2s;}
+        .btn-primary { background: var(--gradient); color:white;}
+        .btn-primary:hover{transform:translateY(-2px);}
+        .btn-secondary{ background:var(--card); color:var(--primary); border:1px solid var(--border);}
+        .btn-secondary:hover{ background:var(--primary); color:white;}
+        .filters-bar {display: flex; flex-wrap: wrap; gap: 1.3em; margin-bottom: 1.9em; align-items:center;}
+        .filters-bar select { min-width:120px; max-width:200px;}
+        .filters-bar label {color:var(--text-dim); font-size:0.97em;}
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:1.5rem; margin-bottom:2rem;}
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary);}
+        .card-img { width:100%; height:200px; background: var(--gradient); display: flex; align-items:center; justify-content:center; font-size:5rem;}
+        .card-img img { width:100%; height:100%; object-fit: cover;}
+        .fav { position:absolute;top:1rem;right:1rem; font-size:1.8rem; z-index:10;}
+        .card-body { padding:1.2rem;}
+        .card-title { font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;}
+        .tag { display:inline-block; padding:0.3rem 0.8rem; border-radius:6px; font-size:0.85rem; font-weight:600; margin:0.3rem 0.3rem 0.3rem 0;}
+        .tag-type { background: rgba(102,126,234,0.15); color:#93c5fd; border:1px solid rgba(102,126,234,0.3);}
+        .tag-diet { background: rgba(245,158,66,0.13); color: #ea580c; border: 1px solid #f59e42;}
+        .tag-cost { background: rgba(34,197,94,0.13); color: #22c55e; border: 1px solid #22c55e;}
+        .tag-nutri{ background:rgba(59,130,246,0.13); color:#38bdf8;}
+        .empty {text-align:center; padding:3rem 1rem; color:var(--text-dim);}
+        .empty-icon {font-size:4rem; margin-bottom:1rem; opacity:0.4;}
+        .card-servings { font-size:1em; color:var(--text-dim); margin-bottom:0.3em;}
+        .card-qtys { font-size:0.97em; color:var(--accent); margin-bottom:0.2em;}
+        .card-actions {margin-top:1em;}
+        .planner-select{margin-top:0.5em; font-size:1em;}
+        @media(max-width:480px){
+            .grid { grid-template-columns: 1fr; }
+            .header { flex-direction:column; align-items:flex-start;}
+            .filters-bar {flex-direction:column;}
+        }
+        /* Modal styles & OCR, unchanged */
+        .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; align-items: center; justify-content: center; padding: 1rem;}
+        .modal.active { display: flex;}
+        .modal-content { background: var(--card); border-radius: 16px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto;}
+        .modal-header { padding:1.4rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+        .modal-header h2 { margin: 0; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+        .modal-close { background:none; border:none; font-size:2rem; color:var(--text-dim); cursor:pointer;}
+        .modal-body { padding:1.5rem;}
+        .modal-footer { padding:1rem 1.5rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; justify-content:flex-end;}
+        .meal-plan-add { margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border);}
+        .form-group { margin-bottom:1rem;}
+        .form-group label { display:block; font-weight:600; margin-bottom:0.33rem;}
+        .checks{display:flex; flex-wrap:wrap; gap:0.8rem;}
+        .ocr-status { margin-top: 1em; color: var(--primary); }
+        .ocr-fields input, .ocr-fields textarea { width:100%; margin-bottom:0.75em; padding:0.5em;}
+        .ocr-fields label { font-weight:600; margin-top:0.45em;}
+        .equipment-list span { background:rgba(245,158,11,0.16); color:#b45309; border-radius:4px; padding:2px 8px; margin-right:6px;}
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-brand">🏠 Home Hub</div>
+        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="../index.html">📊 Dashboard</a></li>
+            <li><a href="meals.html" class="active">🍽️ Meals</a></li>
+            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="shopping.html">🛒 Shopping</a></li>
+            <li><a href="cleaning.html">🧹 Cleaning</a></li>
+            <li><a href="maintenance.html">🛠️ Maintenance</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="header">
+        <h1>Meals & Recipes</h1>
+        <button class="btn btn-primary" onclick="openModal('add')">➕ Add Recipe</button>
+        <input type="file" id="photoInput" accept="image/*" style="margin-left:2em;display:none;" onchange="handlePhotoUpload(event)">
+        <button class="btn btn-secondary" onclick="document.getElementById('photoInput').click()">📷 Add Recipe from Photo</button>
+    </div>
+    <div class="filters-bar">
+        <label for="dietFilter">Diet:</label>
+        <select id="dietFilter" onchange="filterMeals()">
+            <option value="">All</option>
+            <option value="meat">Meat</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="fish">Fish</option>
+        </select>
+        <label for="timeFilter">Meal Time:</label>
+        <select id="timeFilter" onchange="filterMeals()">
+            <option value="">All</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+        </select>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none;">
+        <div class="empty-icon">🍽️</div>
+        <h3>No meals found</h3>
+        <p>Try adding a recipe or using the OCR photo upload above.</p>
+    </div>
+</div>
+<!-- Modals (add/view/ocr etc) unchanged from previous versions, see below for additions to add modal -->
 <script>
-// ... existing JS ...
+const NUTRI_DB = {
+    "chicken breast": {cal:165, protein:31, carb:0, fat:4, cost:1.6, unit:"100g"},
+    "egg": {cal:78, protein:6, carb:0.6, fat:5, cost:0.25, unit:"1"},
+    "flour": {cal:364, protein:10, carb:76, fat:1, cost:0.12, unit:"100g"},
+    "milk": {cal:42, protein:3.4, carb:5, fat:1, cost:0.09, unit:"100ml"},
+    "butter": {cal:717, protein:1, carb:1, fat:81, cost:0.7, unit:"100g"},
+    "rice": {cal:130, protein:2.7, carb:28, fat:0.3, cost:0.22, unit:"100g"},
+    "cod": {cal:82, protein:19, carb:0, fat:0.7, cost:2.2, unit:"100g"},
+};
 
-// Show task cards for selected room
-function showTaskCardsByRoom() {
-    const room = document.getElementById('roomDropdown').value;
-    const container = document.getElementById('maintenanceCards');
-    container.innerHTML = '';
-    if (!room) return;
-    let roomTasks = RECOMMENDED_TASKS.filter(t => t.area === room);
-    if (roomTasks.length === 0) {
-        container.innerHTML = `<div style="color:var(--text-dim);margin:2em;text-align:center;">No recommended maintenance tasks for ${room}.</div>`;
-        return;
-    }
-    roomTasks.forEach((task, idx) => {
-        container.innerHTML += `
-            <div class="task-card" show>
-                <div class="task-title">${task.title}</div>
-                <div class="task-type">${task.type} &bull; ${task.frequency} &bull; <span class="area-tag">${task.area}</span></div>
-                <div class="task-desc">${task.desc}</div>
-                <div><strong>Routine:</strong> ${task.routine}</div>
-                <div style="margin-top:0.5em;"><strong>Instructions:</strong>
-                    <ul style="color:var(--text-dim);font-size:0.97em;margin-top:0.3em;">
-                        ${task.instructions.map(i=>`<li>${i}</li>`).join('')}
-                    </ul>
+const MEALS = JSON.parse(localStorage.getItem('hubMeals')||"[]");
+
+function filterMeals(){
+    renderGrid();
+}
+function getFilters(){
+    return {
+        diet: document.getElementById("dietFilter").value,
+        time: document.getElementById("timeFilter").value
+    };
+}
+function renderGrid(){
+    const grid=document.getElementById('grid');
+    const empty=document.getElementById('empty');
+    const {diet, time} = getFilters();
+    let mealsFiltered = MEALS.filter(m=>{
+        let dietMatch = !diet || (m.diet && m.diet.includes(diet));
+        let timeMatch = !time || (m.type && m.type.toLowerCase()==time);
+        return dietMatch && timeMatch;
+    });
+    grid.innerHTML = '';
+    if(mealsFiltered.length===0){
+        grid.style.display='none';
+        empty.style.display='block';
+    }else{
+        grid.style.display='grid';
+        empty.style.display='none';
+        grid.innerHTML =
+        mealsFiltered.map((m,idx)=>{
+            // Nutrition/cost calc
+            let nutrition = calcNutrition(m.ing, m.portions||1);
+            let cost = nutrition.costPerPortion || "—";
+            let servings = m.portions||1;
+            let qtysView = m.ing && m.ing.length ? m.ing.map(i=>`<span>${ingredientQtyString(i)}</span>`).join(', ') : '';
+            // Planner assignment panel
+            let plannerPanel = `
+                <div class="card-actions planner-select">
+                    <select id="plannerDay${idx}">
+                        <option value="">Day...</option>
+                        <option>Sunday</option>
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                        <option>Friday</option>
+                        <option>Saturday</option>
+                    </select>
+                    <select id="plannerTime${idx}">
+                        <option value="">Time...</option>
+                        <option>Breakfast</option>
+                        <option>Lunch</option>
+                        <option>Dinner</option>
+                        <option>Snack</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addMealToPlannerDirect(${MEALS.indexOf(m)}, ${idx})">Add to Planner</button>
                 </div>
-                <div class="task-actions">
-                    <div>
-                        <select id="plannerDay${idx}">
-                            <option value="">Day...</option>
-                            <option>Sunday</option>
-                            <option>Monday</option>
-                            <option>Tuesday</option>
-                            <option>Wednesday</option>
-                            <option>Thursday</option>
-                            <option>Friday</option>
-                            <option>Saturday</option>
-                        </select>
-                        <select id="plannerTime${idx}">
-                            <option value="">Time...</option>
-                            <option>Breakfast</option>
-                            <option>Lunch</option>
-                            <option>Dinner</option>
-                            <option>Snack</option>
-                        </select>
-                        <button class="task-card-btn" onclick="addTaskCardToPlanner(${idx})">Add to Planner</button>
-                    </div>
+            `;
+            return `
+            <div class="card">
+                ${m.fav?'<div class="fav">⭐</div>':''}
+                <div class="card-img">${m.emoji||'🍽️'}</div>
+                <div class="card-body">
+                    <div class="card-title">${m.title}</div>
+                    <div class="card-servings">Serves: ${servings} adult${servings>1?'s':''}</div>
+                    ${qtysView?'<div class="card-qtys">Ingredient quantities: '+qtysView+'</div>':''}
+                    <span class="tag tag-type">${(m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1))}</span>
+                    ${m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${d.replace('-',' ')}</span>`).join(''):""}
+                    ${nutrition.calories ? `<span class="tag tag-nutri">Kcal: ${nutrition.calories}</span>`:""}
+                    ${nutrition.protein ? `<span class="tag tag-nutri">Protein: ${nutrition.protein}g</span>`:""}
+                    ${nutrition.carbs ? `<span class="tag tag-nutri">Carbs: ${nutrition.carbs}g</span>`:""}
+                    ${nutrition.fat ? `<span class="tag tag-nutri">Fat: ${nutrition.fat}g</span>`:""}
+                    ${cost !== "—" ? `<span class="tag tag-cost">£${cost} per portion</span>`:""}
+                    ${plannerPanel}
                 </div>
             </div>
-        `;
-    });
+        `}).join('');
+    }
 }
-
-// Add card task to weekly planner (uses localStorage 'hubPlanner')
-function addTaskCardToPlanner(idx) {
-    const room = document.getElementById('roomDropdown').value;
-    let task = RECOMMENDED_TASKS.filter(t => t.area === room)[idx];
-    if (!task) return;
+// Add to planner directly from card
+function addMealToPlannerDirect(mealIdx, idx){
     const day = document.getElementById(`plannerDay${idx}`).value;
     const time = document.getElementById(`plannerTime${idx}`).value;
-    if (!day || !time) {
-        alert("Please select a day and a meal time for this maintenance task.");
-        return;
-    }
-    // Get planner structure, store in 'hubPlanner'
-    let planner = JSON.parse(localStorage.getItem('hubPlanner') || "[]");
-    while (planner.length < 7) planner.push({slots: {}});
+    if(!day || !time){ alert("Please select Day & Time for meal planner"); return; }
+    let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
+    while(planner.length < 7){ planner.push({slots:{}});}
     let dayIdx = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].indexOf(day);
-    if (dayIdx < 0) return;
-    if (!planner[dayIdx].slots) planner[dayIdx].slots = {};
-    planner[dayIdx].slots[time] = {...task, from: "maintenance"};
+    if(dayIdx<0) return;
+    if(!planner[dayIdx].slots) planner[dayIdx].slots={};
+    planner[dayIdx].slots[time] = {...MEALS[mealIdx]};
     localStorage.setItem('hubPlanner', JSON.stringify(planner));
-    alert(`Added "${task.title}" to planner for ${day} / ${time}`);
+    alert(`Added "${MEALS[mealIdx].title}" to planner for ${day} / ${time}`);
 }
-
-// ... existing window.onload, calendar etc. unchanged ...
+function ingredientQtyString(ingredient){
+    let match = ingredient.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
+    if(match){
+        let qty = match[1], unit = match[2]||"", rest = match[3];
+        return `${qty} ${unit} ${rest}`.trim();
+    }
+    return ingredient;
+}
+function calcNutrition(ingredients, portions){
+    let totals = {cal:0, protein:0, carbs:0, fat:0, cost:0};
+    ingredients.forEach(line=>{
+        let lc = line.toLowerCase();
+        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|ml|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
+        let qty=1, unit="g", food="";
+        if(match){
+            qty = parseFloat(match[1]);
+            unit = match[2]||"g";
+            food = match[3].replace(/s$/,"");
+        } else {
+            food = lc.replace(/s$/,"");
+        }
+        let nutri = NUTRI_DB[food.trim()];
+        if(nutri){
+            let adj = 1;
+            if(unit=="g"||unit=="ml") adj = qty/100;
+            if(unit=="egg"||unit=="eggs") adj = qty;
+            totals.cal += nutri.cal*adj;
+            totals.protein += nutri.protein*adj;
+            totals.carbs += nutri.carb*adj;
+            totals.fat += nutri.fat*adj;
+            totals.cost += nutri.cost*adj;
+        }
+    });
+    return {
+        calories: Math.round(totals.cal/portions),
+        protein: Math.round(totals.protein/portions),
+        carbs: Math.round(totals.carbs/portions),
+        fat: Math.round(totals.fat/portions),
+        costPerPortion: totals.cost ? totals.cost.toFixed(2) : "—"
+    };
+}
+// --- Render Modals and Add Modal dietary field ---
+function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
+function closeModal(id){ document.getElementById(id+'Modal').classList.remove('active'); }
+window.addEventListener('DOMContentLoaded',renderGrid);
+function saveRecipe(event){
+    event.preventDefault();
+    const dietValues = [];
+    document.querySelectorAll('#addModal input[name="diet"]:checked').forEach(i=>dietValues.push(i.value));
+    const newMeal = {
+        id: "m"+Date.now()+Math.random().toString(16).slice(2),
+        title: document.getElementById('title').value.trim(),
+        type: document.getElementById('type').value,
+        diet: dietValues,
+        ing: document.getElementById('ingredients').value.split('\n').filter(x=>x.trim()),
+        equipment: document.getElementById('equipment').value.split('\n').filter(x=>x.trim()),
+        instructions: document.getElementById('instructions').value,
+        portions: parseInt(document.getElementById('portions').value)||1,
+        fav: document.getElementById('fav').checked,
+        emoji: "🍽️"
+    };
+    MEALS.push(newMeal);
+    localStorage.setItem('hubMeals', JSON.stringify(MEALS));
+    document.getElementById('form').reset();
+    closeModal('add');
+    renderGrid();
+    alert('Recipe added!');
+}
+// --- Add Modal (update: dietary requirements) ---
+document.getElementById('addModal').innerHTML += `
+<div class="form-group">
+    <label>Dietary requirements</label>
+    <label><input type="checkbox" name="diet" value="meat"> Meat</label>
+    <label><input type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
+    <label><input type="checkbox" name="diet" value="vegan"> Vegan</label>
+    <label><input type="checkbox" name="diet" value="fish"> Fish</label>
+</div>
+`;
 </script>
+</body>
+</html>
