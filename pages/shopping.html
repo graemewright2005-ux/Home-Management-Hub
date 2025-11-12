@@ -52,10 +52,12 @@
         ul.shopping-list {list-style:none;margin:0;padding:0;}
         ul.shopping-list li {display:flex;align-items:center;gap:1em;padding:0.6em 0;border-bottom:1px solid var(--border);}
         ul.shopping-list li:last-child{border-bottom:none;}
-        .shop-item-qty {color:var(--accent);margin-left:1.1em;}
+        .shop-item-qty {margin-left:1.1em;color:var(--accent);}
+        .shop-item-size {margin-left:0.6em;font-size:0.97em;color:var(--text-dim);}
         .shop-remove {color:#fff;background:#ef4444;border:none;border-radius:7px;padding:0.35em 1.3em;cursor:pointer;margin-left:auto;}
         .shop-fav {color:#f59e42;font-size:1.3em;margin-right:0.5em;cursor:pointer;}
         .shop-checked {text-decoration:line-through; color:var(--text-dim);}
+        .shopping-clear {float:right;margin-left:auto;background:#ef4444;color:#fff;padding:0.4em 1.1em;border:none;border-radius:8px;cursor:pointer;margin-bottom:1em;}
         .empty { color: var(--text-dim); font-size:1.02rem;}
         @media(max-width:600px){
             .shopping-list-section {padding:1rem;}
@@ -83,12 +85,14 @@
     <div class="controls">
         <button class="btn" onclick="generateShoppingListFromPlanner()">Merge Weekly Meals</button>
         <button class="btn" onclick="pullCleaningSupplies()">Pull Cleaning Supplies</button>
+        <button class="shopping-clear" onclick="clearShoppingList()">Clear All</button>
     </div>
     <div class="shopping-list-section">
         <div class="section-title">🛒 Household Shopping List</div>
         <div class="add-row">
             <input type="text" id="shopInput" placeholder="Add item..." autocomplete="off">
             <input type="number" id="shopQty" placeholder="Qty" min="1" style="width:70px;" value="1">
+            <input type="text" id="shopSize" placeholder="Size/Amount (e.g. 500g, 2L, pack)" style="width:110px;">
             <button class="btn" onclick="addShoppingItem()">Add</button>
         </div>
         <ul class="shopping-list" id="shoppingList"></ul>
@@ -118,6 +122,7 @@ function renderShoppingList(){
             <input type="checkbox" ${item.checked ? 'checked':''} onclick="toggleChecked(${idx})">
             <span class="${item.checked?'shop-checked':''}">${item.name}</span>
             <span class="shop-item-qty">${item.qty>1?`x${item.qty}`:''}</span>
+            ${item.size ? `<span class="shop-item-size">${item.size}</span>` : ""}
             <button class="shop-remove" onclick="removeShoppingItem(${idx})">Remove</button>
         </li>
         `;
@@ -126,18 +131,20 @@ function renderShoppingList(){
 function addShoppingItem(){
     let val = document.getElementById('shopInput').value.trim();
     let qty = parseInt(document.getElementById('shopQty').value)||1;
+    let size = document.getElementById('shopSize').value.trim();
     if(!val) return;
     let list = getShopping();
-    let existing = list.findIndex(i=>i.name.toLowerCase() === val.toLowerCase());
+    let existing = list.findIndex(i=>i.name.toLowerCase() === val.toLowerCase() && (i.size||'') === size);
     if(existing>=0){
         list[existing].qty += qty;
     }else{
-        list.push({name: val, qty:qty, fav:false, checked:false});
+        list.push({name: val, qty:qty, size:size, fav:false, checked:false});
     }
     saveShopping(list);
     renderShoppingList();
     document.getElementById('shopInput').value = '';
     document.getElementById('shopQty').value = 1;
+    document.getElementById('shopSize').value = '';
 }
 function removeShoppingItem(idx){
     let list = getShopping();
@@ -157,6 +164,12 @@ function toggleFav(idx){
     saveShopping(list);
     renderShoppingList();
 }
+function clearShoppingList(){
+    if(confirm("Clear all items from the shopping list?")){
+        localStorage.removeItem('hubShopping');
+        renderShoppingList();
+    }
+}
 function generateShoppingListFromPlanner(){
     let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
     let weekIngredients = [];
@@ -170,25 +183,25 @@ function generateShoppingListFromPlanner(){
     function parseIngredient(ingredient) {
         let parts = ingredient.trim().split(" ");
         if (parts.length>=2 && !isNaN(parts[0])) {
-            return {name:parts.slice(1).join(" "), qty:Number(parts[0])};
+            return {qty:Number(parts[0]), size:parts[1], name:parts.slice(2).join(" ")};
         }
-        return {name:ingredient.trim(), qty:1};
+        return {name:ingredient.trim(), qty:1, size:""};
     }
     let merged = {};
     weekIngredients.forEach(i => {
-        let {name, qty} = parseIngredient(i);
-        let key = name.toLowerCase();
+        let {name, qty, size} = parseIngredient(i);
+        let key = (name+"_"+size).toLowerCase();
         if(name=='') return;
         if(merged[key]) merged[key].qty += qty;
-        else merged[key]={name, qty};
+        else merged[key]={name, qty, size};
     });
     let shopping = getShopping();
-    Object.values(merged).forEach(({name,qty}) => {
-        let idx = shopping.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());
+    Object.values(merged).forEach(({name,qty,size}) => {
+        let idx = shopping.findIndex(i=>(i.name.toLowerCase()+"_"+(i.size||"").toLowerCase())=== (name+"_"+size).toLowerCase());
         if(idx>=0) {
             shopping[idx].qty = (shopping[idx].qty||1)+qty;
         } else {
-            shopping.push({name, qty, fav:false, checked:false});
+            shopping.push({name, qty, size, fav:false, checked:false});
         }
     });
     saveShopping(shopping);
@@ -205,13 +218,16 @@ function pullCleaningSupplies() {
         return;
     }
     let shopping = getShopping();
-
     equipment.forEach(item => {
-        if (!shopping.some(s => s.name.toLowerCase() === item.toLowerCase())) {
-            shopping.push({ name: item, qty: 1, fav: false, checked: false });
+        // Support objects with name, size, qty if saved that way; otherwise treat as string
+        let name = typeof item === "object" ? item.name : item;
+        let qty = typeof item === "object" && item.qty ? item.qty : 1;
+        let size = typeof item === "object" && item.size ? item.size : "";
+        let exists = shopping.find(i=>i.name.toLowerCase() === name.toLowerCase() && (i.size||'') === size);
+        if(!exists){
+            shopping.push({ name, qty, size, fav: false, checked: false });
         }
     });
-
     saveShopping(shopping);
     renderShoppingList();
     alert("Cleaning supplies added to Shopping List!");
