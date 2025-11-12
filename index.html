@@ -12,12 +12,8 @@
             --bg: #0f172a;
             --card: #1e293b;
             --text: #f1f5f9;
-            --text-dim: #cbd5e1;
-            --border: #334155;
             --accent: #a78bfa;
-            --link: #a78bfa;
-            --link-hover: #fafcff;
-            --danger: #ef4444;
+            --border: #334155;
         }
         body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: var(--bg); color: var(--text);}
         .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
@@ -25,41 +21,68 @@
         .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
         .nav-toggle { display: none; background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem;}
         .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
-        .nav-menu a { padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; color: var(--text-dim); font-weight: 600; font-size: 0.95rem; transition: all 0.2s;}
+        .nav-menu a { padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; color: #d6c3fe; font-weight: 600; font-size: 0.95rem; transition: all 0.2s;}
         .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary);}
         .nav-menu a.active { background: var(--gradient); color: white;}
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
         h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 1rem 0;}
-        .welcome-msg {color: var(--text-dim); margin-top:-0.5em; margin-bottom:1.5em;}
-        .dashboard-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(330px,1fr)); gap:2rem; margin-top:2.2em;}
-        .card { background: var(--card); border:1px solid var(--border); border-radius:12px; padding:1.45rem 1.55rem 1.7rem 1.55rem; position:relative;}
-        .card-title {font-weight:700; font-size:1.18rem; margin-bottom:0.6em; color: var(--accent); letter-spacing:.01em;}
+        .welcome-msg {color: #cacde4; margin-bottom:1.3em;}
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(330px,1fr)); gap:2rem; margin-top:2.2em;}
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.55rem 1.7rem 1.3rem 1.7rem;
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* Ensures button area always at bottom */
+            position: relative;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1.18rem;
+            margin-bottom: 0.6em;
+            color: var(--accent);
+            letter-spacing: .01em;
+        }
+        .today-date {font-size:1.04em; color:var(--primary); margin-bottom:10px;}
         .card-list {list-style:none; padding:0; margin:0;}
         .card-list li {margin-bottom: 0.73em;}
         .tasks-today-empty {padding:1.3em 0.2em; color:var(--text);}
-        .today-date {font-size:1.04em; color:var(--primary); margin-bottom:10px;}
-        .card-actions {margin-top:1.1rem;}
-        .card-actions a, .card-actions button, .card-link {
+        .empty-icon { font-size: 2.7rem; margin-bottom: 0.4rem; opacity: 0.32;}
+        .card-bottom {
+            margin-top: auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+        }
+        .card-link {
             color: var(--card);
             font-weight: 600;
             text-decoration: underline;
             background: var(--accent);
-            padding: 7px 21px;
-            border-radius: 7px;
-            font-size: 1.02em;
-            display:inline-block;
-            margin-top: .7em;
+            padding: 15px 0;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 1.13em;
+            display: inline-block;
+            text-align: center;
             border: none;
             transition: background .2s, color .2s;
             outline: none;
             cursor: pointer;
         }
-        .card-link { text-decoration: underline; background: var(--accent);}
-        .card-actions a:hover, .card-link:hover, .card-actions button:hover { background: var(--link-hover); color: var(--primary-dark); }
-        .empty-icon { font-size: 2.7rem; margin-bottom: 0.4rem; opacity: 0.32;}
+        .card-link:focus, .card-link:hover {
+            background: #c4b5fd;
+            color: var(--primary-dark);
+        }
         @media (max-width: 950px){
             .dashboard-grid {grid-template-columns:1fr;}
             .container {padding:1.2rem 0.2rem;}
+            .card { padding:1.05rem .7rem 1.15rem .7rem; min-height:260px;}
+            .card-link {font-size:1em;}
         }
         @media (max-width: 768px) {
             .nav-toggle { display: block;}
@@ -67,17 +90,6 @@
             .nav-menu.active { transform: translateY(0); opacity: 1; pointer-events: all;}
             .nav-menu a { width: 100%;}
             .dashboard-grid {gap:1rem;}
-            .card { padding:1.05rem .7rem 1.22rem .7rem;}
-        }
-        /* Accessibility fixes for links/buttons at card bottom */
-        .card-link, .card-actions a, .card-actions button {
-            box-shadow: 0 1px 3px 0 rgba(102,126,234,0.04);
-            border: 2px solid transparent;
-            font-family: inherit;
-        }
-        .card-link:focus, .card-actions a:focus, .card-actions button:focus {
-            border: 2px solid var(--primary);
-            outline: none;
         }
     </style>
 </head>
@@ -110,7 +122,7 @@
                 <span class="empty-icon">🧹</span><br>
                 You have no cleaning tasks scheduled for today!
             </div>
-            <div class="card-actions">
+            <div class="card-bottom">
                 <a class="card-link" href="pages/cleaning.html">View Cleaning Calendar</a>
             </div>
         </section>
@@ -123,7 +135,7 @@
                 <span class="empty-icon">🍽️</span><br>
                 No meals planned yet.
             </div>
-            <div class="card-actions">
+            <div class="card-bottom">
                 <a class="card-link" href="pages/meals.html">See Meal Planner</a>
             </div>
         </section>
@@ -135,7 +147,7 @@
                 <span class="empty-icon">🛒</span><br>
                 Your shopping list is empty!
             </div>
-            <div class="card-actions">
+            <div class="card-bottom">
                 <a class="card-link" href="pages/shopping.html">Edit Shopping List</a>
             </div>
         </section>
@@ -185,8 +197,6 @@ function renderCleaningTasksToday() {
 }
 
 function getMealsToday() {
-    // Try to load from localStorage (hmhMealsList)
-    // Example structure: [{date: "2025-11-12", meal: "Spaghetti Bolognese"}, ...]
     let d = new Date();
     let todayStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     let list = [];
