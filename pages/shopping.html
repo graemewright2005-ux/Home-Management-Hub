@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Shopping List - Home Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping List & Essentials - Home Hub</title>
     <style>
         :root {
             --primary: #667eea;
@@ -14,78 +14,51 @@
             --text: #f1f5f9;
             --text-dim: #cbd5e1;
             --border: #334155;
+            --accent: #f59e42;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
         }
-        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; }
-        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-toggle { display: none; background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; }
-        .nav-menu { display: flex; gap: 0.5rem; list-style: none; }
-        .nav-menu a { padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; color: var(--text-dim); font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
-        .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
-        .nav-menu a.active { background: var(--gradient); color: white; }
-        @media (max-width: 768px) {
-            .nav-toggle { display: block; }
-            .nav-menu {
-                position: fixed; top: 70px; left: 0; right: 0;
-                background: var(--card);
-                flex-direction: column; padding: 1rem;
-                transform: translateY(-100%);
-                opacity: 0;
-                pointer-events: none; transition: all 0.3s;
-            }
-            .nav-menu.active {
-                transform: translateY(0); opacity: 1; pointer-events: all;
-            }
-            .nav-menu a { width: 100%; }
+        * { box-sizing: border-box; }
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .nav-toggle {display:none;}
+        .nav-menu {display:flex;gap:0.5rem;list-style:none;}
+        .nav-menu a {padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600;font-size:0.95rem; transition:all 0.2s;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color: white;}
+        @media(max-width:768px){
+            .nav-toggle{display:block;}
+            .nav-menu{position:fixed;top:70px;left:0;right:0;background:var(--card);flex-direction:column;padding:1rem;transform:translateY(-100%);opacity:0;pointer-events:none;transition:all 0.3s;}
+            .nav-menu.active{transform:translateY(0);opacity:1;pointer-events:all;}
+            .nav-menu a{width:100%;}
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .essentials-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem 1.6rem; margin-bottom: 2rem; }
-        .essentials-title { font-size: 1.2rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.9rem;}
-        .essentials-list { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem;}
-        .essential-item {background: rgba(102,126,234,0.08);border: 1px solid var(--border);border-radius: 8px;padding: 0.5rem 1.2rem;display: flex;align-items: center;gap: 0.6rem;font-size: 1rem;color: var(--text-dim);cursor: pointer;transition: border 0.2s, color 0.2s;}
-        .essential-item.fav {color: var(--primary);border-color: var(--primary);background: rgba(102,126,234,0.14);}
-        .essential-item .star {cursor: pointer;font-size: 1.2rem;}
-        .shopping-card {background: var(--card);border: 1px solid var(--border);border-radius: 12px;padding: 1.8rem 1.6rem;margin-bottom: 2rem;}
-        .shopping-title {font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem;background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-        .shopping-controls {margin-bottom: 1rem; display:flex; gap:0.5rem; flex-wrap:wrap;}
-        .btn {padding: 0.8rem 1.5rem;border-radius: 8px;font-weight: 600;cursor: pointer;border: none;background: var(--gradient); color: white;transition: all 0.2s;}
-        .btn:hover { transform: translateY(-2px);}
-        .btn-clear { background: #ef4444; color: #fff;}
-        .btn-clear:hover { background: #dc2626;}
-        .btn-secondary { background: var(--card); color: var(--primary); border: 1px solid var(--border);}
-        .btn-secondary:hover { background: var(--primary); color: white;}
-        input[type=text] { padding: 0.7rem 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 1rem; width: 220px; }
-        .list-section { margin-bottom: 2rem; }
-        .list {
-            border-radius: 12px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 1.2rem 1.6rem;
-        }
-        ul { list-style: none; margin: 0; padding: 0; }
-        .list li { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 1rem;}
-        .list li:last-child { border-bottom: none; }
-        .item-check { accent-color: var(--primary); margin-right:0.2rem;}
-        .item-name { flex: 1; }
-        .item-fav { font-size: 1.15rem; color: var(--primary); margin-right:0.3rem; cursor: pointer;}
-        .item-remove {color: #ef4444;font-size: 1.1rem; cursor:pointer;background: none; border:none; margin-left:0.2rem}
-        .item-qty {background:rgba(245,158,11,0.13); color:#f59e11; font-weight:600; border-radius:5px; padding:0.1em 0.5em; font-size:0.97em;}
-        .empty { text-align: center; padding: 2rem 1rem; color: var(--text-dim); }
-        .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.45;}
-        @media (max-width: 480px) {
-            .container { padding: 1.2rem 0.5rem;}
-            input[type=text] { width: 100%;}
-            .essentials-list { flex-direction: column;}
-            .list { padding: 0.7rem 0.6rem;}
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem;}
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0;}
+        .controls { display: flex; gap: 0.7em; margin-bottom: 2em; flex-wrap:wrap;}
+        .btn { padding:0.8rem 1.5rem; border-radius:8px; font-weight:600; cursor:pointer; border:none; background:var(--gradient); color:white; transition:all 0.2s;}
+        .btn:hover{transform:translateY(-2px);}
+        .btn-secondary{ background:var(--card); color:var(--primary); border:1px solid var(--border);}
+        .btn-secondary:hover{ background:var(--primary); color:white;}
+        .shopping-list-section {background:var(--card);border-radius:15px;padding:2rem 1.5rem;border:1px solid var(--border);}
+        .section-title { font-size:1.2rem; font-weight:800; margin-bottom:1.2em; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+        .add-row {display:flex;gap:0.7em;align-items:center;margin-bottom:1.2em;}
+        .add-row input {padding:0.6em 1em; border-radius:7px; border:1px solid var(--border);font-size:1em; background:var(--bg); color:var(--text);}
+        .add-row .btn {padding:0.6em 1.1em;}
+        ul.shopping-list {list-style:none;margin:0;padding:0;}
+        ul.shopping-list li {display:flex;align-items:center;gap:1em;padding:0.6em 0;border-bottom:1px solid var(--border);}
+        ul.shopping-list li:last-child{border-bottom:none;}
+        .shop-item-qty {color:var(--accent);margin-left:1.1em;}
+        .shop-remove {color:#fff;background:#ef4444;border:none;border-radius:7px;padding:0.35em 1.3em;cursor:pointer;margin-left:auto;}
+        .shop-fav {color:#f59e42;font-size:1.3em;margin-right:0.5em;cursor:pointer;}
+        .shop-checked {text-decoration:line-through; color:var(--text-dim);}
+        .empty { color: var(--text-dim); font-size:1.02rem;}
+        @media(max-width:600px){
+            .shopping-list-section {padding:1rem;}
         }
     </style>
 </head>
@@ -106,84 +79,111 @@
     </div>
 </nav>
 <div class="container">
-    <div class="header">
-        <h1>Shopping List & Essentials</h1>
+    <h1>Shopping List</h1>
+    <div class="controls">
+        <button class="btn" onclick="generateShoppingListFromPlanner()">Merge Weekly Meals</button>
+        <button class="btn" onclick="pullCleaningSupplies()">Pull Cleaning Supplies</button>
     </div>
-    <div class="essentials-card">
-        <div class="essentials-title">Household Essentials (Favourites)</div>
-        <div class="essentials-list" id="essentialsList"></div>
-        <form onsubmit="addEssential(event)" class="shopping-controls">
-            <input type="text" id="newEssential" placeholder="Add essential (e.g. Bin bags)">
-            <button class="btn btn-secondary" type="submit">Add Essential</button>
-        </form>
-    </div>
-    <div class="shopping-card">
-        <div class="shopping-title">Shopping List</div>
-        <div class="shopping-controls">
-            <input type="text" id="newItem" placeholder="Add item (e.g. Apples)">
-            <button class="btn btn-secondary" onclick="addItem()">Add Item</button>
-            <button class="btn" onclick="showFavourites()">⭐ Add Favourites</button>
-            <button class="btn-clear" onclick="clearList()">🧹 Clear List</button>
+    <div class="shopping-list-section">
+        <div class="section-title">🛒 Household Shopping List</div>
+        <div class="add-row">
+            <input type="text" id="shopInput" placeholder="Add item..." autocomplete="off">
+            <input type="number" id="shopQty" placeholder="Qty" min="1" style="width:70px;" value="1">
+            <button class="btn" onclick="addShoppingItem()">Add</button>
         </div>
-        <div class="shopping-controls">
-            <button class="btn btn-secondary" onclick="generateFromPlanner()">⏳ Update from Weekly Meals</button>
-        </div>
-        <div class="list-section">
-            <div class="list" id="shoppingList"></div>
-            <div class="empty" id="emptyList" style="display:none;">
-                <div class="empty-icon">🛒</div>
-                <h3>Your shopping list is empty</h3>
-                <p>Start adding items, use favourites, or generate from planned meals</p>
-            </div>
-        </div>
+        <ul class="shopping-list" id="shoppingList"></ul>
+        <div class="empty" id="emptyList" style="display:none;">All done! No items in shopping list.</div>
     </div>
 </div>
 <script>
-const DEFAULT_ESSENTIALS = [
-    {name:"Washing up liquid", fav:true}, {name:"Dishwasher tablets", fav:true},
-    {name:"Laundry detergent", fav:true}, {name:"Fabric softener", fav:true},
-    {name:"Bathroom cleaner", fav:true},{name:"Toilet roll", fav:true},
-    {name:"Kitchen roll", fav:true},{name:"Shampoo", fav:true},{name:"Conditioner", fav:true},
-    {name:"Deodorant (Men)", fav:true},{name:"Deodorant (Women)", fav:true},{name:"Deodorant (Children)", fav:true},
-    {name:"Coffee", fav:true},{name:"Tea", fav:true},
-];
-let essentials = [], shopping = [], autoGenerated = [];
-
-// Helper: Extract name/quantity from ingredient string, e.g. "2 eggs" -> {name:"eggs", qty:2}
-function parseIngredient(ingredient) {
-    let parts = ingredient.trim().split(" ");
-    if(parts.length>=2 && !isNaN(parts[0])) {
-        return {name:parts.slice(1).join(" "), qty:Number(parts[0])};
-    }
-    return {name:ingredient.trim(), qty:1};
+function getShopping(){
+    return JSON.parse(localStorage.getItem('hubShopping')||'[]');
 }
-// Merge ingredients into shopping list
-function mergeIngredients(ings) {
+function saveShopping(list){
+    localStorage.setItem('hubShopping', JSON.stringify(list));
+}
+function renderShoppingList(){
+    const list = getShopping();
+    const ul = document.getElementById('shoppingList');
+    ul.innerHTML = '';
+    if(list.length===0){
+        document.getElementById('emptyList').style.display='block';
+        return;
+    }
+    document.getElementById('emptyList').style.display='none';
+    list.forEach((item, idx) => {
+        ul.innerHTML += `
+        <li>
+            <span class="shop-fav" onclick="toggleFav(${idx})">${item.fav ? '⭐' : '☆'}</span>
+            <input type="checkbox" ${item.checked ? 'checked':''} onclick="toggleChecked(${idx})">
+            <span class="${item.checked?'shop-checked':''}">${item.name}</span>
+            <span class="shop-item-qty">${item.qty>1?`x${item.qty}`:''}</span>
+            <button class="shop-remove" onclick="removeShoppingItem(${idx})">Remove</button>
+        </li>
+        `;
+    });
+}
+function addShoppingItem(){
+    let val = document.getElementById('shopInput').value.trim();
+    let qty = parseInt(document.getElementById('shopQty').value)||1;
+    if(!val) return;
+    let list = getShopping();
+    let existing = list.findIndex(i=>i.name.toLowerCase() === val.toLowerCase());
+    if(existing>=0){
+        list[existing].qty += qty;
+    }else{
+        list.push({name: val, qty:qty, fav:false, checked:false});
+    }
+    saveShopping(list);
+    renderShoppingList();
+    document.getElementById('shopInput').value = '';
+    document.getElementById('shopQty').value = 1;
+}
+function removeShoppingItem(idx){
+    let list = getShopping();
+    list.splice(idx,1);
+    saveShopping(list);
+    renderShoppingList();
+}
+function toggleChecked(idx){
+    let list = getShopping();
+    list[idx].checked = !list[idx].checked;
+    saveShopping(list);
+    renderShoppingList();
+}
+function toggleFav(idx){
+    let list = getShopping();
+    list[idx].fav = !list[idx].fav;
+    saveShopping(list);
+    renderShoppingList();
+}
+function generateShoppingListFromPlanner(){
+    let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
+    let weekIngredients = [];
+    planner.forEach(slotObj=>{
+        Object.values(slotObj.slots||{}).forEach(meal=>{
+            if(meal && meal.ing){
+                weekIngredients.push(...meal.ing);
+            }
+        });
+    });
+    function parseIngredient(ingredient) {
+        let parts = ingredient.trim().split(" ");
+        if (parts.length>=2 && !isNaN(parts[0])) {
+            return {name:parts.slice(1).join(" "), qty:Number(parts[0])};
+        }
+        return {name:ingredient.trim(), qty:1};
+    }
     let merged = {};
-    ings.forEach(i => {
+    weekIngredients.forEach(i => {
         let {name, qty} = parseIngredient(i);
         let key = name.toLowerCase();
         if(name=='') return;
         if(merged[key]) merged[key].qty += qty;
         else merged[key]={name, qty};
     });
-    return Object.values(merged);
-}
-function getPlannerIngredients() {
-    let plannerData = JSON.parse(localStorage.getItem('hubPlanner')||"[]");
-    // Each item must have "ingredients", or if not, fallback to "meals"
-    let mealIngredients = [];
-    plannerData.forEach(day => {
-        if(day && day.meal && day.meal.ing) mealIngredients.push(...day.meal.ing);
-        else if(day && day.ingredients) mealIngredients.push(...day.ingredients);
-    });
-    return mealIngredients;
-}
-function generateFromPlanner(){
-    let ings = getPlannerIngredients();
-    let merged = mergeIngredients(ings);
-    // Add to shopping, merge quantities
-    merged.forEach(({name,qty}) => {
+    let shopping = getShopping();
+    Object.values(merged).forEach(({name,qty}) => {
         let idx = shopping.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());
         if(idx>=0) {
             shopping[idx].qty = (shopping[idx].qty||1)+qty;
@@ -191,126 +191,34 @@ function generateFromPlanner(){
             shopping.push({name, qty, fav:false, checked:false});
         }
     });
-    saveShopping();
-    renderShopping();
-    window.scrollTo({top:document.getElementById('shoppingList').offsetTop-60, behavior:"smooth"});
+    saveShopping(shopping);
+    alert("Weekly meals added to shopping list!");
+    renderShoppingList();
 }
-function init() {
-    essentials = JSON.parse(localStorage.getItem('hubEssentials')) || DEFAULT_ESSENTIALS;
-    shopping = JSON.parse(localStorage.getItem('hubShopping')) || [];
-    // Auto-generate from planner on load
-    let ings = getPlannerIngredients();
-    let merged = mergeIngredients(ings);
-    merged.forEach(({name,qty})=>{
-        let idx = shopping.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());
-        if(idx>=0) {
-            shopping[idx].qty = (shopping[idx].qty||1)+qty;
-        } else {
-            shopping.push({name, qty, fav:false, checked:false});
+
+// NEW: Pull Cleaning Supplies
+function pullCleaningSupplies() {
+    // Get equipment/cleaning supplies from cleaning page's localStorage
+    const equipment = JSON.parse(localStorage.getItem('hubCleaningEquipment') || "[]");
+    if(!equipment || !equipment.length){
+        alert("No cleaning supplies found.");
+        return;
+    }
+    let shopping = getShopping();
+
+    equipment.forEach(item => {
+        if (!shopping.some(s => s.name.toLowerCase() === item.toLowerCase())) {
+            shopping.push({ name: item, qty: 1, fav: false, checked: false });
         }
     });
-    saveShopping();
-    renderEssentials();
-    renderShopping();
+
+    saveShopping(shopping);
+    renderShoppingList();
+    alert("Cleaning supplies added to Shopping List!");
 }
-function saveEssentials() {
-    localStorage.setItem('hubEssentials', JSON.stringify(essentials));
-}
-function saveShopping() {
-    localStorage.setItem('hubShopping', JSON.stringify(shopping));
-}
-function renderEssentials() {
-    const list = document.getElementById('essentialsList');
-    list.innerHTML = essentials.map((e,idx) =>
-        `<div class="essential-item${e.fav?' fav':''}" title="Click to add to shopping" onclick="addEssentialToShopping('${e.name}')">
-            <span>${e.name}</span>
-            <span class="star" onclick="toggleFavourite(event,${idx})">${e.fav?'⭐':'☆'}</span>
-        </div>`
-    ).join('');
-}
-function addEssential(event) {
-    event.preventDefault();
-    const val = document.getElementById('newEssential').value.trim();
-    if (val && !essentials.some(e=>e.name.toLowerCase()===val.toLowerCase())) {
-        essentials.push({name: val, fav: false});
-        saveEssentials();
-        renderEssentials();
-    }
-    document.getElementById('newEssential').value = '';
-}
-function toggleFavourite(evt, idx){
-    evt.stopPropagation();
-    essentials[idx].fav = !essentials[idx].fav;
-    saveEssentials();
-    renderEssentials();
-}
-function addEssentialToShopping(name){
-    let idx = shopping.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());
-    if(idx>=0) {
-        shopping[idx].qty = (shopping[idx].qty||1)+1;
-    } else {
-        shopping.push({name, qty:1, fav: getEssentialFav(name), checked:false});
-    }
-    saveShopping();
-    renderShopping();
-}
-function getEssentialFav(name){
-    const e = essentials.find(e=>e.name.toLowerCase()===name.toLowerCase());
-    return e ? e.fav : false;
-}
-function showFavourites(){
-    essentials.filter(e=>e.fav).forEach(e=>addEssentialToShopping(e.name));
-}
-function renderShopping() {
-    document.getElementById('emptyList').style.display = shopping.length ? "none" : "block";
-    const ul = document.createElement('ul');
-    shopping.forEach((item,idx) => {
-        ul.innerHTML += `
-        <li>
-            <input type="checkbox" class="item-check" ${item.checked?'checked':''} onchange="toggleChecked(${idx})">
-            <span class="item-name${item.checked?' item-checked':''}">${item.name}</span>
-            ${item.qty>1?`<span class="item-qty">x${item.qty}</span>`:""}
-            ${item.fav?'<span class="item-fav" title="Favourite">⭐</span>':''}
-            <button class="item-remove" onclick="removeItem(${idx})" title="Remove">&times;</button>
-        </li>`;
-    });
-    document.getElementById('shoppingList').innerHTML = '';
-    document.getElementById('shoppingList').appendChild(ul);
-}
-function addItem() {
-    const val = document.getElementById('newItem').value.trim();
-    if (val) {
-        // Attempt quantity parse, e.g. "2 apples"
-        let {name,qty} = parseIngredient(val);
-        let idx = shopping.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());
-        if(idx>=0) {
-            shopping[idx].qty = (shopping[idx].qty||1) + qty;
-        } else {
-            shopping.push({name, qty, fav:false, checked:false});
-        }
-        saveShopping();
-        renderShopping();
-    }
-    document.getElementById('newItem').value = '';
-}
-function removeItem(idx){
-    shopping.splice(idx,1);
-    saveShopping();
-    renderShopping();
-}
-function toggleChecked(idx){
-    shopping[idx].checked = !shopping[idx].checked;
-    saveShopping();
-    renderShopping();
-}
-function clearList(){
-    if (confirm("Clear the entire shopping list?")) {
-        shopping = [];
-        saveShopping();
-        renderShopping();
-    }
-}
-window.addEventListener('DOMContentLoaded', init);
+
+// INIT
+window.addEventListener('DOMContentLoaded',renderShoppingList);
 </script>
 </body>
 </html>
