@@ -1,285 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Maintenance & Home Tasks Dashboard - Home Hub</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --primary: #667eea;
-            --primary-dark: #764ba2;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --text-dim: #cbd5e1;
-            --border: #334155;
-            --seasonal: #f59e42;
-            --overdue: #ef4444;
-            --accent: #f59e42;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-        .nav {
-            background: var(--card);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
-            position: sticky; top: 0; z-index: 100;
-        }
-        .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        .nav-menu {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-        }
-        .nav-menu a {
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-        .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
-        .nav-menu a.active { background: var(--gradient); color: white; }
-        @media (max-width: 768px) {
-            .nav-toggle { display: block; }
-            .nav-menu {
-                position: fixed; top: 70px; left: 0; right: 0;
-                background: var(--card);
-                flex-direction: column; padding: 1rem;
-                transform: translateY(-100%);
-                opacity: 0;
-                pointer-events: none; transition: all 0.3s;
-            }
-            .nav-menu.active {
-                transform: translateY(0); opacity: 1; pointer-events: all;
-            }
-            .nav-menu a { width: 100%; }
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
-        .main-section { flex: 1 1 700px; }
-        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .today-date {font-size:1.04rem;color:var(--text-dim);margin-bottom:6px;}
-        .filters {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.1rem 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .filter-group { margin-bottom: 1rem; }
-        .filter-label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .filter-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .filter-btn {
-            padding: 0.57rem 1.1rem;
-            border: 2px solid var(--border);
-            background: transparent;
-            border-radius: 8px;
-            color: var(--text-dim);
-            font-weight: 600;
-            font-size: 0.92rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .filter-btn.active { background: var(--gradient); color: white; border-color: transparent; }
-        select, input[type="search"], input[type="text"], input[type="number"], input[type="date"] {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
-        .calendar-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        .calendar-table th, .calendar-table td {
-            padding: 0.5rem 0.6rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.99rem;
-        }
-        .calendar-table th {
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1rem;
-        }
-        .seasonal { color: var(--seasonal); }
-        .overdue { color: var(--overdue); font-weight:700;}
-        .area-tag {
-            display: inline-block;
-            padding: 0.22rem 0.84rem;
-            border-radius: 6px;
-            font-size: 0.87rem;
-            font-weight: 600;
-            margin: 0.18rem 0.3rem 0 0;
-            background: rgba(102,126,234,0.1); color: #93c5fd; border: 1px solid rgba(102,126,234,0.22);
-            text-transform: capitalize;
-        }
-        .seasonal-tag {
-            background: rgba(245,158,66,0.16); color: #f59e42; border: 1px solid rgba(245,158,66,0.26);
-        }
-        .service-tag {
-            background: rgba(34,197,94,0.13); color: #86efac; border: 1px solid rgba(34,197,94,0.20);
-        }
-        .appliance-tag {
-            background: rgba(168,85,247,0.12); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.20);
-        }
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            margin-right: 0.3rem;
-            margin-bottom:0.4rem;
-            background: var(--gradient); color: #fff; transition: all 0.2s;
-        }
-        .btn:hover { transform: translateY(-2px);}
-        /* Maintenance cards styles */
-        .task-cards-container { display: flex; flex-wrap: wrap; gap: 1.2em; margin-bottom: 2em;}
-        .task-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            min-width: 260px;
-            max-width: 340px;
-            flex: 1 1 240px;
-            padding: 1.1em 1.2em;
-            margin-bottom: 0.7em;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            display: none;
-            transition: box-shadow 0.2s;
-        }
-        .task-card[show] { display: block; }
-        .task-title { font-weight: bold; margin-bottom: 0.4em; font-size: 1.15em; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .task-type { font-size: 0.95em; color: var(--text-dim); margin-bottom: 0.2em;}
-        .task-desc { margin-bottom: 0.4em; }
-        .task-actions { margin-top: 0.8em; display: flex; gap: 0.7em;}
-        .task-card-btn { background: var(--gradient); color: #fff; border: none; border-radius: 7px; padding: 0.5em 1.1em; font-size: 0.97em; cursor:pointer; }
-        .task-card-btn:hover { background: var(--primary-dark); }
-        @media (max-width: 950px) {
-            .task-cards-container { flex-direction: column;}
-            .task-card { max-width: 100%; min-width: 0; }
-        }
-    </style>
-</head>
-<body>
-<nav class="nav">
-    <div class="nav-content">
-        <div class="nav-brand">🏠 Home Hub</div>
-        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
-        <ul class="nav-menu" id="navMenu">
-            <li><a href="../index.html">📊 Dashboard</a></li>
-            <li><a href="meals.html">🍽️ Meals</a></li>
-            <li><a href="planner.html">📅 Planner</a></li>
-            <li><a href="shopping.html">🛒 Shopping</a></li>
-            <li><a href="cleaning.html">🧹 Cleaning</a></li>
-            <li><a href="maintenance.html" class="active">🛠️ Maintenance</a></li>
-            <li><a href="settings.html">⚙️ Settings</a></li>
-        </ul>
-    </div>
-</nav>
-<div class="container">
-    <div class="main-section">
-        <div class="header">
-            <h1>Maintenance & Home Tasks Dashboard</h1>
-            <span class="today-date" id="todayDate"></span>
-            <button class="btn" onclick="openModal('add')">➕ Manual Add Task</button>
-        </div>
-        <div class="filters">
-            <div class="filter-group">
-                <div class="filter-label">Show tasks for room:</div>
-                <select id="roomDropdown" onchange="showTaskCardsByRoom()" style="max-width:260px;">
-                    <option value="">Select Room...</option>
-                    <option>Kitchen</option>
-                    <option>Bathroom</option>
-                    <option>Bedroom</option>
-                    <option>Living</option>
-                    <option>Garden</option>
-                    <option>Conservatory</option>
-                    <option>Garage</option>
-                    <option>Loft</option>
-                    <option>Office</option>
-                    <option>Other</option>
-                </select>
-            </div>
-        </div>
-        <div class="task-cards-container" id="maintenanceCards"></div>
-        <!-- ...rest of your filters, dashboard, calendar, todo, modals etc. unchanged... -->
-    </div>
-    <!-- To Do section etc. unchanged -->
-</div>
+<!-- ... Existing HTML above this section ... -->
+<style>
+.task-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2em;
+    margin-bottom: 2em;
+    align-items: stretch; /* ensure all cards stretch equally */
+}
+.task-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    min-width: 260px;
+    max-width: 340px;
+    flex: 1 1 240px;
+    padding: 1.1em 1.2em;
+    margin-bottom: 0.7em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100%; /* ensures all cards fill height of grid item */
+}
+.task-card-content { /* wrap all non-action content in this */
+    width: 100%;
+}
+.task-actions {
+    margin-top: auto; /* this pushes actions to the bottom always */
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+</style>
+...
+<!-- Maintenance Cards Section -->
+<div class="task-cards-container" id="maintenanceCards"></div>
 <script>
-document.getElementById("todayDate").textContent = "Tuesday, 11 November 2025";
-
-// All recommended maintenance tasks (shown as cards when filtered by room)
-const RECOMMENDED_TASKS = [
-    {title:"Clean extractor fan", area:"Bathroom", type:"Appliance", frequency:"monthly", desc:"Remove cover, clean dust, reset.", routine:"15th", instructions:["Remove cover","Clean dust","Reset"]},
-    {title:"Descale shower head", area:"Bathroom", type:"General", frequency:"seasonal", desc:"Remove shower head and soak in descaler.", routine:"Spring", instructions:["Remove shower head","Soak in descaler", "Rinse and replace"]},
-    {title:"Check for leaks", area:"Bathroom", type:"General", frequency:"monthly", desc:"Inspect around sink, toilet and bath.", routine:"First Monday", instructions:["Inspect around sink, toilet and bath"]},
-
-    {title:"Clean oven", area:"Kitchen", type:"Appliance", frequency:"monthly", desc:"Remove racks, apply oven cleaner, wipe clean.", routine:"End of month", instructions:["Remove racks","Apply oven cleaner","Wipe clean"]},
-    {title:"Defrost freezer", area:"Kitchen", type:"Appliance", frequency:"yearly", desc:"Turn off freezer, remove ice, clean shelves.", routine:"December", instructions:["Turn off freezer","Remove ice","Clean shelves"]},
-    {title:"Check appliance hoses", area:"Kitchen", type:"General", frequency:"monthly", desc:"Inspect washing machine and dishwasher hoses.", routine:"Second Friday", instructions:["Inspect washing machine and dishwasher hoses"]},
-
-    {title:"Mow lawn", area:"Garden", type:"General", frequency:"weekly", desc:"Check mower, mow evenly.", routine:"Saturday", instructions:["Check mower","Mow evenly"]},
-    {title:"Tree pruning", area:"Garden", type:"Seasonal", frequency:"seasonal", desc:"Prune before budding, remove dead wood.", routine:"Spring", instructions:["Prune before budding", "Remove dead wood"]},
-    {title:"Clean patio", area:"Garden", type:"General", frequency:"monthly", desc:"Sweep, scrub stains.", routine:"Last weekend", instructions:["Sweep","Scrub stains"]},
-
-    {title:"Dust furniture", area:"Living", type:"General", frequency:"weekly", desc:"Wipe surfaces, vacuum behind furniture.", routine:"Friday", instructions:["Wipe surfaces","Vacuum behind furniture"]},
-    {title:"Test smoke alarm", area:"Living", type:"Appliance", frequency:"monthly", desc:"Press test button, change battery if needed.", routine:"First day", instructions:["Press test button","Change battery if needed"]},
-
-    {title:"Flip mattress", area:"Bedroom", type:"General", frequency:"seasonal", desc:"Vacuum, rotate and flip.", routine:"March/Sept", instructions:["Vacuum first","Rotate and flip"]},
-    {title:"Clean under bed", area:"Bedroom", type:"General", frequency:"monthly", desc:"Move storage boxes, vacuum.", routine:"15th", instructions:["Move storage boxes","Vacuum"]},
-
-    {title:"Oil hinges on garage door", area:"Garage", type:"General", frequency:"monthly", desc:"Check and oil hinges.", routine:"First Saturday", instructions:["Check and oil hinges"]},
-    {title:"Test garage remote", area:"Garage", type:"Appliance", frequency:"monthly", desc:"Replace batteries if needed.", routine:"First Monday", instructions:["Replace batteries if needed"]},
-
-    {title:"Boiler service", area:"Loft", type:"Service", frequency:"yearly", desc:"Book engineer, check pressure.", routine:"November", instructions:["Book engineer","Check pressure"]},
-    {title:"Check insulation", area:"Loft", type:"General", frequency:"yearly", desc:"Inspect insulation coverage.", routine:"Autumn", instructions:["Inspect insulation coverage"]},
-
-    {title:"Clean monitor screen", area:"Office", type:"General", frequency:"monthly", desc:"Wipe with microfibre cloth.", routine:"15th", instructions:["Wipe with microfibre cloth"]},
-
-    {title:"Window cleaning", area:"Conservatory", type:"General", frequency:"monthly", desc:"Clean inside and outside.", routine:"End of month", instructions:["Clean inside and outside"]},
-    // Other tasks can go here ...
-];
-
+// ...existing JS...
 // Show task cards for selected room
 function showTaskCardsByRoom() {
     const room = document.getElementById('roomDropdown').value;
@@ -294,14 +52,16 @@ function showTaskCardsByRoom() {
     roomTasks.forEach((task, idx) => {
         container.innerHTML += `
             <div class="task-card" show>
-                <div class="task-title">${task.title}</div>
-                <div class="task-type">${task.type} &bull; ${task.frequency} &bull; <span class="area-tag">${task.area}</span></div>
-                <div class="task-desc">${task.desc}</div>
-                <div><strong>Routine:</strong> ${task.routine}</div>
-                <div style="margin-top:0.5em;"><strong>Instructions:</strong>
-                    <ul style="color:var(--text-dim);font-size:0.97em;margin-top:0.3em;">
-                        ${task.instructions.map(i=>`<li>${i}</li>`).join('')}
-                    </ul>
+                <div class="task-card-content">
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-type">${task.type} • ${task.frequency} • <span class="area-tag">${task.area}</span></div>
+                    <div class="task-desc">${task.desc}</div>
+                    <div><strong>Routine:</strong> ${task.routine}</div>
+                    <div style="margin-top:0.5em;"><strong>Instructions:</strong>
+                        <ul style="color:var(--text-dim);font-size:0.97em;margin-top:0.3em;">
+                            ${task.instructions.map(i=>`<li>${i}</li>`).join('')}
+                        </ul>
+                    </div>
                 </div>
                 <div class="task-actions">
                     <button class="task-card-btn" onclick="addTaskCardToPlanner(${idx})">Add to Calendar</button>
@@ -310,36 +70,6 @@ function showTaskCardsByRoom() {
         `;
     });
 }
-
-// Add card task to main maintenance list (for calendar/planner)
-function addTaskCardToPlanner(idx) {
-    // You can tailor this to push into your planner array/localStorage as needed.
-    const room = document.getElementById('roomDropdown').value;
-    let task = RECOMMENDED_TASKS.filter(t => t.area === room)[idx];
-    if (!task) return;
-    // Dummy integration (append to maintenance, then refresh calendar)
-    if (!window.maintenance) window.maintenance = [];
-    const exists = window.maintenance.some(t => t.title === task.title && t.area === task.area);
-    if (!exists) {
-        // Add due date logic here if needed
-        let cloned = {...task, due: "2025-11-20", active:true, history: []};
-        window.maintenance.push(cloned);
-        localStorage.setItem('hubMaintenance', JSON.stringify(window.maintenance));
-        alert(`Added "${task.title}" to your calendar!`);
-        if(typeof renderCalendar === "function") renderCalendar();
-    }
-}
-
-
-// --- PATCH YOUR INIT TO LOAD MAINTENANCE FROM LOCALSTORAGE ---
-window.addEventListener('DOMContentLoaded',function(){
-    // Load all main maintenance tasks (already added manually or via card)
-    window.maintenance = JSON.parse(localStorage.getItem('hubMaintenance') || "[]");
-    // Render rest of page as usual
-    // Optionally: renderTodo(); applyFilters(); renderCalendar();
-    if (typeof renderCalendar === "function") renderCalendar();
-});
+// ...existing JS continued...
 </script>
-<!-- ...modals, todo, calendar, etc. from your existing maintenance.html, unchanged... -->
-</body>
-</html>
+<!-- ... Existing HTML below this section ... -->
