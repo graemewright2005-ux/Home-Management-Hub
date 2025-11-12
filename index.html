@@ -2,90 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Dashboard - Home Hub</title>
+    <title>Home Management Hub - Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <style>
         :root {
             --primary: #667eea;
             --primary-dark: #764ba2;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 98%);
             --bg: #0f172a;
             --card: #1e293b;
             --text: #f1f5f9;
             --text-dim: #cbd5e1;
             --border: #334155;
-            --accent: #f59e42;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box;}
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+        body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: var(--bg); color: var(--text);}
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .nav-toggle { display: none; background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem;}
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
+        .nav-menu a { padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; color: var(--text-dim); font-weight: 600; font-size: 0.95rem; transition: all 0.2s;}
+        .nav-menu a:hover { background: rgba(102, 126, 234, 0.1); color: var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color: white;}
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
+        h1 { font-size: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 1rem 0;}
+        .dashboard-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(330px,1fr)); gap:2rem; margin-top:2rem;}
+        .card { background: var(--card); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1.6rem 1.4rem 1.6rem; position:relative;}
+        .card-title {font-weight:700; font-size:1.1rem; margin-bottom:0.5em; background: var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .card-list {list-style:none; padding:0; margin:0;}
+        .card-list li {margin-bottom: 0.75em;}
+        .tasks-today-empty {padding:1.5em; color:var(--text-dim;}
+        .today-date {font-size:1.15em; color:var(--primary);}
+        .card-actions {margin-top:1rem;}
+        .card-actions a {color:var(--primary); font-weight:600; text-decoration:none; border-radius:6px; padding:5px 20px; background: var(--gradient); color:white; margin-right:0.4em;}
+        .card-actions a:hover {background:var(--primary-dark); color:white;}
+        @media (max-width: 950px){
+            .dashboard-grid {grid-template-columns:1fr;}
+            .container {padding:1.2rem 0.2rem;}
         }
-        .nav {background: var(--card);border-bottom: 1px solid var(--border);padding: 1rem 1.5rem;position: sticky;top: 0;z-index: 100;}
-        .nav-content {max-width: 1400px;margin: 0 auto;display: flex;justify-content: space-between;align-items: center;}
-        .nav-brand {font-size: 1.5rem;font-weight: 800;background: var(--gradient);-webkit-background-clip: text;-webkit-text-fill-color: transparent;}
-        .nav-toggle {display: none;background: none;border: none;color: var(--primary);font-size: 1.5rem;cursor:pointer;padding: 0.5rem;}
-        .nav-menu {display: flex;gap: 0.5rem;list-style: none;}
-        .nav-menu a {padding: 0.6rem 1.2rem;border-radius: 8px;text-decoration: none;color: var(--text-dim);font-weight: 600;font-size: 0.95rem;transition: all 0.2s;}
-        .nav-menu a:hover {background: rgba(102,126,234,0.1);color: var(--primary);}
-        .nav-menu a.active {background: var(--gradient);color: white;}
         @media (max-width: 768px) {
-            .nav-toggle {display: block;}
-            .nav-menu {
-                position: fixed;top: 70px;left: 0;right: 0;
-                background: var(--card);flex-direction: column;padding: 1rem;
-                transform: translateY(-100%);
-                opacity: 0;pointer-events: none;transition: all 0.3s;
-            }
-            .nav-menu.active {transform: translateY(0);opacity: 1;pointer-events: all;}
-            .nav-menu a {width: 100%;}
+            .nav-toggle { display: block;}
+            .nav-menu { position: fixed; top: 70px; left: 0; right: 0; background: var(--card); flex-direction: column; padding: 1rem; transform: translateY(-100%); opacity: 0; pointer-events: none; transition: all 0.3s;}
+            .nav-menu.active { transform: translateY(0); opacity: 1; pointer-events: all;}
+            .nav-menu a { width: 100%;}
         }
-        .container {max-width: 1400px;margin: 0 auto;padding: 2rem 1.5rem;}
-        .header {display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:2rem;margin-bottom:2rem;}
-        h1 {font-size:2rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;}
-        .todays-date {font-size:1.09rem;color:var(--text-dim);font-weight:500;margin-bottom:6px;}
-        .dashboard-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:2rem;}
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.4rem 1.2rem 1rem 1.2rem;
-            box-shadow: 0 0 6px rgba(0,0,0,0.03);
-            min-height: 215px;
-            position: relative;
-        }
-        .card-title {
-            font-size: 1.13rem;font-weight: 700; margin-bottom: 0.7rem;background: var(--gradient);-webkit-background-clip: text;-webkit-text-fill-color: transparent;
-        }
-        .card-link {float:right;text-decoration:none;color: var(--accent);font-size:1.04rem;}
-        .list-group {margin-bottom:1rem;}
-        .list-group li {margin-bottom:0.57rem;}
-        .empty {color:var(--text-dim); font-size:1.04rem;}
-        .meal-title {font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
-        .tag {
-            display:inline-block; padding:0.20em 0.8em; border-radius:6px; 
-            font-size:0.92em; background:rgba(102,126,234,0.09);color:var(--primary);
-            margin:0 0.25em 0.27em 0; text-transform:capitalize;border:1px solid var(--border);
-        }
-        .tag-type {background:rgba(102,126,234,0.17);color:#93c5fd;border:1px solid rgba(102,126,234,0.26);}
-        .tag-area {background:rgba(245,158,66,0.13);color:#f59e42;border:1px solid rgba(245,158,66,0.25);}
-        .btn {
-            padding: 0.65rem 1.2rem;
-            border-radius: 7px;
-            font-weight: 600;
-            cursor:pointer;
-            border: none;
-            background: var(--gradient); color: white;
-            transition: all 0.2s;
-        }
-        .btn:hover {transform:translateY(-1px);}
-        .quick-add-form {display: flex; gap:0.25em; flex-wrap:wrap;align-items:center;margin-top:0.4em;}
-        .quick-add-form input[type=text], .quick-add-form input[type=number], .quick-add-form select {
-            padding:0.46rem 0.85rem; border:2px solid var(--border); border-radius:7px; background:var(--bg);color:var(--text);font-size:1rem;}
-        .quick-add-form input[type=number]{max-width:65px;}
-        .quick-add-form .btn {padding:0.5rem 1.3rem;}
+        .welcome-msg {color: var(--text-dim); margin-top:-0.5em; margin-bottom:1.5em;}
+        .overview-row {display:flex; gap:1em; flex-wrap:wrap;}
+        .overview-card {background:var(--gradient); color:white; border-radius:9px; padding:1.1em 2em; min-width:160px; box-shadow:0 2px 7px rgba(102,126,234,0.05);}
+        .overview-value {font-size:2em; font-weight:800;}
+        .overview-label {font-size:1em; font-weight:600; letter-spacing:0.03em;}
+        .empty-icon { font-size: 2.7rem; margin-bottom: 0.4rem; opacity: 0.4;}
+        a.cleaning-btn { background:var(--gradient); color:white; text-decoration:none; padding:7px 18px; border-radius:7px; display:inline-block; margin-top:1em; font-weight:600;}
+        a.cleaning-btn:hover {background:var(--primary-dark); color:white;}
+
     </style>
 </head>
 <body>
@@ -94,6 +63,7 @@
         <div class="nav-brand">🏠 Home Hub</div>
         <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
         <ul class="nav-menu" id="navMenu">
+            <li><a href="index.html" class="active">📊 Dashboard</a></li>
             <li><a href="pages/meals.html">🍽️ Meals</a></li>
             <li><a href="pages/planner.html">📅 Planner</a></li>
             <li><a href="pages/shopping.html">🛒 Shopping</a></li>
@@ -104,166 +74,158 @@
     </div>
 </nav>
 <div class="container">
-    <div class="header">
-        <h1>Home Hub Dashboard</h1>
-        <div class="todays-date" id="dateToday"></div>
+    <h1>Welcome back!</h1>
+    <div class="welcome-msg">Here is what’s on today and a quick snapshot of your home hub.</div>
+
+    <!-- Overview summary cards -->
+    <div class="overview-row" id="overviewRow">
+        <div class="overview-card">
+            <div class="overview-value" id="overviewTasks"></div>
+            <div class="overview-label">Cleaning Tasks Today</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-value" id="overviewMeals"></div>
+            <div class="overview-label">Meals Planned</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-value" id="overviewShopping"></div>
+            <div class="overview-label">Shopping Items</div>
+        </div>
     </div>
-    <div class="dashboard-grid">
+
+    <div class="dashboard-grid" style="margin-top:2.2em;">
+        <!-- Today's Cleaning Tasks -->
         <div class="card">
-            <div class="card-title">🍽️ Meals Today <a href="meals.html" class="card-link">View meals</a></div>
-            <ul class="list-group" id="mealsToday"></ul>
+            <div class="card-title">Today's Cleaning Tasks</div>
+            <div><span class="today-date" id="todayDate"></span></div>
+            <ul class="card-list" id="tasksTodayList"></ul>
+            <div class="tasks-today-empty" id="tasksTodayEmpty" style="display:none;">
+                <span class="empty-icon">🧹</span><br>
+                You have no cleaning tasks scheduled for today!
+            </div>
+            <a class="cleaning-btn" href="pages/cleaning.html">View Cleaning Calendar</a>
         </div>
+        <!-- Meals Planned Card -->
         <div class="card">
-            <div class="card-title">🧹 Cleaning Tasks Today <a href="cleaning.html" class="card-link">View cleaning</a></div>
-            <ul class="list-group" id="cleaningToday"></ul>
+            <div class="card-title">Meals Planned for Today</div>
+            <div><span class="today-date" id="todayDateMeals"></span></div>
+            <ul class="card-list" id="mealsTodayList"></ul>
+            <div class="tasks-today-empty" id="mealsTodayEmpty" style="display:none;">
+                <span class="empty-icon">🍽️</span><br>
+                No meals planned yet.
+            </div>
+            <a class="cleaning-btn" href="pages/meals.html">See Meal Planner</a>
         </div>
+        <!-- Shopping List Card -->
         <div class="card">
-            <div class="card-title">🛠️ Maintenance Tasks Today <a href="maintenance.html" class="card-link">View maintenance</a></div>
-            <ul class="list-group" id="maintenanceToday"></ul>
-        </div>
-        <div class="card">
-            <div class="card-title">🛒 Shopping List <a href="shopping.html" class="card-link">View shopping</a></div>
-            <ul class="list-group" id="shoppingPreview"></ul>
-            <form class="quick-add-form" onsubmit="addQuickShopping(event)">
-                <input type="text" id="quickItem" placeholder="Item (e.g. Apples)" required>
-                <input type="number" id="quickQty" min="1" value="1" required>
-                <select id="quickUnit" style="width:auto">
-                    <option value="">x</option>
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                    <option value="ml">ml</option>
-                    <option value="l">l</option>
-                </select>
-                <button class="btn" type="submit">Add to Shopping</button>
-            </form>
+            <div class="card-title">Shopping List</div>
+            <ul class="card-list" id="dashboardShoppingList"></ul>
+            <div class="tasks-today-empty" id="dashboardShoppingEmpty" style="display:none;">
+                <span class="empty-icon">🛒</span><br>
+                Your shopping list is empty!
+            </div>
+            <a class="cleaning-btn" href="pages/shopping.html">Edit Shopping List</a>
         </div>
     </div>
 </div>
 <script>
-const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function formatToday(){
-    let d=new Date(), day=WEEKDAYS[d.getDay()], date=d.getDate(), month=MONTHS[d.getMonth()], year=d.getFullYear();
-    return `${day}, ${date} ${month} ${year}`;
-}
-document.getElementById("dateToday").textContent = formatToday();
-
-// Meals today
-function renderMealsToday(){
-    let plannerData = JSON.parse(localStorage.getItem('hubPlanner')||"[]");
+// Set today's date visual
+function formatTodayDate() {
     let today = new Date();
-    let idx = today.getDay(); // Assuming 0=Sunday, 1=Monday, etc
-    let mealEls = document.getElementById("mealsToday");
-    mealEls.innerHTML = '';
-    if(plannerData && plannerData[idx] && plannerData[idx].meal){
-        let meal = plannerData[idx].meal;
-        mealEls.innerHTML = `<li>
-            <span class="meal-title">${meal.t||meal.title||"Meal"}</span>
-            ${meal.type?`<span class="tag tag-type">${meal.type}</span>`:""}
-            ${meal.diet && meal.diet.length ? meal.diet.map(d=>`<span class="tag tag-type">${d.replace('-',' ')}</span>`).join(''):''}
-            <br>
-            <small style="color:var(--text-dim);">Ingredients: ${meal.ing?meal.ing.join(", "):"N/A"}</small>
-        </li>`;
-    } else {
-        mealEls.innerHTML = '<li class="empty">No meal planned for today.</li>';
+    let month = today.toLocaleString('default',{month:'short'});
+    let weekday = today.toLocaleString('default',{weekday:'short'});
+    let dateStr = `${weekday}, ${today.getDate()} ${month} ${today.getFullYear()}`;
+    document.getElementById("todayDate").textContent = dateStr;
+    document.getElementById("todayDateMeals").textContent = dateStr;
+}
+formatTodayDate();
+
+// Cleaning tasks for today from cleaning.html pushed to window.todayCleaningTasks
+function getCleaningTasksToday() {
+    // Try calendar save, fallback to window.todayCleaningTasks if set by cleaning.html
+    let d = new Date();
+    let yyyy = d.getFullYear(), mm=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+    let todayKeyAM = `${yyyy}-${mm}-${dd}_AM`;
+    let todayKeyPM = `${yyyy}-${mm}-${dd}_PM`;
+
+    let calendarTasks = [];
+    let stored = localStorage.getItem('hmhCleaningCalendarTasks');
+    if (stored) {
+        let calendar = JSON.parse(stored)
+        let am = calendar.find(c=>c.date===`${yyyy}-${mm}-${dd}`&&c.part==="AM");
+        let pm = calendar.find(c=>c.date===`${yyyy}-${mm}-${dd}`&&c.part==="PM");
+        if(am) calendarTasks = calendarTasks.concat(am.tasks.map(t=>t.title));
+        if(pm) calendarTasks = calendarTasks.concat(pm.tasks.map(t=>t.title));
+    }
+    // window.todayCleaningTasks fallback
+    if(calendarTasks.length==0 && window.todayCleaningTasks) calendarTasks = window.todayCleaningTasks;
+    return calendarTasks;
+}
+function renderCleaningTasksToday() {
+    let arr = getCleaningTasksToday();
+    document.getElementById("overviewTasks").textContent = arr.length;
+    let ul = document.getElementById("tasksTodayList");
+    let empty = document.getElementById("tasksTodayEmpty");
+    if(!arr || arr.length===0){
+        ul.innerHTML = "";
+        empty.style.display="block";
+    }else{
+        ul.innerHTML = arr.map(t=>`<li>🧹 ${t}</li>`).join('');
+        empty.style.display="none";
     }
 }
 
-// Cleaning today
-function renderCleaningToday(){
-    let cleaningData = JSON.parse(localStorage.getItem('hubCleaning')||"[]");
-    let tasksToday = cleaningData.filter(t=>{
-        // For simplicity, just assuming daily tasks, can be improved:
-        if(!t.active) return false;
-        if(t.freq=="daily") return true;
-        // Weekly: show on task day (assumes Monday start)
-        let today=new Date(), weekday=WEEKDAYS[today.getDay()].toLowerCase();
-        if(t.freq=="weekly" && t.day && t.day.toLowerCase()==weekday) return true;
-        return false;
-    });
-    let cleaningEls = document.getElementById("cleaningToday");
-    cleaningEls.innerHTML = '';
-    if(tasksToday.length){
-        cleaningEls.innerHTML = tasksToday.map(t=>
-            `<li>
-                <span>${t.title}</span>
-                ${t.room?`<span class="tag tag-area">${t.room}</span>`:""}
-            </li>`
-        ).join('');
-    } else {
-        cleaningEls.innerHTML = '<li class="empty">No cleaning tasks due today.</li>';
+function getMealsToday() {
+    // Try to load from localStorage (hmhMealsList)
+    // Example structure: [{date: "2025-11-12", meal: "Spaghetti Bolognese"}, ...]
+    let d = new Date();
+    let todayStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    let list = [];
+    let stored = localStorage.getItem('hmhMealsList');
+    if(stored){
+        try{
+            let meals = JSON.parse(stored).filter(m=>m.date==todayStr);
+            list = meals.map(m=>m.meal);
+        }catch{}
+    }
+    return list;
+}
+function renderMealsToday(){
+    let arr = getMealsToday();
+    document.getElementById("overviewMeals").textContent = arr.length;
+    let ul = document.getElementById("mealsTodayList");
+    let empty = document.getElementById("mealsTodayEmpty");
+    if(!arr || arr.length==0){
+        ul.innerHTML = "";
+        empty.style.display="block";
+    }else{
+        ul.innerHTML = arr.map(m=>`<li>🍽️ ${m}</li>`).join('');
+        empty.style.display="none";
     }
 }
-
-// Maintenance today
-function renderMaintenanceToday(){
-    let maintenanceData = JSON.parse(localStorage.getItem('hubMaintenance')||"[]");
-    let todayStr = (new Date()).toISOString().split("T")[0];
-    let mtEls = document.getElementById("maintenanceToday");
-    let tasksToday = maintenanceData.filter(t=>t.active && t.due===todayStr && !t.history.includes(todayStr));
-    mtEls.innerHTML = '';
-    if(tasksToday.length){
-        mtEls.innerHTML = tasksToday.map(t=>`
-            <li>
-                <span>${t.title}</span>
-                ${t.area?`<span class="tag tag-area">${t.area}</span>`:""}
-            </li>
-        `).join('');
-    } else {
-        mtEls.innerHTML = '<li class="empty">No maintenance tasks due today.</li>';
+function getShoppingItems(){
+    let stored = localStorage.getItem('hmhShoppingList');
+    let arr = stored ? JSON.parse(stored) : [];
+    return arr;
+}
+function renderShoppingDashboard(){
+    let arr = getShoppingItems();
+    document.getElementById("overviewShopping").textContent = arr.length;
+    let ul = document.getElementById("dashboardShoppingList");
+    let empty = document.getElementById("dashboardShoppingEmpty");
+    if(!arr || arr.length==0){
+        ul.innerHTML = "";
+        empty.style.display="block";
+    }else{
+        ul.innerHTML = arr.map(m=>`<li>🛒 ${m}</li>`).join('');
+        empty.style.display="none";
     }
 }
-
-// Shopping preview
-function renderShoppingPreview(){
-    let shoppingData = JSON.parse(localStorage.getItem('hubShopping')||"[]");
-    let list = document.getElementById("shoppingPreview");
-    let preview = shoppingData.slice(0,5); // Show top 5 items
-    list.innerHTML = '';
-    if(preview.length){
-        list.innerHTML = preview.map(i=>`
-            <li>
-                <span>${i.name}</span>
-                ${i.qty>1?`<span class="tag">x${i.qty}${i.unit?i.unit:''}</span>`:""}
-                ${i.fav?'<span class="item-fav" title="Favourite">⭐</span>':''}
-            </li>
-        `).join('');
-        if(shoppingData.length>5){
-            list.innerHTML += `<li class="empty"><a href="shopping.html" style="color:var(--accent);text-decoration:underline;">View all items...</a></li>`;
-        }
-    } else {
-        list.innerHTML = '<li class="empty">Shopping list is empty.</li>';
-    }
-}
-
-// Quick add shopping
-function addQuickShopping(e){
-    e.preventDefault();
-    let name = document.getElementById("quickItem").value.trim();
-    let qty = parseInt(document.getElementById("quickQty").value)||1;
-    let unit = document.getElementById("quickUnit").value;
-    if(name){
-        let shoppingData = JSON.parse(localStorage.getItem('hubShopping')||"[]");
-        let idx = shoppingData.findIndex(i=>i.name.toLowerCase()===name.toLowerCase() && ((i.unit||"")==unit));
-        if(idx>=0){
-            shoppingData[idx].qty = (shoppingData[idx].qty||1) + qty;
-            shoppingData[idx].unit = unit;
-        } else {
-            shoppingData.push({name, qty, unit, fav:false, checked:false});
-        }
-        localStorage.setItem('hubShopping', JSON.stringify(shoppingData));
-        renderShoppingPreview();
-    }
-    document.getElementById("quickItem").value = '';
-    document.getElementById("quickQty").value = 1;
-    document.getElementById("quickUnit").value = '';
-}
-
-// Initial render
-renderMealsToday();
-renderCleaningToday();
-renderMaintenanceToday();
-renderShoppingPreview();
+document.addEventListener("DOMContentLoaded",()=>{
+    renderCleaningTasksToday();
+    renderMealsToday();
+    renderShoppingDashboard();
+});
 </script>
 </body>
 </html>
