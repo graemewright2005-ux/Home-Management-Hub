@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Meals & Recipes | Home Hub</title>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.1/dist/tesseract.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
@@ -36,7 +35,6 @@
         }
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
         h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
-        /* Top controls row */
         .top-controls {
             display: flex;
             gap: 1.1em;
@@ -45,17 +43,9 @@
             flex-wrap: wrap;
         }
         .top-controls .btn,
-        .top-controls .btn-primary,
-        .top-controls .btn-secondary {
+        .top-controls .btn-primary {
             margin-bottom:0;
         }
-        /* Import link modal */
-        #importUrlModal {display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1100;align-items:center;justify-content:center;}
-        #importUrlModal.active {display:flex;}
-        .import-url-content {background:var(--card);border-radius:16px;max-width:480px;width:100%;padding:2em;}
-        .import-url-content label {font-weight:600;}
-        .import-url-content input[type="url"] {width:95%;padding:.7em;font-size:1em;margin-bottom:.6em;}
-        /* Filters bar unchanged */
         .filters-bar {display: flex; flex-wrap: wrap; gap: 1.3em; margin-bottom: 1.9em; align-items:center;}
         .filters-bar select { min-width:120px; max-width:200px;}
         .filters-bar label {color:var(--text-dim); font-size:0.97em;}
@@ -79,7 +69,7 @@
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
-            height: 520px; /* set fixed height for uniformity */
+            height: 520px; /* fixed height for alignment */
         }
         .card-img {
             width:100%;
@@ -119,7 +109,27 @@
             .grid {flex-direction:column;}
             .card {max-width:100%;min-width:0;height:auto;}
         }
-        /* Modal styles unchanged from previous version */
+        /* Add Recipe Modal */
+        .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; align-items: center; justify-content: center; padding: 1rem;}
+        .modal.active { display: flex;}
+        .modal-content { background: var(--card); border-radius: 16px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto;}
+        .modal-header { padding:1.4rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+        .modal-header h2 { margin: 0; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+        .modal-close { background:none; border:none; font-size:2rem; color:var(--text-dim); cursor:pointer;}
+        .modal-body { padding:1.5rem;}
+        .modal-footer { padding:1rem 1.5rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; justify-content:flex-end;}
+        .form-group { margin-bottom:1rem;}
+        .form-group label { display:block; font-weight:600; margin-bottom:0.33rem;}
+        .modal-group-row {display:flex; gap:1em;}
+        .modal-group-row > div {flex:1;}
+        input[type="text"], input[type="number"], input[type="url"], select, textarea {
+            width:100%; padding:.73em .9em; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);
+        }
+        textarea { min-height: 90px; resize: vertical; font-family: inherit;}
+        .checks{display:flex; flex-wrap:wrap; gap:0.8rem;}
+        .equipment-list span { background:rgba(245,158,11,0.16); color:#b45309; border-radius:4px; padding:2px 8px; margin-right:6px;}
+        .meal-photo-preview {margin-bottom:0.9em;text-align:center;}
+        .meal-photo-preview img {max-width:90%;max-height:150px;border-radius:8px;}
     </style>
 </head>
 <body>
@@ -139,12 +149,9 @@
 </nav>
 <div class="container">
     <h1>Meals & Recipes</h1>
-    <!-- Neat button bar -->
+    <!-- Only one manual button -->
     <div class="top-controls">
         <button class="btn btn-primary" onclick="openModal('add')">➕ Add Recipe</button>
-        <button class="btn-secondary" onclick="document.getElementById('photoInput').click()">📷 Add Recipe from Photo</button>
-        <button class="btn-primary" onclick="openImportUrlModal()">🌐 Import Recipe from Link</button>
-        <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
     </div>
     <div class="filters-bar">
         <label for="dietFilter">Diet:</label>
@@ -168,20 +175,76 @@
     <div class="empty" id="empty" style="display:none;">
         <div class="empty-icon">🍽️</div>
         <h3>No meals found</h3>
-        <p>Try adding a recipe or using the OCR photo upload/link import above.</p>
+        <p>Add a recipe using the button above.</p>
     </div>
 </div>
-<!-- Modal for Import Recipe from Link -->
-<div id="importUrlModal">
-    <div class="import-url-content">
-        <label for="importUrlInput">Paste URL for Recipe from Website</label><br>
-        <input type="url" id="importUrlInput" placeholder="Paste recipe URL here"><br>
-        <button class="btn btn-primary" onclick="fetchRecipeFromUrl(event)">Import Recipe from Link</button>
-        <button class="btn btn-secondary" onclick="closeImportUrlModal()">Cancel</button>
-        <div id="importUrlStatus" style="margin-top:1em;color:var(--primary);"></div>
+<!-- Manual Add Meal Modal -->
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Recipe</h2>
+            <button class="modal-close" onclick="closeModal('add')">&times;</button>
+        </div>
+        <form id="addForm" onsubmit="saveRecipe(event)">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group modal-group-row">
+                <div>
+                    <label>Meal Type</label>
+                    <select id="type" required>
+                        <option value="">Select type</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Dietary requirements</label>
+                    <select id="diet" multiple>
+                        <option value="meat">Meat</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="fish">Fish</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ingredients & Amounts (e.g. "2 eggs, 125g flour, 200ml milk")</label>
+                <textarea id="ingredients" required></textarea>
+                <small>Ingredient units accepted: g, kg, ml, l, quantity (use e.g. "2 eggs" for quantity).</small>
+            </div>
+            <div class="form-group">
+                <label>Method / Instructions</label>
+                <textarea id="instructions" required></textarea>
+            </div>
+            <div class="form-group modal-group-row">
+                <div>
+                    <label>Servings (adults)</label>
+                    <input type="number" id="servings" min="1" value="1" required>
+                </div>
+                <div>
+                    <label>Recipe URL (optional)</label>
+                    <input type="url" id="urlInput" placeholder="e.g. https://www.bbcgoodfood.com/recipes/slow-cooker-ratatouille">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Optional Recipe Photo</label>
+                <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+                <div class="meal-photo-preview" id="photoPreview"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Save Recipe</button>
+            <button class="btn" type="button" onclick="closeModal('add')">Cancel</button>
+        </div>
+        </form>
     </div>
 </div>
-<!-- View Modal unchanged -->
+<!-- Meal View Modal -->
 <div class="modal" id="viewModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -194,78 +257,42 @@
         </div>
     </div>
 </div>
-<!-- OCR modal reused for photo/link import -->
-<div class="modal" id="ocrModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Extracted Recipe</h2>
-            <button class="modal-close" onclick="closeModal('ocr')">&times;</button>
-        </div>
-        <form id="ocrForm" onsubmit="saveOcrRecipe(event)">
-        <div class="modal-body ocr-fields">
-            <label>Title</label>
-            <input type="text" id="ocr_title" required>
-            <label>Type</label>
-            <select id="ocr_type" required>
-                <option value="">Select</option>
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
-                <option value="snack">Snack</option>
-            </select>
-            <label>Dietary requirements (you may select more than one):</label>
-            <label><input type="checkbox" name="diet" value="meat"> Meat</label>
-            <label><input type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
-            <label><input type="checkbox" name="diet" value="vegan"> Vegan</label>
-            <label><input type="checkbox" name="diet" value="fish"> Fish</label>
-            <label>Ingredients (one per line, include quantity/unit)</label>
-            <textarea id="ocr_ingredients" rows="5" required></textarea>
-            <label>Equipment (one per line, optional)</label>
-            <textarea id="ocr_equipment" rows="2"></textarea>
-            <label>Instructions / Method</label>
-            <textarea id="ocr_method" rows="7" required></textarea>
-            <label>Estimated time (mins)</label>
-            <input type="number" id="ocr_time" min="1" placeholder="e.g. 20" value="">
-            <label>Number of portions (adults)</label>
-            <input type="number" id="ocr_portions" min="1" value="1">
-            <label>Recipe URL (optional)</label>
-            <input type="url" id="ocr_url" placeholder="Web source (if imported)">
-            <div id="ocrNutrition" style="margin:1em 0;"></div>
-            <div id="ocrStatus" class="ocr-status"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="submit">Save to Meals</button>
-            <button class="btn btn-secondary" type="button" onclick="calculateOcrNutrition()">Calculate Nutrition</button>
-            <button class="btn" type="button" onclick="closeModal('ocr')">Cancel</button>
-        </div>
-        </form>
-    </div>
-</div>
 <script>
 const NUTRI_DB = {
-    "chicken breast": {cal:165, protein:31, carb:0, fat:4, cost:1.6, unit:"100g", time:20},
-    "egg": {cal:78, protein:6, carb:0.6, fat:5, cost:0.25, unit:"1", time:5},
-    "flour": {cal:364, protein:10, carb:76, fat:1, cost:0.12, unit:"100g", time:0},
-    "milk": {cal:42, protein:3.4, carb:5, fat:1, cost:0.09, unit:"100ml", time:0},
-    "butter": {cal:717, protein:1, carb:1, fat:81, cost:0.7, unit:"100g", time:0},
-    "rice": {cal:130, protein:2.7, carb:28, fat:0.3, cost:0.22, unit:"100g", time:18},
-    "cod": {cal:82, protein:19, carb:0, fat:0.7, cost:2.2, unit:"100g", time:10},
+    "chicken breast": {cal:165, protein:31, carb:0, fat:4, unit:"100g", time:20},
+    "egg": {cal:78, protein:6, carb:0.6, fat:5, unit:"1", time:5},
+    "flour": {cal:364, protein:10, carb:76, fat:1, unit:"100g", time:0},
+    "milk": {cal:42, protein:3.4, carb:5, fat:1, unit:"100ml", time:0},
+    "butter": {cal:717, protein:1, carb:1, fat:81, unit:"100g", time:0},
+    "rice": {cal:130, protein:2.7, carb:28, fat:0.3, unit:"100g", time:18},
+    "cod": {cal:82, protein:19, carb:0, fat:0.7, unit:"100g", time:10},
     // Add more!
 };
-const MEALS = JSON.parse(localStorage.getItem('hubMeals')||"[]");
+const LS_KEY = 'hubMeals';
+let MEALS = JSON.parse(localStorage.getItem(LS_KEY)||"[]");
 
-// ------ Neat Top Controls/Import Modal ------
-function openImportUrlModal() {
-    document.getElementById('importUrlModal').classList.add('active');
-    document.getElementById('importUrlStatus').textContent = '';
+// Photo preview and encoding
+let photoDataUrl = '';
+function previewPhoto(event){
+    const file = event.target.files[0];
+    if(!file) {photoDataUrl='';document.getElementById("photoPreview").innerHTML="";return;}
+    const reader = new FileReader();
+    reader.onload = function(e){
+        photoDataUrl = e.target.result;
+        document.getElementById("photoPreview").innerHTML = `<img src="${photoDataUrl}" alt="Recipe photo">`;
+    };
+    reader.readAsDataURL(file);
 }
-function closeImportUrlModal() {
-    document.getElementById('importUrlModal').classList.remove('active');
-    document.getElementById('importUrlInput').value = '';
-    document.getElementById('importUrlStatus').textContent = '';
+function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
+function closeModal(id){
+    document.getElementById(id+'Modal').classList.remove('active');
+    if(id==='add'){
+        document.getElementById('addForm').reset();
+        document.getElementById('photoPreview').innerHTML='';
+        photoDataUrl='';
+    }
 }
 
-// ------ Recipe List and Card Grid ------
 function filterMeals(){
     renderGrid();
 }
@@ -293,9 +320,10 @@ function renderGrid(){
         empty.style.display='none';
         grid.innerHTML =
         mealsFiltered.map((m,idx)=>{
-            let nutrition = calcNutrition(m.ing, m.portions||1);
-            let servings = m.portions||1;
+            let nutrition = calcNutrition(m.ing, m.servings||1);
+            let servingsFront = `<div class="card-servings">Serves: ${m.servings||1} adult${(m.servings||1)>1?'s':''}</div>`;
             let qtysView = m.ing && m.ing.length ? m.ing.map(i=>`<span>${ingredientQtyString(i)}</span>`).join(', ') : '';
+            let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photocard" style="width:100%;height:100%;object-fit:cover;">` : m.emoji||'🍽️';
             let dietaryView = m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${d.replace('-',' ')}</span>`).join(''):"";
             let mealTime = m.type
                 ? `<span class="tag tag-type">${(m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1))}</span>`
@@ -327,11 +355,10 @@ function renderGrid(){
                 </div>
             `;
             let nutritionFront = `<span class="tag tag-nutri">Kcal: ${nutrition.calories}</span>`;
-            let servingsFront = `<div class="card-servings">Serves: ${servings} adult${servings>1?'s':''}</div>`;
             return `
             <div class="card" onclick="viewMeal(${MEALS.indexOf(m)})">
                 ${m.fav?'<div class="fav">⭐</div>':''}
-                <div class="card-img">${m.emoji||'🍽️'}</div>
+                <div class="card-img">${photo}</div>
                 <div class="card-body">
                     <div class="card-title">${m.title}</div>
                     ${cardTimeView}
@@ -345,11 +372,9 @@ function renderGrid(){
         `}).join('');
     }
 }
-// Fix ingredient string spacing (no "egg s", "baco n")
+// Clean up split words (no "egg s", "baco n")
 function ingredientQtyString(ingredient){
-    // Remove stray spaces e.g. "egg s", "sausag e"
-    let cleaned = ingredient.replace(/\b(\w)\s+(\w)\b/g, '$1$2'); // Fix split letters
-    // Also fix common split cases: "egg s" -> "eggs", "baco n" -> "bacon", "sausag e" -> "sausage"
+    let cleaned = ingredient.replace(/\b(\w)\s+(\w)\b/g, '$1$2');
     cleaned = cleaned.replace(/\begg s\b/gi,"eggs").replace(/\bbaco n\b/gi,"bacon").replace(/\bsausag e\b/gi,"sausage");
     let match = cleaned.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
     if(match){
@@ -358,11 +383,11 @@ function ingredientQtyString(ingredient){
     }
     return cleaned;
 }
-function calcNutrition(ingredients, portions){
-    let totals = {cal:0, protein:0, carbs:0, fat:0, cost:0};
+function calcNutrition(ingredients, servings){
+    let totals = {cal:0, protein:0, carbs:0, fat:0};
     ingredients.forEach(line=>{
         let lc = line.toLowerCase();
-        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|ml|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
+        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|kg|ml|l|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
         let qty=1, unit="g", food="";
         if(match){
             qty = parseFloat(match[1]);
@@ -374,28 +399,28 @@ function calcNutrition(ingredients, portions){
         let nutri = NUTRI_DB[food.trim()];
         if(nutri){
             let adj = 1;
-            if(unit=="g"||unit=="ml") adj = qty/100;
-            if(unit=="egg"||unit=="eggs") adj = qty;
+            if(unit==="kg") adj = qty*10; // 1kg = 10x100g
+            else if(unit==="g"||unit==="ml") adj = qty/100;
+            else if(unit==="egg"||unit==="eggs") adj = qty;
+            else if(unit==="l") adj = qty*10; // 1l = 10x100ml
             totals.cal += nutri.cal*adj;
             totals.protein += nutri.protein*adj;
             totals.carbs += nutri.carb*adj;
             totals.fat += nutri.fat*adj;
-            totals.cost += nutri.cost*adj;
         }
     });
     return {
-        calories: Math.round(totals.cal/portions),
-        protein: Math.round(totals.protein/portions),
-        carbs: Math.round(totals.carbs/portions),
-        fat: Math.round(totals.fat/portions),
-        costPerPortion: totals.cost ? totals.cost.toFixed(2) : "—"
+        calories: Math.round(totals.cal/servings),
+        protein: Math.round(totals.protein/servings),
+        carbs: Math.round(totals.carbs/servings),
+        fat: Math.round(totals.fat/servings)
     };
 }
 function estimateMealTime(ingredients) {
     let timeTotal = 0;
     ingredients.forEach(line => {
         let lc = line.toLowerCase();
-        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|ml|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
+        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|kg|ml|l|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
         let food = match ? match[3].replace(/s$/,"") : lc.replace(/s$/,"");
         let nutri = NUTRI_DB[food.trim()];
         if(nutri && nutri.time) timeTotal += nutri.time;
@@ -417,177 +442,11 @@ function addMealToPlannerDirect(mealIdx, idx){
     localStorage.setItem('hubPlanner', JSON.stringify(planner));
     alert(`Added "${MEALS[mealIdx].title}" to planner for ${day} / ${time}`);
 }
-function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
-function closeModal(id){ document.getElementById(id+'Modal').classList.remove('active'); }
-window.addEventListener('DOMContentLoaded',renderGrid);
-
-// Import from link: open URL modal
-function fetchRecipeFromUrl(event) {
-    event.preventDefault();
-    let url = document.getElementById('importUrlInput').value.trim();
-    if(!url) {document.getElementById('importUrlStatus').textContent = "Please paste a recipe URL."; return;}
-    document.getElementById('importUrlStatus').textContent = "Importing...";
-    fetch(url)
-      .then(resp => resp.text())
-      .then(html => {
-          // Parse DOM
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, "text/html");
-          let title = doc.querySelector("title") ? doc.querySelector("title").innerText : "";
-          let metaTitle = doc.querySelector('meta[property="og:title"]') || doc.querySelector('meta[name="title"]');
-          if(metaTitle) title = metaTitle.content;
-          let ingArr = [];
-          let ingredientNodes = doc.querySelectorAll('[itemprop="recipeIngredient"], .ingredient, li.ingredient, ul.ingredients > li');
-          ingredientNodes.forEach(n => ingArr.push(n.innerText.trim()));
-          if(ingArr.length === 0) {
-              let fallback = Array.from(doc.querySelectorAll('ul, ol')).filter(ul=>ul.textContent.toLowerCase().includes("ingredient"));
-              if(fallback.length) ingArr = Array.from(fallback[0].querySelectorAll('li')).map(li=>li.innerText.trim());
-          }
-          let methodArr = [];
-          let instructionNodes = doc.querySelectorAll('[itemprop="recipeInstructions"], .instructions, li.instruction, ul.instructions > li, ol.instructions > li');
-          instructionNodes.forEach(n => methodArr.push(n.innerText.trim()));
-          if(methodArr.length === 0) {
-              let fallback = Array.from(doc.querySelectorAll('ul, ol')).filter(ul=>ul.textContent.toLowerCase().includes("instruction") || ul.textContent.toLowerCase().includes("method"));
-              if(fallback.length) methodArr = Array.from(fallback[0].querySelectorAll('li')).map(li=>li.innerText.trim());
-          }
-          let portionsRaw = doc.querySelector('[itemprop="recipeYield"], .servings, .portion');
-          let portions = portionsRaw ? parseInt(portionsRaw.innerText.match(/\d+/)) || 1 : 1;
-          let timeRaw = doc.querySelector('[itemprop="totalTime"], .time, .duration');
-          let timeVal = timeRaw ? parseInt(timeRaw.innerText.match(/\d+/)) || '' : '';
-          document.getElementById("ocr_title").value = title || "";
-          document.getElementById("ocr_ingredients").value = ingArr.join('\n');
-          document.getElementById("ocr_method").value = methodArr.join('\n');
-          document.getElementById("ocr_portions").value = portions;
-          document.getElementById("ocr_time").value = timeVal ? timeVal : '';
-          document.getElementById("ocr_url").value = url;
-          document.getElementById("ocrStatus").textContent = "Imported from webpage. Please review and correct as needed!";
-          closeImportUrlModal();
-          openModal('ocr');
-      })
-      .catch(err => {
-          document.getElementById('importUrlStatus').textContent = "Could not fetch or parse the recipe from this link.";
-      });
-}
-
-// Photo upload logic unchanged
-function handlePhotoUpload(event) {
-    const file = event.target.files[0];
-    if(!file) return;
-    document.getElementById('ocrStatus').textContent = 'Scanning photo for recipe text...';
-    openModal('ocr');
-    Tesseract.recognize(file, 'eng').then(result =>{
-        document.getElementById('ocrStatus').textContent = 'Scan complete! Parsing recipe...';
-        const parsed = parseRecipeText(result.data.text);
-        document.getElementById('ocr_title').value = parsed.title || '';
-        document.getElementById('ocr_ingredients').value = parsed.ingredients.join('\n');
-        document.getElementById('ocr_method').value = parsed.method || '';
-        document.getElementById('ocr_equipment').value = parsed.equipment.join('\n');
-        document.getElementById('ocr_type').value = parsed.type || '';
-        document.getElementById('ocr_portions').value = parsed.portions || 1;
-        document.getElementById('ocr_time').value = parsed.time || '';
-        document.getElementById('ocr_url').value = "";
-        document.getElementById('ocrStatus').textContent = '';
-        document.getElementById('ocr_title').focus();
-    }).catch(err=>{
-        document.getElementById('ocrStatus').textContent = 'Scan failed: ' + err;
-    });
-}
-// OCR Modal Save logic unchanged
-function saveOcrRecipe(event){
-    event.preventDefault();
-    const dietValues = [];
-    document.querySelectorAll('#ocrModal input[name="diet"]:checked').forEach(i=>dietValues.push(i.value));
-    const newMeal = {
-        id: "m"+Date.now()+Math.random().toString(16).slice(2),
-        title: document.getElementById('ocr_title').value.trim(),
-        type: document.getElementById('ocr_type').value,
-        diet: dietValues,
-        ing: document.getElementById('ocr_ingredients').value.split('\n').filter(x=>x.trim()),
-        equipment: document.getElementById('ocr_equipment').value.split('\n').filter(x=>x.trim()),
-        instructions: document.getElementById('ocr_method').value,
-        portions: parseInt(document.getElementById('ocr_portions').value)||1,
-        time: parseInt(document.getElementById('ocr_time').value)||'',
-        fav: false,
-        emoji: "🍽️",
-        url: document.getElementById('ocr_url').value.trim() || ""
-    };
-    MEALS.push(newMeal);
-    localStorage.setItem('hubMeals', JSON.stringify(MEALS));
-    closeModal('ocr');
-    renderGrid();
-    alert('Recipe saved!');
-}
-function calculateOcrNutrition(){
-    const ingList = document.getElementById('ocr_ingredients').value.split('\n').filter(x=>x.trim());
-    const portions = parseInt(document.getElementById('ocr_portions').value)||1;
-    document.getElementById('ocrNutrition').textContent = 'Calculating nutrition for ingredients...';
-    let totals = {cal:0, protein:0, carb:0, fat:0};
-    ingList.forEach(line=>{
-        let lc = line.toLowerCase();
-        let match = lc.match(/(\d+)\s*(g|ml|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
-        let qty=1, unit="g", food="";
-        if(match){
-            qty = parseFloat(match[1]);
-            unit = match[2]||"g";
-            food = match[3].replace(/s$/,"");
-        } else {
-            food = lc.replace(/s$/,"");
-        }
-        let nutri = NUTRI_DB[food.trim()];
-        if(nutri){
-            let adj = 1;
-            if(unit=="g"||unit=="ml") adj = qty/100;
-            if(unit=="egg"||unit=="eggs") adj = qty;
-            totals.cal += nutri.cal*adj;
-            totals.protein += nutri.protein*adj;
-            totals.carb += nutri.carb*adj;
-            totals.fat += nutri.fat*adj;
-        }
-    });
-    document.getElementById('ocrNutrition').innerHTML = `
-        <strong>Estimated nutrition per portion:</strong><br>
-        Calories: ${Math.round(totals.cal/portions)} kcal<br>
-        Protein: ${Math.round(totals.protein/portions)} g<br>
-        Carbs: ${Math.round(totals.carb/portions)} g<br>
-        Fat: ${Math.round(totals.fat/portions)} g<br>
-        <span style="color:var(--text-dim);font-size:0.91em;">(for more accuracy, connect to full nutrition API)</span>
-    `;
-}
-// OCR text parsing
-function parseRecipeText(text) {
-    let title = '';
-    let type = '';
-    let ingredients = [];
-    let equipment = [];
-    let method = '';
-    let portions = 1;
-    let time = '';
-    title = (text.match(/^(.+?)\n/)||[])[1] || '';
-    let ingMatch = text.match(/Ingredients([\s\S]*?)(?:Method|Instructions|Equipment|\n\n)/i);
-    if(ingMatch) {
-        ingredients = ingMatch[1].split('\n').map(l=>l.trim()).filter(l=>l && l.length<60);
-    }
-    let equipMatch = text.match(/Equipment([\s\S]*?)(?:Method|Instructions|\n\n)/i);
-    if(equipMatch){
-        equipment = equipMatch[1].split('\n').map(l=>l.trim()).filter(l=>l);
-    }
-    let methodMatch = text.match(/(?:Method|Instructions)([\s\S]*$)/i);
-    if(methodMatch){
-        method = methodMatch[1].replace(/\n{2,}/g,'\n').trim();
-    }
-    ['breakfast','lunch','dinner','snack'].forEach(t=>{
-        if(new RegExp(t,'i').test(text) && !type) type = t;
-    });
-    let servings = text.match(/(\d+)\s+(servings|portions)/i);
-    if(servings) portions = Number(servings[1]);
-    let timeMatch = text.match(/(\d+)\s*(min|mins|minutes)/i);
-    if(timeMatch) time = Math.ceil(parseInt(timeMatch[1]) / 10) * 10;
-    return { title, type, ingredients, equipment, method, portions, time };
-}
+// View Meal
 function viewMeal(idx){
     let m = MEALS[idx];
-    let nutrition = calcNutrition(m.ing, m.portions||1);
-    let servings = m.portions||1;
+    let nutrition = calcNutrition(m.ing, m.servings||1);
+    let servings = m.servings||1;
     let timeEstimate = typeof m.time === 'number'
         ? Math.ceil(m.time/10)*10
         : estimateMealTime(m.ing);
@@ -595,10 +454,11 @@ function viewMeal(idx){
     let mealTime = m.type
         ? `<span class="tag tag-type">${(m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1))}</span>`
         : '';
+    let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photo" style="width:100%;max-width:100%;max-height:180px;border-radius:8px;">` : m.emoji||'🍽️';
     let urlView = m.url ? `<div style="margin-top:.7em;font-size:.98em;"><a href="${m.url}" target="_blank">${m.url}</a></div>` : '';
     document.getElementById("viewTitle").textContent = m.title;
     document.getElementById("viewBody").innerHTML = `
-        <div style="font-size:2em;margin-bottom:0.4em;">${m.emoji||'🍽️'}</div>
+        <div class="meal-photo-preview">${photo}</div>
         ${mealTime} ${dietaryView}
         <div class="modal-time">Estimated time: ${timeEstimate} mins</div>
         <div class="modal-nutrition"><strong>Nutrition (per portion):</strong>
@@ -610,16 +470,46 @@ function viewMeal(idx){
             <ul>${(m.ing||[]).map(i=>`<li>${ingredientQtyString(i)}</li>`).join('')}</ul>
         </div>
         <div style="margin-top:1em;">
-            <strong>Equipment:</strong>
-            <div class="equipment-list">${(m.equipment||[]).map(e=>`<span>${e}</span>`).join('')}</div>
-        </div>
-        <div style="margin-top:1em;">
             <strong>Instructions:</strong>
             <p style="white-space:pre-wrap;">${m.instructions||""}</p>
         </div>
         <div style="margin-top:1em;"><strong>Servings:</strong> ${servings} adult${servings>1?'s':''}</div>
     `;
     openModal('view');
+}
+
+// Save Recipe from Modal
+function saveRecipe(event){
+    event.preventDefault();
+    let title = document.getElementById('title').value.trim();
+    let type = document.getElementById('type').value;
+    let dietArray = Array.from(document.getElementById('diet').selectedOptions).map(opt=>opt.value);
+    // Accept commas, split into array, cleanup and remove empty values
+    let ingRaw = document.getElementById('ingredients').value.split(',').flatMap(s=>s.split('\n')).map(t=>t.trim()).filter(t=>t);
+    let instructions = document.getElementById('instructions').value;
+    let servings = parseInt(document.getElementById('servings').value)||1;
+    let url = document.getElementById('urlInput').value.trim();
+    let time = estimateMealTime(ingRaw);
+    let photo = photoDataUrl || "";
+    let meal = {
+        id: "m"+Date.now()+Math.random().toString(16).slice(2),
+        title,
+        type,
+        diet: dietArray,
+        ing: ingRaw,
+        instructions,
+        servings,
+        fav: false,
+        emoji: "🍽️",
+        url,
+        time,
+        photo
+    };
+    MEALS.push(meal);
+    localStorage.setItem(LS_KEY, JSON.stringify(MEALS));
+    closeModal('add');
+    renderGrid();
+    alert('Recipe saved!');
 }
 </script>
 </body>
