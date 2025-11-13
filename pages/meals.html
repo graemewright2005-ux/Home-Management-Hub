@@ -8,7 +8,7 @@
         :root {
             --primary: #667eea;
             --primary-dark: #764ba2;
-            --gradient: linear-gradient(135deg, #a4befe 0%, #f0b7a4 100%);
+            --gradient: linear-gradient(135deg,#a4befe 0%, #f0b7a4 100%);
             --bg: #f7f9fc;
             --card: #fff;
             --text: #17263a;
@@ -196,9 +196,9 @@
         .modal-btn-close:hover { background: linear-gradient(120deg,#e37b38 30%, #bdb4fc 100%);}
         .modal-section-sub { color:var(--primary-dark);font-size:1.13em;font-weight:800;margin-top:1.3em;margin-bottom:0.32em;}
         .modal-ingredients-list {margin-left:0;margin-bottom:0.34em;}
-        .modal-ingredients-list span {display:inline-block;padding:0.18em 0.4em;margin-right:0.13em;margin-bottom:0.1em;background:#f3efe3;color:#e37b38;border-radius:6px;font-weight:500;}
+        .modal-ingredients-list span {display:inline-block;padding:0.18em 0.4em;margin-right:0.13em;margin-bottom:0.07em;background:#f3efe3;color:#e37b38;border-radius:6px;font-weight:500;}
         /* Instructions */
-        .modal-instructions { color: #1c3057; font-size:1.09em; margin-top:0.33em; margin-bottom:1.2em; line-height:1.7;}
+        .modal-instructions { color: #17263a; font-size:1.09em; margin-top:0.33em; margin-bottom:1.2em; line-height:1.7;}
         .modal-servings { font-size:1.07em; color:#e37b38; font-weight:700;}
     </style>
 </head>
@@ -293,7 +293,7 @@
             <div class="form-group modal-group-row">
                 <div>
                     <label for="servings">Servings (adults)</label>
-                    <input type="number" id="servings" min="1" value="4" required aria-required="true">
+                    <input type="number" id="servings" min="4" value="4" required aria-required="true">
                 </div>
                 <div>
                     <label for="urlInput">Recipe URL (optional)</label>
@@ -410,7 +410,7 @@ function renderGrid(){
                 </div>
             `;
             return `
-            <div class="card" tabindex="0" aria-label="View details for ${escapeHTML(m.title)}" onclick="viewMeal(${MEALS.indexOf(m)})">
+            <div class="card" tabindex="0" aria-label="View details for ${escapeHTML(m.title)}" data-meal="${MEALS.indexOf(m)}">
                 <div class="card-img">${photo}</div>
                 <div class="card-body">
                     <div class="card-title">${escapeHTML(m.title)}</div>
@@ -423,9 +423,17 @@ function renderGrid(){
             </div>
         `}).join('');
     }
+    // Add click listeners explicitly for cards
+    document.querySelectorAll('.card').forEach(card => {
+        card.onclick = function(e) {
+            // Prevent if dropdown or button within card-actions is clicked
+            if (e.target.closest('.card-actions')) return;
+            let idx = card.getAttribute('data-meal');
+            viewMeal(idx);
+        }
+    });
 }
-function ingredientQtyString(ingredient, servings=1){
-    // Fix common split spelling and stray spaces in ingredients (e.g. "egg s", "baco n", "sausag e", "tomat o")
+function ingredientQtyString(ingredient, servings=4){
     let cleaned = ingredient
         .replace(/\b([a-zA-Z]+)\s([a-zA-Z])\b/g, '$1$2')
         .replace(/\begg s\b/gi, "eggs")
@@ -437,7 +445,6 @@ function ingredientQtyString(ingredient, servings=1){
         .replace(/\bchoc olate\b/gi, "chocolate")
         .replace(/\bonio n\b/gi, "onion")
         ;
-    // Parse quantity and unit
     let match = cleaned.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
     if(match){
         let qty = match[1], unit = match[2]||"", rest = match[3];
@@ -445,7 +452,6 @@ function ingredientQtyString(ingredient, servings=1){
         if (!isNaN(perAdult) && perAdult > 0) qty = perAdult.toString();
         return `${qty} ${unit} ${rest}`.replace(/\s+/g,' ').trim();
     }
-    // If just a word, show 4x quantity for adults
     return /^([a-zA-Z ]+)$/.test(cleaned) ? `4 ${cleaned}` : cleaned;
 }
 function escapeHTML(str) {
@@ -506,6 +512,7 @@ function viewMeal(idx){
         <div class="modal-instructions">${m.instructions ? escapeHTML(m.instructions) : '<span style="color:#c2b7af;">No instructions listed.</span>'}</div>
         <div class="modal-servings">Servings: 4 adults</div>
     `;
+    openModal('view');
 }
 function saveRecipe(event){
     event.preventDefault();
