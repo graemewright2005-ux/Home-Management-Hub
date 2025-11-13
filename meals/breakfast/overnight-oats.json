@@ -1,0 +1,15 @@
+{
+    "title": "Overnight Oats",
+    "type": "breakfast",
+    "diet": ["vegetarian", "dairy free"],
+    "ingredients": [
+        "4 tbsp oats",
+        "400ml almond milk",
+        "4 tsp chia seeds",
+        "2 bananas"
+    ],
+    "instructions": "Mix oats, chia seeds, and almond milk in a bowl or jar. Cover and refrigerate overnight. In the morning, add sliced banana and any fruit or toppings you prefer. Eat cold or warm.",
+    "servings": 4,
+    "photo": "",
+    "url": ""
+}
