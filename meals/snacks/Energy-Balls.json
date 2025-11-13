@@ -1,0 +1,16 @@
+{
+    "title": "Energy Balls",
+    "type": "snack",
+    "diet": ["vegan", "dairy free"],
+    "ingredients": [
+        "200g medjool dates",
+        "100g oats",
+        "80g ground almonds",
+        "2 tbsp peanut butter",
+        "2 tbsp cacao powder"
+    ],
+    "instructions": "Place dates in a food processor and pulse to break up. Add oats, ground almonds, peanut butter, and cacao. Process until sticky. Roll mixture into balls. Chill before serving.",
+    "servings": 4,
+    "photo": "",
+    "url": ""
+}
