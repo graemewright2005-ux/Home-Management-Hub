@@ -1,109 +1,310 @@
-<!-- ... inside <head> ... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meals & Recipes | Home Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --gradient: linear-gradient(135deg, #a4befe 0%, #f0b7a4 100%);
+            --bg: #eef1f8;
+            --card: #f6f8fc;
+            --text: #203040;
+            --text-dim: #6273a1;
+            --border: #dbe1ec;
+            --accent: #f59e42;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
+        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem; transition:all 0.2s;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color:white;}
+        @media(max-width:768px){
+            .nav-menu{flex-direction:column;}
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
+        .top-controls { display: flex; gap: 1.1em; align-items: center; margin-bottom: 1.7em; flex-wrap: wrap;}
+        .top-controls .btn,
+        .top-controls .btn-primary { margin-bottom:0; }
+        .filters-bar {display: flex; flex-wrap: wrap; gap: 1.3em; margin-bottom: 1.9em; align-items:center;}
+        .filters-bar select { min-width:120px; max-width:200px;}
+        .filters-bar label {color:var(--text-dim); font-size:0.97em;}
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom:2rem;
+            align-items: stretch;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            min-width: 300px;
+            max-width: 420px;
+            flex: 1 1 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+            height: 470px;
+            box-shadow: 0 4px 16px 0 rgba(160,170,220,0.10);
+            transition: box-shadow 0.2s;
+        }
+        .card-img {
+            width:100%; height:150px;
+            background: var(--gradient);
+            display: flex; align-items:center; justify-content:center;font-size:4.2rem;
+        }
+        .fav { position:absolute;top:1rem;right:1rem; font-size:1.8rem; z-index:10;}
+        .card-body {
+            padding:1.1rem 1.2rem 1rem 1.2rem;
+            flex:1 1 auto;
+            display: flex; flex-direction: column;
+        }
+        .card-title { font-size:1.22rem; font-weight:700; margin-bottom:0.35rem; color:#5b45c3;}
+        .card-time { font-size: 1em; color: #b45309; background:rgba(245,158,11,0.13); border-radius:7px; padding: 2px 10px; margin:0.2em 0 0.36em 0;}
+        .tag {display:inline-block; padding:0.25rem 0.7rem; border-radius:6px; font-size:0.97em;font-weight:600;margin-right:0.3rem;margin-bottom:0.3rem;}
+        .tag-type {background:rgba(126,168,234,0.18); color:#3675fc;}
+        .tag-diet {background:rgba(248,183,86,0.13); color:#b45309; border:1px solid #f59e42;}
+        .card-servings { font-size:1.01em; color:var(--text-dim); margin-bottom:0.18em;}
+        .card-qtys { font-size:1.01em; color:var(--accent);}
+        .card-actions {
+            margin-top:auto;
+            width:100%;
+            display:flex;align-items:center;justify-content:flex-start;gap:0.5em;
+        }
+        .planner-select select {
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            padding: 0.52em 0.7em;
+            font-size: 1em;
+            margin-right:0.32em;
+            appearance: none;
+            transition: box-shadow 0.2s, border 0.2s;
+            box-shadow: 0 1px 4px 0 rgba(146,172,234,0.10);
+        }
+        .planner-select select:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            box-shadow: 0 1px 8px 0 rgba(102,126,234,0.17);
+        }
+        .planner-select .btn {
+            background: var(--gradient);
+            color: #fff;
+            border:none;
+            border-radius:8px;
+            padding:0.62em 1.2em;
+            font-weight:600;
+            font-size:0.99em;
+            margin-left:0.14em;
+            cursor:pointer;
+            box-shadow: 0 2px 8px 0 rgba(102,126,234,0.08);
+            transition:background 0.2s;
+        }
+        .planner-select .btn:hover {
+            background: linear-gradient(120deg,#764ba2 0%, #a3c3f2 100%);
+        }
+        .empty {text-align:center; padding:3rem 1rem; color:var(--text-dim);}
+        .empty-icon {font-size:4rem; margin-bottom:1rem; opacity:0.4;}
+        @media(max-width:950px){
+            .grid {flex-direction:column;}
+            .card {max-width:100%;min-width:0;}
+        }
+        /* Modal styles */
+        .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:1000; align-items: center; justify-content: center; padding: 1rem;}
+        .modal.active { display: flex;}
+        .modal-content { background: var(--card); border-radius: 18px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto;}
+        .modal-header { padding:1.3rem 1.3rem 1.1rem 1.3rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+        .modal-header h2 { margin: 0; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+        .modal-close { background:none; border:none; font-size:2rem; color:var(--text-dim); cursor:pointer;}
+        .modal-body { padding:1.2rem;}
+        .modal-footer { padding:1rem 1.3rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; justify-content:flex-end;}
+        .form-group { margin-bottom:1rem;}
+        .modal-group-row {display:flex; gap:1em;}
+        .modal-group-row > div {flex:1;}
+        input[type="text"], input[type="number"], input[type="url"], select, textarea {
+            width:100%; padding:.73em .9em; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);
+        }
+        textarea { min-height: 90px; resize: vertical; font-family: inherit;}
+        .meal-photo-preview {margin-bottom:0.9em;text-align:center;}
+        .meal-photo-preview img {max-width:90%;max-height:150px;border-radius:8px;}
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <div class="nav-content">
+        <div class="nav-brand">🏠 Home Hub</div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="../index.html">📊 Dashboard</a></li>
+            <li><a href="meals.html" class="active">🍽️ Meals</a></li>
+            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="shopping.html">🛒 Shopping</a></li>
+            <li><a href="cleaning.html">🧹 Cleaning</a></li>
+            <li><a href="maintenance.html">🛠️ Maintenance</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <h1>Meals & Recipes</h1>
+    <div class="top-controls">
+        <button class="btn btn-primary" onclick="openModal('add')">➕ Add Recipe</button>
+    </div>
+    <div class="filters-bar">
+        <label for="dietFilter">Diet:</label>
+        <select id="dietFilter" onchange="filterMeals()">
+            <option value="">All</option>
+            <option value="meat">Meat</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="fish">Fish</option>
+        </select>
+        <label for="timeFilter">Meal Time:</label>
+        <select id="timeFilter" onchange="filterMeals()">
+            <option value="">All</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+        </select>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none;">
+        <div class="empty-icon">🍽️</div>
+        <h3>No meals found</h3>
+        <p>Add a recipe using the button above.</p>
+    </div>
+</div>
+<!-- Manual Add Meal Modal -->
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Recipe</h2>
+            <button class="modal-close" onclick="closeModal('add')">&times;</button>
+        </div>
+        <form id="addForm" onsubmit="saveRecipe(event)">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group modal-group-row">
+                <div>
+                    <label>Meal Type</label>
+                    <select id="type" required>
+                        <option value="">Select type</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Dietary requirements</label>
+                    <select id="diet" multiple>
+                        <option value="meat">Meat</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="fish">Fish</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ingredients & Amounts (e.g. "2 eggs, 125g flour, 200ml milk")</label>
+                <textarea id="ingredients" required></textarea>
+                <small>Ingredient units accepted: g, kg, ml, l, quantity (use e.g. "2 eggs" for quantity).</small>
+            </div>
+            <div class="form-group">
+                <label>Method / Instructions</label>
+                <textarea id="instructions" required></textarea>
+            </div>
+            <div class="form-group modal-group-row">
+                <div>
+                    <label>Servings (adults)</label>
+                    <input type="number" id="servings" min="1" value="1" required>
+                </div>
+                <div>
+                    <label>Recipe URL (optional)</label>
+                    <input type="url" id="urlInput" placeholder="e.g. https://www.bbcgoodfood.com/recipes/slow-cooker-ratatouille">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Optional Recipe Photo</label>
+                <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+                <div class="meal-photo-preview" id="photoPreview"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Save Recipe</button>
+            <button class="btn" type="button" onclick="closeModal('add')">Cancel</button>
+        </div>
+        </form>
+    </div>
+</div>
+<!-- Meal View Modal -->
+<div class="modal" id="viewModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="viewTitle"></h2>
+            <button class="modal-close" onclick="closeModal('view')">&times;</button>
+        </div>
+        <div class="modal-body" id="viewBody"></div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="closeModal('view')">Close</button>
+        </div>
+    </div>
+</div>
+<script>
+const LS_KEY = 'hubMeals';
+let MEALS = JSON.parse(localStorage.getItem(LS_KEY)||"[]");
 
-<style>
-:root {
-    --primary: #667eea;
-    --primary-dark: #764ba2;
-    --gradient: linear-gradient(135deg,#a4befe 0%, #f0b7a4 100%);
-    --bg: #eef1f8;
-    --card: #f6f8fc;
-    --text: #203040;
-    --text-dim: #6273a1;
-    --border: #dbe1ec;
-    --accent: #f59e42;
+let photoDataUrl = '';
+function previewPhoto(event){
+    const file = event.target.files[0];
+    if(!file) {photoDataUrl='';document.getElementById("photoPreview").innerHTML="";return;}
+    const reader = new FileReader();
+    reader.onload = function(e){
+        photoDataUrl = e.target.result;
+        document.getElementById("photoPreview").innerHTML = `<img src="${photoDataUrl}" alt="Recipe photo">`;
+    };
+    reader.readAsDataURL(file);
 }
-body {
-    background:var(--bg);
-    color:var(--text);
+function openModal(id){ document.getElementById(id+'Modal').classList.add('active'); }
+function closeModal(id){
+    document.getElementById(id+'Modal').classList.remove('active');
+    if(id==='add'){
+        document.getElementById('addForm').reset();
+        document.getElementById('photoPreview').innerHTML='';
+        photoDataUrl='';
+    }
 }
-h1, .nav-brand { color:var(--primary-dark); }
-.grid {
-    display:flex; flex-wrap:wrap; gap:2rem; margin-bottom:2rem; align-items:stretch;
-}
-.card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    min-width: 300px;
-    max-width: 400px;
-    flex: 1 1 320px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    box-sizing: border-box;
-    overflow: hidden;
-    position: relative;
-    height: 490px;
-    box-shadow: 0 4px 16px 0 rgba(160,170,220,0.13);
-    transition: box-shadow 0.2s;
-}
-.card-img {
-    width:100%; height:170px;
-    background: var(--gradient);
-    display: flex; align-items:center; justify-content:center;font-size:5rem;
-}
-.card-body {
-    padding:1.1rem 1.2rem 1rem 1.2rem;
-    flex:1 1 auto;
-    display: flex; flex-direction: column;
-}
-.card-title { font-size:1.22rem; font-weight:700; margin-bottom:0.35rem; color:#5b45c3;}
-.card-time { font-size: 1em; color: #b45309; background:rgba(245,158,11,0.13); border-radius:7px; padding: 2px 10px; margin:0.2em 0 0.36em 0;}
-.tag {display:inline-block; padding:0.25rem 0.7rem; border-radius:6px; font-size:0.97em;font-weight:600;margin-right:0.3rem;margin-bottom:0.3rem;}
-.tag-type {background:rgba(126,168,234,0.18); color:#3675fc;}
-.tag-diet {background:rgba(248,183,86,0.13); color:#b45309; border:1px solid #f59e42;}
-.card-servings { font-size:1.01em; color:var(--text-dim);margin-bottom:0.18em;}
-.card-qtys { font-size:1.01em; color:var(--accent);}
-.card-actions {
-    margin-top:auto;
-    width:100%;
-    display:flex;align-items:center;justify-content:flex-start;gap:0.5em;
-}
-.planner-select select {
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: #fff;
-    color: var(--text);
-    padding: 0.52em 1em;
-    font-size: 1em;
-    margin-right:0.32em;
-    appearance: none;
-    transition: box-shadow 0.2s, border 0.2s;
-    box-shadow: 0 1px 4px 0 rgba(146,172,234,0.10);
-}
-.planner-select select:focus {
-    outline: none;
-    border-color: var(--primary-dark);
-    box-shadow: 0 1px 8px 0 rgba(102,126,234,0.17);
-}
-.planner-select .btn {
-    background: var(--gradient);
-    color: #fff;
-    border:none;
-    border-radius:8px;
-    padding:0.62em 1.3em;
-    font-weight:600;
-    font-size:1.01em;
-    margin-left:0.14em;
-    cursor:pointer;
-    box-shadow: 0 2px 8px 0 rgba(102,126,234,0.08);
-    transition:background 0.2s;
-}
-.planner-select .btn:hover {
-    background: linear-gradient(120deg,#764ba2 0%, #a3c3f2 100%);
-}
-.empty {text-align:center; padding:3rem 1rem; color:var(--text-dim);}
-.empty-icon {font-size:4rem; margin-bottom:1rem; opacity:0.4;}
-/* Remove default outline styles for selects/buttons */
-select, button:focus {outline:none;}
-@media(max-width:950px){
-    .grid {flex-direction:column;}
-    .card {max-width:100%;min-width:0;}
-}
-</style>
 
-<!-- ... inside your <script> ... -->
-
+function filterMeals(){
+    renderGrid();
+}
+function getFilters(){
+    return {
+        diet: document.getElementById("dietFilter").value,
+        time: document.getElementById("timeFilter").value
+    };
+}
 function renderGrid(){
     const grid=document.getElementById('grid');
     const empty=document.getElementById('empty');
@@ -170,5 +371,106 @@ function renderGrid(){
         `}).join('');
     }
 }
+function ingredientQtyString(ingredient){
+    let cleaned = ingredient.replace(/\b(\w)\s+(\w)\b/g, '$1$2');
+    cleaned = cleaned.replace(/\begg s\b/gi,"eggs").replace(/\bbaco n\b/gi,"bacon").replace(/\bsausag e\b/gi,"sausage");
+    let match = cleaned.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
+    if(match){
+        let qty = match[1], unit = match[2]||"", rest = match[3];
+        return `${qty} ${unit} ${rest}`.trim();
+    }
+    return cleaned;
+}
+function estimateMealTime(ingredients) {
+    let timeTotal = 0;
+    if (!ingredients) return 10;
+    ingredients.forEach(line => {
+        let lc = line.toLowerCase();
+        let match = lc.match(/(\d+(?:\.\d+)?)\s*(g|kg|ml|l|egg|eggs|cup|tbsp|tsp)?\s*(.+)/);
+        // Heuristic: +5 min per ingredient, +10 for meats, +10 for oven/boil
+        timeTotal += 5;
+        if (lc.includes("chicken") || lc.includes("lamb") || lc.includes("beef") || lc.includes("pork")) timeTotal += 10;
+        if (lc.includes("oven") || lc.includes("roast") || lc.includes("boil")) timeTotal += 10;
+    });
+    return Math.ceil(timeTotal/10)*10;
+}
+function addMealToPlannerDirect(mealIdx, idx){
+    const day = document.getElementById(`plannerDay${idx}`).value;
+    const time = document.getElementById(`plannerTime${idx}`).value;
+    if(!day || !time){ alert("Please select Day & Time for meal planner"); return; }
+    let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
+    while(planner.length < 7){ planner.push({slots:{}});}
+    let dayIdx = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].indexOf(day);
+    if(dayIdx<0) return;
+    if(!planner[dayIdx].slots) planner[dayIdx].slots={};
+    planner[dayIdx].slots[time] = {...MEALS[mealIdx]};
+    localStorage.setItem('hubPlanner', JSON.stringify(planner));
+    alert(`Added "${MEALS[mealIdx].title}" to planner for ${day} / ${time}`);
+}
 
-<!-- ... All other logic remains the same ... -->
+function viewMeal(idx){
+    let m = MEALS[idx];
+    let servings = m.servings||1;
+    let timeEstimate = typeof m.time === 'number'
+        ? Math.ceil(m.time/10)*10
+        : estimateMealTime(m.ing);
+    let dietaryView = m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${d.replace('-',' ')}</span>`).join(''):"";
+    let mealTime = m.type
+        ? `<span class="tag tag-type">${(m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1))}</span>`
+        : '';
+    let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photo" style="width:100%;max-width:100%;max-height:180px;border-radius:8px;">` : m.emoji||'🍽️';
+    let urlView = m.url ? `<div style="margin-top:.7em;font-size:.98em;"><a href="${m.url}" target="_blank">${m.url}</a></div>` : '';
+    document.getElementById("viewTitle").textContent = m.title;
+    document.getElementById("viewBody").innerHTML = `
+        <div class="meal-photo-preview">${photo}</div>
+        ${mealTime} ${dietaryView}
+        <div class="modal-time">Estimated time: ${timeEstimate} mins</div>
+        ${urlView}
+        <div style="margin-top:1em;">
+            <strong>Ingredients and Quantities:</strong>
+            <ul>${(m.ing||[]).map(i=>`<li>${ingredientQtyString(i)}</li>`).join('')}</ul>
+        </div>
+        <div style="margin-top:1em;">
+            <strong>Instructions:</strong>
+            <p style="white-space:pre-wrap;">${m.instructions||""}</p>
+        </div>
+        <div style="margin-top:1em;"><strong>Servings:</strong> ${servings} adult${servings>1?'s':''}</div>
+    `;
+    openModal('view');
+}
+
+function saveRecipe(event){
+    event.preventDefault();
+    let title = document.getElementById('title').value.trim();
+    let type = document.getElementById('type').value;
+    let dietArray = Array.from(document.getElementById('diet').selectedOptions).map(opt=>opt.value);
+    let ingRaw = document.getElementById('ingredients').value.split(',').flatMap(s=>s.split('\n')).map(t=>t.trim()).filter(t=>t);
+    let instructions = document.getElementById('instructions').value;
+    let servings = parseInt(document.getElementById('servings').value)||1;
+    let url = document.getElementById('urlInput').value.trim();
+    let time = estimateMealTime(ingRaw);
+    let photo = photoDataUrl || "";
+    let meal = {
+        id: "m"+Date.now()+Math.random().toString(16).slice(2),
+        title,
+        type,
+        diet: dietArray,
+        ing: ingRaw,
+        instructions,
+        servings,
+        fav: false,
+        emoji: "🍽️",
+        url,
+        time,
+        photo
+    };
+    MEALS.push(meal);
+    localStorage.setItem(LS_KEY, JSON.stringify(MEALS));
+    closeModal('add');
+    renderGrid();
+    alert('Recipe saved!');
+}
+window.addEventListener('DOMContentLoaded',renderGrid);
+</script>
+</body>
+</html>
