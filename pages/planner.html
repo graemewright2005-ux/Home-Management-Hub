@@ -8,32 +8,30 @@
         :root {
             --primary: #667eea;
             --primary-dark: #764ba2;
-            --gradient: linear-gradient(135deg,#f1d8ff 0%, #cfe8fc 100%);
-            --bg: #f7f9fc;
-            --card: #fff;
-            --text: #273248;
-            --text-dim: #7987a0;
-            --border: #e3e6f2;
-            --accent: #f59e42;
+            --gradient: linear-gradient(120deg,#b0bbe9 0%, #fdb6b6 100%);
+            --bg: #e9eef6;
+            --card: #f7f7fb;
+            --text: #25304b;
+            --text-dim: #6a7fa7;
+            --border: #dbe1ec;
+            --accent: #e37b38;
+            --tag: #fff8e8;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.61;
             min-height:100vh;
         }
         * { box-sizing: border-box; margin: 0; padding: 0;}
-        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
-        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
-        .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-        .nav-menu {display:flex;gap:0.5rem;list-style:none;}
-        .nav-menu a {padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600;font-size:0.95rem; transition:all 0.2s;}
-        .nav-menu a:hover { background: rgba(102,126,234,0.10); color:var(--primary);}
+        .nav { background: #fcfcfc; border-bottom: 1px solid var(--border); padding: 1rem 1.5rem;}
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex;justify-content: space-between; align-items: center;}
+        .nav-brand { font-size: 1.5rem; font-weight: 800; background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .nav-menu {display:flex; gap:0.58rem; list-style:none;}
+        .nav-menu a {padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600;font-size:0.97rem;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.15); color:var(--primary);}
         .nav-menu a.active { background: var(--gradient); color: white; }
-        @media(max-width:768px){
-            .nav-menu{flex-direction:column;}
-        }
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
         .header {
             display: flex; flex-wrap:wrap; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap:1rem;
@@ -49,25 +47,25 @@
         }
         .planner-action { display:flex; gap: 0.9rem; margin-bottom:2rem; }
         .btn {
-            padding:0.82rem 1.6rem;
+            padding:0.81rem 1.5rem;
             border-radius:8px;
             font-weight:600;
             cursor:pointer;
             border:none;
             background: var(--gradient);
-            color:#764ba2;
+            color:#fff;
             font-size:1rem;
-            box-shadow:0 1px 6px #e3eaf8a0;
-            transition:background 0.18s, color 0.16s;
+            box-shadow:0 1px 6px #e3eaf89a;
+            transition:background 0.19s, color 0.16s;
         }
-        .btn:hover{ background: linear-gradient(120deg,#bdb4fc 0%, #c3f2ff 100%); color:#3a216d;}
+        .btn:hover{ background: linear-gradient(120deg, #dac8fc 0%, #c3f2ff 100%); color:#394368;}
         .btn-secondary{
             background:#e3eafe;
             color:#764ba2;
             border:1.5px solid var(--border);
         }
-        .btn-secondary:hover{background:var(--gradient);color:#3a216d;}
-        /* Grid for planner days */
+        .btn-secondary:hover{background:var(--gradient);color:#24213d;}
+        /* Responsive grid */
         .planner-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -78,54 +76,57 @@
             .planner-grid { grid-template-columns:1fr; gap:1rem;}
         }
         .day-card {
-            background:var(--card); 
-            border:1.5px solid var(--border); 
+            background:var(--card);
+            border:1.5px solid var(--border);
             border-radius:17px;
-            box-shadow: 0 2px 14px 0 #cfe8fc25;
-            padding:1.4em 2em 1.2em 2em;
-            min-width:260px; max-width:620px;
+            box-shadow: 0 2px 17px #cfe8fc2a;
+            padding:1.36em 1.6em 1.2em 1.6em;
+            min-width:240px; max-width:650px;
         }
         .day-label {
-            font-size:1.25em;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.9em;letter-spacing:0.02em;
+            font-size:1.25em; font-weight:800; color:#4474c7;
+            margin-bottom:0.89em;
+            letter-spacing:0.01em;
         }
-        .meal-block {
-            margin-bottom:1.6em; font-size:1.08em;
-        }
-        .meal-header { font-weight:700; margin-bottom:0.28em; color:#273248;}
-        .meal-cell-content { display:flex; align-items:center; gap:0.55em; margin-bottom:0.12em;}
-        .meal-emoji { font-size:1.48em; margin-right:0.15em; }
-        .meal-title { font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-right:0.33em; font-size:1.08em;}
-        .meal-type {font-size:0.97em; color:#576389; font-style:italic; background:#e3eafe; border-radius:3px; padding:0 0.4em;}
-        .meal-diet {font-size:0.97em; color:#b45309;background:#fff6ea;border-radius:3px; padding:0 0.4em; margin-left:0.3em;}
-        .clear-link {color:var(--primary-dark);cursor:pointer;font-size:0.97em;background:none;border:none;}
+        .meal-block { margin-bottom:1.25em; }
+        .meal-header { font-weight:700; margin-bottom:0.18em; color:#25304b; font-size:1.08em;}
+        .meal-cell-content { display:flex; align-items:center; gap:0.46em; margin-bottom:0.02em;}
+        .meal-emoji { font-size:1.43em; margin-right:0.08em;}
+        .meal-title { font-weight:700; color:#764ba2; margin-right:0.27em; font-size:1.1em;}
+        .meal-type {font-size:0.98em; color:#576389; font-style:italic; background:#e3eafe; border-radius:3px; padding:0 0.38em;}
+        .meal-diet {font-size:0.97em; color:#e37b38; background:#fff9ee; border-radius:3px; padding:0 0.37em; margin-left:0.22em;}
+        .clear-link {color:#764ba2;cursor:pointer;font-size:0.97em;background:none;border:none;margin-left:0.8em;}
         .clear-link:hover{text-decoration:underline;}
-        .meal-ingredients {font-size:1.01em; color:#a05718; margin-left:2.3em; margin-top:-0.22em;}
+        .meal-ingredients {
+            font-size:1.05em;
+            color:var(--accent);
+            margin-left:2.1em;
+            margin-top:0.07em;
+            letter-spacing:0.04em;
+            word-break:break-word;
+        }
         /* Dropdown styling for select (non-corporate look) */
         .meal-select {
-            width:100%;
-            padding:0.62em 1em;
-            border-radius:8px;
-            border:1.5px solid var(--border);
-            background: #f6f8fc;
+            width:100%; padding:0.58em 0.85em;
+            border-radius:9px; border:1.5px solid var(--border);
+            background: #f4f6fb;
             color: #273248;
-            font-size:1.06em;
-            font-weight:500;
-            transition: border 0.17s, box-shadow 0.17s;
-            margin-bottom:0.26em;
-            box-shadow:0 1px 4px #e3eaf868;
+            font-size:1.07em; font-weight:500;
+            margin-bottom:0.22em;
+            box-shadow:0 1px 5px #e3eaf841;
         }
         .meal-select:focus {
-            border-color: var(--primary-dark);
+            border-color: #734b9a;
             outline:none;
             background:#e3eafe;
-            box-shadow:0 2px 8px #c3f2ff40;
+            color: #1e2541;
         }
-        .empty { color: var(--text-dim); font-size:1.02rem; margin-top:2em; text-align:center;}
+        .empty { color: var(--text-dim); font-size:1.065rem; margin-top:2em; text-align:center;}
         @media(max-width:660px){
             .meal-block {font-size:1em;}
             .day-label {font-size:1.1em;}
             .planner-grid {padding-left:0;padding-right:0;}
-            .day-card{min-width:0;padding:1em 0.7em;}
+            .day-card{min-width:0;padding:1em 0.6em;}
         }
     </style>
 </head>
@@ -159,7 +160,6 @@
 const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const MEAL_TIMES = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const meals = JSON.parse(localStorage.getItem('hubMeals')||'[]');
-// Return meal options with emoji and type, grouped
 function getMealOptions(mt){
     return meals.map(m=>
         `<option value="${m.id}">${m.emoji ? m.emoji+" " : ""}${m.title} (${m.type||mt})</option>`
@@ -174,13 +174,31 @@ function loadPlanner(){
     return planner;
 }
 function savePlanner(planner){ localStorage.setItem('hubPlanner', JSON.stringify(planner)); }
-// Accessibility: escape content
 function escapeHTML(str) {
     if (!str) return '';
     return str.replace(/[&<>"']/g,
         function(m) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
 }
-
+function ingredientQtyString(ingredient, servings=1){
+    let cleaned = ingredient
+        .replace(/\b([a-zA-Z]+)\s([a-zA-Z])\b/g, '$1$2')
+        .replace(/\begg s\b/gi, "eggs")
+        .replace(/\bbaco n\b/gi, "bacon")
+        .replace(/\bsausag e\b/gi, "sausage")
+        .replace(/\btomat o\b/gi, "tomato")
+        .replace(/\bmushroo m\b/gi, "mushroom")
+        .replace(/\bchil i\b/gi, "chili")
+        .replace(/\bchoc olate\b/gi, "chocolate")
+        .replace(/\bonio n\b/gi, "onion");
+    let match = cleaned.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
+    if(match){
+        let qty = match[1], unit = match[2]||"", rest = match[3];
+        let perAdult = Math.ceil(parseFloat(qty) * 4 / (servings||1));
+        if (!isNaN(perAdult) && perAdult > 0) qty = perAdult.toString();
+        return `${qty} ${unit} ${rest}`.replace(/\s+/g,' ').trim();
+    }
+    return /^([a-zA-Z ]+)$/.test(cleaned) ? `4 ${cleaned}` : cleaned;
+}
 function renderPlanner(){
     let planner = loadPlanner();
     let isEmpty = true;
@@ -193,6 +211,9 @@ function renderPlanner(){
             let mealCell = '';
             if(mealObj && mealObj.title){
                 isEmpty = false;
+                let qtysText = mealObj.ing && mealObj.ing.length ?
+                  mealObj.ing.map(x=>ingredientQtyString(x, mealObj.servings)).join(', ') :
+                  '';
                 mealCell = `
                 <div class="meal-cell-content">
                     <span class="meal-emoji">${escapeHTML(mealObj.emoji||"")}</span>
@@ -201,7 +222,7 @@ function renderPlanner(){
                     ${mealObj.diet && mealObj.diet.length ? `<span class="meal-diet">${escapeHTML(mealObj.diet.join(', '))}</span>` :''}
                     <button class="clear-link" onclick="clearMeal(event, ${i}, '${mt}')">Clear</button>
                 </div>
-                <div class="meal-ingredients">${ (mealObj.ing&&mealObj.ing.length)? escapeHTML(mealObj.ing.join(', ')) : ''}</div>
+                <div class="meal-ingredients">${qtysText}</div>
                 `;
             } else {
                 mealCell = `
@@ -223,7 +244,6 @@ function renderPlanner(){
     }
     document.getElementById('plannerGrid').innerHTML = gridHTML;
     document.getElementById('emptyPlanner').style.display = isEmpty ? "block":"none";
-    // Repopulate selects
     let plannerData = loadPlanner();
     let selects = document.querySelectorAll('.meal-select');
     selects.forEach((s,idx) => {
@@ -286,7 +306,6 @@ function generateShoppingListFromPlanner() {
     localStorage.setItem('hubShopping', JSON.stringify(shopping));
     alert("Weekly meals added to shopping list!");
 }
-// Render on load
 window.addEventListener('DOMContentLoaded', renderPlanner);
 </script>
 </body>
