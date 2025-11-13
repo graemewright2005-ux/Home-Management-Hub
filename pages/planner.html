@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cleaning | Home Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Planner - Home Hub</title>
     <style>
         :root {
             --primary: #667eea;
@@ -16,212 +16,214 @@
             --border: #dbe1ec;
             --accent: #f59e42;
         }
-        body { background:var(--bg); color:var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        * { box-sizing: border-box; }
-        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0;}
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        * { box-sizing: border-box; margin: 0; padding: 0;}
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
         .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
         .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-        .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
-        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem; transition:all 0.2s;}
+        .nav-toggle {display:none;}
+        .nav-menu {display:flex;gap:0.5rem;list-style:none;}
+        .nav-menu a {padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600;font-size:0.95rem; transition:all 0.2s;}
         .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
-        .nav-menu a.active { background: var(--gradient); color:white;}
+        .nav-menu a.active { background: var(--gradient); color: white; }
         @media(max-width:768px){
-            .nav-menu{flex-direction:column;}
+            .nav-toggle{display:block;}
+            .nav-menu{position:fixed;top:70px;left:0;right:0;background:var(--card);flex-direction:column;padding:1rem;transform:translateY(-100%);opacity:0;pointer-events:none;transition:all 0.3s;}
+            .nav-menu.active{transform:translateY(0);opacity:1;pointer-events:all;}
+            .nav-menu a{width:100%;}
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
-        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
-        /* Week selector */
-        .week-picker-row {
-            display: flex; gap: 1.2em; align-items: center; margin-bottom: 2em; flex-wrap: wrap;
-            background: var(--card); padding: 1.2em 1.3em; border-radius: 14px; box-shadow: 0 2px 9px 0 rgba(160,170,220,0.14);
-        }
-        .week-picker-row label { font-weight:600; color:var(--primary-dark);}
-        .week-picker-row select {
-            border-radius: 9px; background: #fff; border: 1px solid var(--border);
-            color: var(--text); padding: 0.47em 1em; font-size: 1.05em; box-shadow: 0 1px 5px 0 rgba(146,172,234,0.09);
-        }
-        .week-picker-row select:focus { outline:none; border-color: var(--primary); box-shadow: 0 2px 8px 0 #a4befe44;}
-        /* Cleaning cards and equipment */
-        .cleaning-tasks-table { width:100%; border-collapse:collapse; margin-bottom:2.5em;}
-        th, td { border:1px solid var(--border); padding:1.1em 0.8em; background:var(--card);}
-        th { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:1.01em;}
-        .cleaning-card {
-            background:var(--card); border-radius:15px; border:1px solid var(--border); box-shadow: 0 3px 12px 0 rgba(190,196,220,0.09);
-            margin-bottom:1.2em; padding:1.3em 1.3em; display:flex;flex-direction:column; min-height:180px;
-            justify-content:space-between;
-        }
-        .cleaning-card-title { font-size:1.15em; font-weight:700; margin-bottom:0.3em; color:var(--primary-dark);}
-        .cleaning-card-desc { font-size:1em; margin-bottom:0.12em; color:var(--text-dim);}
-        .cleaning-card-actions { margin-top:auto; }
-        /* Equipment/shopping section */
-        .shopping-equip {
-            background:var(--card); border-radius:12px; border:1px solid var(--border); padding:1.3em 1.5em; margin-top:2em; box-shadow: 0 2px 8px 0 rgba(160,160,192,0.15);}
-        .shopping-equip label { font-weight:700; font-size:1.13em; color:var(--primary);}
-        .shopping-equip input[type=text] {
-            padding:0.65em 1em; border-radius:8px; border:1px solid var(--border); font-size:1em; margin-right:0.75em;
-        }
-        .shopping-equip .btn { padding:0.65em 1.3em; border-radius:7px; font-weight:600; color:#fff; background:var(--gradient); border:none; cursor:pointer;}
-        .shopping-equip .btn:hover { background:linear-gradient(135deg, #764ba2 0%, #f59e42 100%);}
-        .equip-list {padding-top:1.1em;}
-        .equip-list-item {display:flex;align-items:center;justify-content:space-between;margin-bottom:0.48em;}
-        .equip-list-item span {font-size:1.08em;}
-        .equip-list-remove {color:#fff;background:#ef4444;border:none;border-radius:7px;padding:0.15em 1.1em;cursor:pointer;}
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem;}
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap:1rem;}
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0;}
+        .planner-table { width:100%; border-collapse:collapse; margin-bottom:2rem;}
+        th,td { border:1px solid var(--border); padding:1rem; background:var(--card);}
+        th { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:1rem;}
+        .planner-action { display:flex; gap: 0.7rem; margin-bottom:2rem;}
+        .btn { padding:0.8rem 1.5rem; border-radius:8px; font-weight:600; cursor:pointer; border:none; background: var(--gradient); color:white; transition:all 0.2s;}
+        .btn:hover{transform:translateY(-2px);}
+        .btn-secondary{ background:var(--card); color:var(--primary); border:1px solid var(--border);}
+        .btn-secondary:hover{ background:var(--primary); color:white;}
+        .meal-cell-content { display:flex; align-items:center; gap:0.6em; margin-bottom:0.15em; }
+        .meal-emoji { font-size:1.7em; margin-right:0.25em; }
+        .meal-title { font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-right:0.4em;}
+        .meal-type {font-size:0.92em; color:var(--text-dim);font-style:italic;background:rgba(102,126,234,0.13);border-radius:3px; padding:0 0.5em;}
+        .meal-diet {font-size:0.92em; color:#ea580c;background:rgba(245,158,66,0.13);border-radius:3px; padding:0 0.5em; margin-left:0.3em;}
+        .ingredients-list { display:block; font-size:0.97em; color: var(--text-dim); margin-left:2.2em; margin-top:-0.28em;}
         .empty { color: var(--text-dim); font-size:1.02rem;}
+        .meal-select {width:90%;margin-bottom:0.3em;}
+        @media(max-width:660px){
+            th, td { padding:0.4rem;}
+            .ingredients-list { margin-left:0.8em;}
+        }
+        .clear-link {color:var(--primary);cursor:pointer;font-size:0.98em;background:none;border:none;}
+        .clear-link:hover{text-decoration:underline;}
     </style>
 </head>
 <body>
 <nav class="nav">
     <div class="nav-content">
         <div class="nav-brand">🏠 Home Hub</div>
+        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
         <ul class="nav-menu" id="navMenu">
             <li><a href="../index.html">📊 Dashboard</a></li>
             <li><a href="meals.html">🍽️ Meals</a></li>
-            <li><a href="planner.html">📅 Planner</a></li>
+            <li><a href="planner.html" class="active">📅 Planner</a></li>
             <li><a href="shopping.html">🛒 Shopping</a></li>
-            <li><a href="cleaning.html" class="active">🧹 Cleaning</a></li>
+            <li><a href="cleaning.html">🧹 Cleaning</a></li>
             <li><a href="maintenance.html">🛠️ Maintenance</a></li>
             <li><a href="settings.html">⚙️ Settings</a></li>
         </ul>
     </div>
 </nav>
 <div class="container">
-    <h1>Cleaning</h1>
-    <div class="week-picker-row">
-        <label for="weekSelect">Select Week:</label>
-        <select id="weekSelect" onchange="renderCleaningWeek()"></select>
-        <span id="weekLabel"></span>
+    <div class="header">
+        <h1>Weekly Meal Planner</h1>
+        <div class="planner-action">
+            <button class="btn" onclick="generateShoppingListFromPlanner()">Generate Shopping List</button>
+            <a href="shopping.html"><button class="btn-secondary">Go To Shopping List</button></a>
+        </div>
     </div>
-    <div id="weekCleaningDisplay"></div>
-    <!-- Equipment/shopping list section at bottom -->
-    <div class="shopping-equip">
-        <form id="equipForm" onsubmit="addCleaningEquipment(event)">
-            <label for="equipInput">Add Equipment / Cleaning Supplies to Shopping List</label><br>
-            <input type="text" id="equipInput" placeholder="E.g. Toilet Duck, Cleaner...">
-            <button class="btn" type="submit">Add</button>
-        </form>
-        <div class="equip-list" id="equipList"></div>
-    </div>
+    <table class="planner-table">
+        <thead>
+            <tr>
+                <th style="width:110px;">Day</th>
+                <th>Meal</th>
+                <th>Ingredients</th>
+            </tr>
+        </thead>
+        <tbody id="plannerRows"></tbody>
+    </table>
+    <div class="empty" id="emptyPlanner" style="display:none;">No meals planned this week. Add meals using the Meals page or manually below.</div>
 </div>
 <script>
-// --- Week Picker, Monday-Sunday aligned, can cross months
-function getWeeksOfMonth(year, month) {
-    // month is 0-indexed!
-    let d = new Date(year, month, 1);
-    while (d.getDay() !== 1) { d.setDate(d.getDate() + 1); } // first Monday
-    let weeks = [];
-    let weekStart = new Date(d);
-    do {
-        let weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6);
-        weeks.push({start: new Date(weekStart), end: new Date(weekEnd)});
-        weekStart.setDate(weekStart.getDate() + 7);
-    } while (weekStart.getMonth() === month || (weekStart <= new Date(year, month+1,0)));
-    // If 1st of month not Monday, add previous week (can cross months)
-    let firstOfMonth = new Date(year, month, 1);
-    let prevWeekStart = new Date(d); prevWeekStart.setDate(prevWeekStart.getDate()-7);
-    if (d.getDate() !== 1) weeks.unshift({ start: prevWeekStart, end: new Date(prevWeekStart.getFullYear(), prevWeekStart.getMonth(), prevWeekStart.getDate()+6) });
-    return weeks;
+const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MEAL_TIMES = ["Breakfast", "Lunch", "Dinner", "Snack"];
+const meals = JSON.parse(localStorage.getItem('hubMeals')||'[]');
+function getMealOptions(){
+    return meals.map(m=>`<option value="${m.id}">${m.title} (${m.type})</option>`).join('');
 }
-
-function populateWeekSelect() {
-    const select = document.getElementById("weekSelect");
-    select.innerHTML = "";
-    let now = new Date();
-    let year = now.getFullYear();
-    let month = now.getMonth();
-
-    let weeks = getWeeksOfMonth(year, month);
-    weeks.forEach((week, idx) => {
-        let startStr = `${week.start.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
-        let endStr = `${week.end.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
-        let label = `Mon ${startStr} – Sun ${endStr} '${week.end.getFullYear().toString().slice(-2)}`;
-        select.innerHTML += `<option value="${week.start.toISOString()}">${label}</option>`;
-    });
-
-    select.selectedIndex = weeks.findIndex(w=>{
-        let today = new Date();
-        return today >= w.start && today <= w.end;
-    });
-    setWeekLabel();
+function loadPlanner(){
+    let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
+    while(planner.length<7){ planner.push({slots:{}});}
+    for(let i=0;i<7;i++){
+        if(!planner[i].slots) planner[i].slots={};
+    }
+    return planner;
 }
+function savePlanner(planner){ localStorage.setItem('hubPlanner', JSON.stringify(planner)); }
 
-function setWeekLabel() {
-    const select = document.getElementById("weekSelect");
-    const weekStart = new Date(select.value);
-    let weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate()+6);
-    document.getElementById('weekLabel').textContent =
-        `Viewing: Mon ${weekStart.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})} – Sun ${weekEnd.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})}`;
-}
+function renderPlanner(){
+    let planner = loadPlanner();
+    let rows = '';
+    let isEmpty = true;
 
-function renderCleaningWeek() {
-    setWeekLabel();
-    const select = document.getElementById("weekSelect");
-    const weekStart = new Date(select.value);
-    let weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6);
-    // Dummy tasks for example, replace with your own cleaning logic!
-    let sampleTasks = [
-        { day: 'Monday', task: 'Hoover living room', room: 'Living Room' },
-        { day: 'Wednesday', task: 'Clean bathroom sink', room: 'Bathroom' },
-        { day: 'Saturday', task: 'Dust shelves', room: 'Bedroom' }
-    ];
-    let display = `<table class="cleaning-tasks-table"><thead><tr><th>Day</th><th>Room</th><th>Task</th></tr></thead><tbody>`;
-    for (let i=0; i<7; i++) {
-        let day = new Date(weekStart); day.setDate(day.getDate()+i);
-        let dayStr = day.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
-        let found = sampleTasks.filter(t => t.day === day.toLocaleDateString('en-GB',{weekday:'long'}));
-        if (found.length) found.forEach(t=>{
-            display += `<tr><td>${dayStr}</td><td>${t.room}</td><td>${t.task}</td></tr>`;
+    for(let i=0;i<7;i++){
+        let slot = planner[i].slots;
+        let mealCells = '';
+        MEAL_TIMES.forEach(mt=>{
+            let mealObj = slot[mt] ? meals.find(m=>m.id === slot[mt].id) || slot[mt] : null;
+            let mealPreview = '';
+            if(mealObj && mealObj.title){
+                isEmpty = false;
+                mealPreview = `
+                    <div class="meal-cell-content">
+                        <span class="meal-emoji">${mealObj.emoji||""}</span>
+                        <span class="meal-title">${mealObj.title}</span>
+                        <span class="meal-type">${mt.toLowerCase()}</span>
+                        ${mealObj.diet && mealObj.diet.length ? `<span class="meal-diet">${mealObj.diet.join(', ')}</span>`:''}
+                        <button class="clear-link" onclick="clearMeal(event, ${i}, '${mt}')">Clear</button>
+                    </div>
+                `;
+            } else {
+                mealPreview = `
+                    <div class="meal-cell-content">
+                        <select class="meal-select" onchange="setMeal(${i},'${mt}',this.value)">
+                            <option value="">Select ${mt}</option>${getMealOptions()}
+                        </select>
+                    </div>
+                `;
+            }
+            let ingPreview = (mealObj && mealObj.ing && mealObj.ing.length)
+                ? `<div class="ingredients-list">${mealObj.ing.join(', ')}</div>`
+                : '';
+            mealCells += `<div style="margin-bottom:0.35em;">
+                <strong>${mt}:</strong>
+                ${mealPreview}
+                ${ingPreview}
+            </div>`;
         });
-        else display += `<tr><td>${dayStr}</td><td>-</td><td>-</td></tr>`;
-    }
-    display += "</tbody></table>";
-    document.getElementById('weekCleaningDisplay').innerHTML = display;
-}
 
-// --- Equipment/Cleaning Shopping List
-function getCleaningEquipment() {
-    return JSON.parse(localStorage.getItem('hubCleaningEquipment') || "[]");
-}
-function saveCleaningEquipment(list) {
-    localStorage.setItem('hubCleaningEquipment', JSON.stringify(list));
-}
-function addCleaningEquipment(event){
-    event.preventDefault();
-    let val = document.getElementById('equipInput').value.trim();
-    if(!val) return;
-    let list = getCleaningEquipment();
-    if(!list.includes(val)) list.push(val);
-    saveCleaningEquipment(list);
-    renderCleaningEquipment();
-    document.getElementById('equipInput').value = '';
-}
-function removeCleaningEquipment(idx){
-    let list = getCleaningEquipment();
-    list.splice(idx,1);
-    saveCleaningEquipment(list);
-    renderCleaningEquipment();
-}
-function renderCleaningEquipment(){
-    const list = getCleaningEquipment();
-    const div = document.getElementById('equipList');
-    if(list.length===0){
-        div.innerHTML = `<div class="empty">No cleaning equipment/supplies added.</div>`;
-        return;
+        rows += `<tr>
+            <td>${WEEKDAYS[i]}</td>
+            <td style="padding:1em 1em 1em 0.7em;">${mealCells}</td>
+            <td></td>
+        </tr>`;
     }
-    div.innerHTML = list.map((item,idx)=>`
-        <div class="equip-list-item">
-            <span>${item}</span>
-            <button class="equip-list-remove" onclick="removeCleaningEquipment(${idx})">Remove</button>
-        </div>
-    `).join('');
+    document.getElementById('plannerRows').innerHTML = rows;
+    document.getElementById('emptyPlanner').style.display = isEmpty ? "block":"none";
+    let plannerData = loadPlanner();
+    let selects = document.querySelectorAll('.meal-select');
+    selects.forEach((s,idx) => {
+        let day = Math.floor(idx/MEAL_TIMES.length);
+        let time = MEAL_TIMES[idx%MEAL_TIMES.length];
+        let id = plannerData[day] && plannerData[day].slots[time] && plannerData[day].slots[time].id ? plannerData[day].slots[time].id : "";
+        s.value = id;
+    });
 }
-
-window.addEventListener("DOMContentLoaded",()=>{
-    populateWeekSelect();
-    renderCleaningWeek();
-    renderCleaningEquipment();
-});
+function setMeal(day, mt, mealId){
+    let planner = loadPlanner();
+    let mealObj = meals.find(m=>m.id === mealId);
+    if(!planner[day].slots) planner[day].slots={};
+    planner[day].slots[mt] = mealObj ? {...mealObj} : null;
+    savePlanner(planner);
+    renderPlanner();
+}
+function clearMeal(event, day, mt){
+    event.stopPropagation();
+    let planner = loadPlanner();
+    if(!planner[day].slots) planner[day].slots={};
+    planner[day].slots[mt] = null;
+    savePlanner(planner);
+    renderPlanner();
+}
+function generateShoppingListFromPlanner() {
+    let planner = loadPlanner();
+    let weekIngredients = [];
+    planner.forEach(slotObj=>{
+        Object.values(slotObj.slots||{}).forEach(meal=>{
+            if(meal && meal.ing){
+                weekIngredients.push(...meal.ing);
+            }
+        });
+    });
+    function parseIngredient(ingredient) {
+        let parts = ingredient.trim().split(" ");
+        if (parts.length>=2 && !isNaN(parts[0])) {
+            return {name:parts.slice(1).join(" "), qty:Number(parts[0])};
+        }
+        return {name:ingredient.trim(), qty:1};
+    }
+    let merged = {};
+    weekIngredients.forEach(i => {
+        let {name, qty} = parseIngredient(i);
+        let key = name.toLowerCase();
+        if(name=='') return;
+        if(merged[key]) merged[key].qty += qty;
+        else merged[key]={name, qty};
+    });
+    let shopping = JSON.parse(localStorage.getItem('hubShopping')||'[]');
+    Object.values(merged).forEach(({name,qty}) => {
+        let idx = shopping.findIndex(i=>i.name.toLowerCase()===name.toLowerCase());
+        if(idx>=0) {
+            shopping[idx].qty = (shopping[idx].qty||1)+qty;
+        } else {
+            shopping.push({name, qty, fav:false, checked:false});
+        }
+    });
+    localStorage.setItem('hubShopping', JSON.stringify(shopping));
+    alert("Weekly meals added to shopping list!");
+}
+renderPlanner();
 </script>
 </body>
 </html>
