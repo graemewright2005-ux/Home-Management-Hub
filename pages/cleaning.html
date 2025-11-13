@@ -8,69 +8,139 @@
         :root {
             --primary: #667eea;
             --primary-dark: #764ba2;
-            --gradient: linear-gradient(135deg, #a4befe 0%, #f0b7a4 100%);
-            --bg: #eef1f8;
-            --card: #f6f8fc;
-            --text: #203040;
-            --text-dim: #6273a1;
-            --border: #dbe1ec;
-            --accent: #f59e42;
+            --gradient: linear-gradient(135deg,#a4befe 0%, #f0b7a4 100%);
+            --bg: #f7f9fc;
+            --card: #fff;
+            --text: #17263a;
+            --text-dim: #6a7fa7;
+            --border: #e3e6f2;
+            --accent: #e37b38;
         }
-        body { background:var(--bg); color:var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        * { box-sizing: border-box; }
-        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0;}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        * { box-sizing: border-box; margin:0; padding:0; }
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; }
         .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
         .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
         .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
-        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem; transition:all 0.2s;}
-        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
-        .nav-menu a.active { background: var(--gradient); color:white;}
-        @media(max-width:768px){
-            .nav-menu{flex-direction:column;}
-        }
+        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.12); color:var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color:#fff;}
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
-        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
-        /* Week selector */
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0;}
+        /* Week picker controls */
         .week-picker-row {
             display: flex; gap: 1.2em; align-items: center; margin-bottom: 2em; flex-wrap: wrap;
             background: var(--card); padding: 1.2em 1.3em; border-radius: 14px; box-shadow: 0 2px 9px 0 rgba(160,170,220,0.14);
         }
         .week-picker-row label { font-weight:600; color:var(--primary-dark);}
         .week-picker-row select {
-            border-radius: 9px; background: #fff; border: 1px solid var(--border);
-            color: var(--text); padding: 0.47em 1em; font-size: 1.05em; box-shadow: 0 1px 5px 0 rgba(146,172,234,0.09);
+            border-radius: 8px; background: #f7f6fb; border: 1.5px solid var(--border); color: var(--text); padding: 0.47em 1em; font-size: 1.08em; box-shadow: 0 1px 5px 0 rgba(146,172,234,0.09);
         }
         .week-picker-row select:focus { outline:none; border-color: var(--primary); box-shadow: 0 2px 8px 0 #a4befe44;}
-        /* Cleaning cards and equipment */
-        .cleaning-tasks-table { width:100%; border-collapse:collapse; margin-bottom:2.5em;}
-        th, td { border:1px solid var(--border); padding:1.1em 0.8em; background:var(--card);}
-        th { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:1.01em;}
+        /* Task grid and cards */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2em;
+            margin-bottom:2em;
+        }
+        @media(max-width:950px){ .task-grid { grid-template-columns:1fr; gap:1em; } }
+        .cleaning-task-card {
+            background: var(--card);
+            border: 1.2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.3em 2em;
+            box-shadow: 0 3px 14px 0 #cfe8fc35;
+            margin-bottom:0.8em;
+        }
+        .task-header {
+            font-size:1.1em;
+            font-weight:800;
+            margin-bottom:0.3em;
+            color: #6a7fa7;
+            letter-spacing: 0.01em;
+            background:var(--gradient);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+        .task-day-label {
+            font-size:1.2em;
+            font-weight:800;
+            margin-bottom:1em;
+            color:#4474c7;
+        }
+        .task-time {
+            font-size:1em; color:#e37b38; background:#fff8e8; border-radius: 6px; padding:0.1em 0.5em; margin-left:0.7em; font-weight:600; margin-bottom:0.2em;
+        }
+        .cleaning-task {
+            display:flex; align-items:center; gap:1em; margin-bottom:0.39em;
+        }
+        .task-room {font-size:1em; color:#764ba2; font-weight:600;}
+        .task-desc {font-size:1em; color:#273248;}
+        /* Add task controls */
+        .add-task-row { display:flex; gap:0.96em; flex-wrap:wrap; align-items:center; margin-bottom:1.18em; }
+        .add-task-row input, .add-task-row select {
+            font-size:1em;
+            padding:0.51em 0.87em;
+            border-radius:8px;
+            border:1.2px solid var(--border);
+            background:#f6faff;
+            color:#17263a;
+            margin-bottom:0.29em;
+        }
+        .add-task-row input:focus, .add-task-row select:focus {
+            outline:none;
+            border-color: #764ba2;
+            background:#e3eafe;
+        }
+        .add-task-row .btn {
+            padding:0.7em 1.12em;
+            border-radius:8px;
+            font-weight:600;
+            font-size:1em;
+            border:none;
+            background: var(--gradient);
+            color:#fff;
+            cursor:pointer;
+        }
+        .add-task-row .btn:hover { background: linear-gradient(120deg, var(--btn-hover) 3%, #f1d8ff 100%); }
+        .empty { color: var(--text-dim); font-size:1.065rem; margin:1.3em 0; text-align:center;}
+        /* Cleaning supplies section styling (copied from shopping) */
         .cleaning-card {
-            background:var(--card); border-radius:15px; border:1px solid var(--border); box-shadow: 0 3px 12px 0 rgba(190,196,220,0.09);
-            margin-bottom:1.2em; padding:1.3em 1.3em; display:flex;flex-direction:column; min-height:180px;
-            justify-content:space-between;
+            background: #f8f8fd;
+            border: 1.2px solid var(--border);
+            border-radius:15px;
+            padding:1.2em 1.5em;
+            margin-top:2.2em;
+            box-shadow:0 2px 12px #cfe8fc22;
+            max-width:650px;
         }
-        .cleaning-card-title { font-size:1.15em; font-weight:700; margin-bottom:0.3em; color:var(--primary-dark);}
-        .cleaning-card-desc { font-size:1em; margin-bottom:0.12em; color:var(--text-dim);}
-        .cleaning-card-actions { margin-top:auto; }
-        /* Equipment/shopping section */
-        .shopping-equip {
-            background:var(--card); border-radius:12px; border:1px solid var(--border); padding:1.3em 1.5em; margin-top:2em; box-shadow: 0 2px 8px 0 rgba(160,160,192,0.15);}
-        .shopping-equip label { font-weight:700; font-size:1.13em; color:var(--primary);}
-        .shopping-equip input[type=text] {
-            padding:0.65em 1em; border-radius:8px; border:1px solid var(--border); font-size:1em; margin-right:0.75em;
+        .cleaning-title {font-size:1.18em;font-weight:800;color:#6a7fa7; margin-bottom:0.5em;}
+        .cleaning-list-item {
+            display:flex;align-items:center;justify-content:space-between;margin-bottom:0.44em;font-size:1.02em;
+            padding:0.18em 0.2em;border-radius:7px;
+            background:#f6faff;
+            color:#e27c22;
         }
-        .shopping-equip .btn { padding:0.65em 1.3em; border-radius:7px; font-weight:600; color:#fff; background:var(--gradient); border:none; cursor:pointer;}
-        .shopping-equip .btn:hover { background:linear-gradient(135deg, #764ba2 0%, #f59e42 100%);}
-        .equip-list {padding-top:1.1em;}
-        .equip-list-item {display:flex;align-items:center;justify-content:space-between;margin-bottom:0.48em;}
-        .equip-list-item span {font-size:1.08em;}
-        .equip-list-remove {color:#fff;background:#ef4444;border:none;border-radius:7px;padding:0.15em 1.1em;cursor:pointer;}
-        .empty { color: var(--text-dim); font-size:1.02rem;}
+        .cleaning-list-remove {
+            color:#fff;
+            background: linear-gradient(120deg,#e37b38 30%, #fdb6b6 100%);
+            border:none;
+            border-radius:6px;
+            font-size:0.97em;
+            cursor:pointer;
+            padding:0.14em 0.75em;
+        }
+        .cleaning-list-remove:hover {background: linear-gradient(90deg,#d51b1b 0%, #ffadad 100%);}
     </style>
 </head>
 <body>
-<nav class="nav">
+<nav class="nav" aria-label="Main navigation">
     <div class="nav-content">
         <div class="nav-brand">🏠 Home Hub</div>
         <ul class="nav-menu" id="navMenu">
@@ -88,26 +158,45 @@
     <h1>Cleaning</h1>
     <div class="week-picker-row">
         <label for="weekSelect">Select Week:</label>
-        <select id="weekSelect" onchange="renderCleaningWeek()"></select>
+        <select id="weekSelect" onchange="renderCleaningWeek()" aria-label="Week picker"></select>
         <span id="weekLabel"></span>
     </div>
-    <div id="weekCleaningDisplay"></div>
-    <!-- Equipment/shopping list section at bottom -->
-    <div class="shopping-equip">
-        <form id="equipForm" onsubmit="addCleaningEquipment(event)">
-            <label for="equipInput">Add Equipment / Cleaning Supplies to Shopping List</label><br>
-            <input type="text" id="equipInput" placeholder="E.g. Toilet Duck, Cleaner...">
-            <button class="btn" type="submit">Add</button>
+    <form onsubmit="addCleaningTask(event)">
+        <div class="add-task-row">
+            <input type="text" id="addDesc" placeholder="Clean task (e.g. 'Hoover lounge')" required>
+            <input type="text" id="addRoom" placeholder="Room (e.g. 'Lounge')" required>
+            <select id="addDay" required>
+                <option value="">Day</option>
+                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+            </select>
+            <select id="addTime">
+                <option value="">Time</option>
+                <option>Morning</option>
+                <option>Afternoon</option>
+                <option>Evening</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Add Task</button>
+        </div>
+    </form>
+    <div class="task-grid" id="taskGrid"></div>
+    <div class="empty" id="emptyTasks" style="display:none;">No cleaning tasks scheduled — add one above.</div>
+    <div class="cleaning-card">
+        <div class="cleaning-title">Cleaning Supplies List</div>
+        <form id="cleaningForm" onsubmit="addCleaningSupply(event)">
+            <div class="add-task-row">
+                <input type="text" id="cleaningInput" aria-label="Add supply" placeholder="E.g. Toilet Duck, Spray..." autocomplete="off">
+                <button class="btn btn-primary" type="submit">Add Supply</button>
+            </div>
         </form>
-        <div class="equip-list" id="equipList"></div>
+        <div id="cleaningList"></div>
+        <div class="empty" id="emptyCleaning" style="display:none;">No cleaning supplies added.</div>
     </div>
 </div>
 <script>
-// --- Week Picker, Monday-Sunday aligned, can cross months
 function getWeeksOfMonth(year, month) {
-    // month is 0-indexed!
     let d = new Date(year, month, 1);
-    while (d.getDay() !== 1) { d.setDate(d.getDate() + 1); } // first Monday
+    while (d.getDay() !== 1) d.setDate(d.getDate() + 1);
     let weeks = [];
     let weekStart = new Date(d);
     do {
@@ -116,20 +205,17 @@ function getWeeksOfMonth(year, month) {
         weeks.push({start: new Date(weekStart), end: new Date(weekEnd)});
         weekStart.setDate(weekStart.getDate() + 7);
     } while (weekStart.getMonth() === month || (weekStart <= new Date(year, month+1,0)));
-    // If 1st of month not Monday, add previous week (can cross months)
     let firstOfMonth = new Date(year, month, 1);
     let prevWeekStart = new Date(d); prevWeekStart.setDate(prevWeekStart.getDate()-7);
     if (d.getDate() !== 1) weeks.unshift({ start: prevWeekStart, end: new Date(prevWeekStart.getFullYear(), prevWeekStart.getMonth(), prevWeekStart.getDate()+6) });
     return weeks;
 }
-
 function populateWeekSelect() {
     const select = document.getElementById("weekSelect");
     select.innerHTML = "";
     let now = new Date();
     let year = now.getFullYear();
     let month = now.getMonth();
-
     let weeks = getWeeksOfMonth(year, month);
     weeks.forEach((week, idx) => {
         let startStr = `${week.start.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
@@ -137,14 +223,12 @@ function populateWeekSelect() {
         let label = `Mon ${startStr} – Sun ${endStr} '${week.end.getFullYear().toString().slice(-2)}`;
         select.innerHTML += `<option value="${week.start.toISOString()}">${label}</option>`;
     });
-
     select.selectedIndex = weeks.findIndex(w=>{
         let today = new Date();
         return today >= w.start && today <= w.end;
     });
     setWeekLabel();
 }
-
 function setWeekLabel() {
     const select = document.getElementById("weekSelect");
     const weekStart = new Date(select.value);
@@ -152,75 +236,118 @@ function setWeekLabel() {
     document.getElementById('weekLabel').textContent =
         `Viewing: Mon ${weekStart.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})} – Sun ${weekEnd.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})}`;
 }
-
+function getAllTasks() {
+    return JSON.parse(localStorage.getItem('hubCleaningTasks') || "[]");
+}
+function saveAllTasks(tasks) {
+    localStorage.setItem('hubCleaningTasks', JSON.stringify(tasks));
+}
+function addCleaningTask(event){
+    event.preventDefault();
+    let task = {
+        desc: document.getElementById('addDesc').value.trim(),
+        room: document.getElementById('addRoom').value.trim(),
+        day: document.getElementById('addDay').value,
+        time: document.getElementById('addTime').value,
+        id: "ct"+Date.now()+Math.random().toString(16).slice(2)
+    };
+    if(!task.desc || !task.room || !task.day) return;
+    let tasks = getAllTasks();
+    tasks.push(task);
+    saveAllTasks(tasks); document.querySelector('form').reset();
+    renderCleaningWeek();
+}
+function deleteCleaningTask(taskId){
+    let tasks = getAllTasks();
+    let filtered = tasks.filter(t => t.id !== taskId);
+    saveAllTasks(filtered);
+    renderCleaningWeek();
+}
 function renderCleaningWeek() {
     setWeekLabel();
     const select = document.getElementById("weekSelect");
     const weekStart = new Date(select.value);
-    let weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6);
-    // Dummy tasks for example, replace with your own cleaning logic!
-    let sampleTasks = [
-        { day: 'Monday', task: 'Hoover living room', room: 'Living Room' },
-        { day: 'Wednesday', task: 'Clean bathroom sink', room: 'Bathroom' },
-        { day: 'Saturday', task: 'Dust shelves', room: 'Bedroom' }
-    ];
-    let display = `<table class="cleaning-tasks-table"><thead><tr><th>Day</th><th>Room</th><th>Task</th></tr></thead><tbody>`;
-    for (let i=0; i<7; i++) {
-        let day = new Date(weekStart); day.setDate(day.getDate()+i);
-        let dayStr = day.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
-        let found = sampleTasks.filter(t => t.day === day.toLocaleDateString('en-GB',{weekday:'long'}));
-        if (found.length) found.forEach(t=>{
-            display += `<tr><td>${dayStr}</td><td>${t.room}</td><td>${t.task}</td></tr>`;
-        });
-        else display += `<tr><td>${dayStr}</td><td>-</td><td>-</td></tr>`;
+    let weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+    // Find week days as Date objects
+    let weekDays = Array.from({length:7},(_,i)=>{let d=new Date(weekStart);d.setDate(weekStart.getDate()+i);return d;});
+    // Get tasks for dates in week
+    let allTasks = getAllTasks();
+    // Map weekday names to date objects
+    let dayNames = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    let gridHTML = "";
+    for(let col=0;col<2;col++){
+        gridHTML += `<div>`;
+        for(let row=0; row<4; row++){
+            let idx = col*4+row;
+            if(idx>=7) continue;
+            let d = weekDays[idx];
+            let name = dayNames[idx];
+            let tasks = allTasks.filter(t => t.day === name);
+            gridHTML += `<div class="cleaning-task-card">
+            <div class="task-day-label">${name} <span style="font-size:0.94em; color:#7987a0;">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span></div>
+            ${(tasks.length==0)?
+                `<div class="empty">No cleaning tasks for this day.</div>`
+            :
+                `<div class="task-header">Tasks:</div>`+
+                tasks.map(ts=>`
+                <div class="cleaning-task">
+                    <span class="task-room">${ts.room}</span>
+                    <span class="task-desc">${ts.desc}</span>
+                    ${ts.time ? `<span class="task-time">${ts.time}</span>` : ``}
+                    <button class="cleaning-list-remove" onclick="deleteCleaningTask('${ts.id}')">Remove</button>
+                </div>`).join('')
+            }
+            </div>`;
+        }
+        gridHTML += `</div>`;
     }
-    display += "</tbody></table>";
-    document.getElementById('weekCleaningDisplay').innerHTML = display;
+    document.getElementById("taskGrid").innerHTML = gridHTML;
+    document.getElementById("emptyTasks").style.display = (allTasks.length === 0) ? 'block':'none';
 }
-
-// --- Equipment/Cleaning Shopping List
-function getCleaningEquipment() {
+// --- Cleaning Supplies ---
+function getCleaningSupplies() {
     return JSON.parse(localStorage.getItem('hubCleaningEquipment') || "[]");
 }
-function saveCleaningEquipment(list) {
+function saveCleaningSupplies(list) {
     localStorage.setItem('hubCleaningEquipment', JSON.stringify(list));
 }
-function addCleaningEquipment(event){
+function addCleaningSupply(event){
     event.preventDefault();
-    let val = document.getElementById('equipInput').value.trim();
+    let val = document.getElementById('cleaningInput').value.trim();
     if(!val) return;
-    let list = getCleaningEquipment();
+    let list = getCleaningSupplies();
     if(!list.includes(val)) list.push(val);
-    saveCleaningEquipment(list);
-    renderCleaningEquipment();
-    document.getElementById('equipInput').value = '';
+    saveCleaningSupplies(list);
+    renderCleaningSupplies();
+    document.getElementById('cleaningForm').reset();
 }
-function removeCleaningEquipment(idx){
-    let list = getCleaningEquipment();
+function deleteCleaningSupply(idx){
+    let list = getCleaningSupplies();
     list.splice(idx,1);
-    saveCleaningEquipment(list);
-    renderCleaningEquipment();
+    saveCleaningSupplies(list);
+    renderCleaningSupplies();
 }
-function renderCleaningEquipment(){
-    const list = getCleaningEquipment();
-    const div = document.getElementById('equipList');
+function renderCleaningSupplies(){
+    const list = getCleaningSupplies();
+    const div = document.getElementById('cleaningList');
     if(list.length===0){
-        div.innerHTML = `<div class="empty">No cleaning equipment/supplies added.</div>`;
+        div.innerHTML = '';
+        document.getElementById('emptyCleaning').style.display = 'block';
         return;
     }
+    document.getElementById('emptyCleaning').style.display = 'none';
     div.innerHTML = list.map((item,idx)=>`
-        <div class="equip-list-item">
+        <div class="cleaning-list-item">
             <span>${item}</span>
-            <button class="equip-list-remove" onclick="removeCleaningEquipment(${idx})">Remove</button>
+            <button class="cleaning-list-remove" onclick="deleteCleaningSupply(${idx})">Remove</button>
         </div>
     `).join('');
 }
-
-window.addEventListener("DOMContentLoaded",()=>{
+// --- Page load ---
+window.addEventListener('DOMContentLoaded',()=>{
     populateWeekSelect();
     renderCleaningWeek();
-    renderCleaningEquipment();
+    renderCleaningSupplies();
 });
 </script>
 </body>
