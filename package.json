@@ -1,5 +1,5 @@
 {
-  "name": "saveMealsApi.js",
+  "name": "server.js",
   "version": "1.0.0",
   "main": "saveMealsApi.js",
   "dependencies": {
