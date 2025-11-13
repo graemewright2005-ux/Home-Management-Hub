@@ -10,7 +10,7 @@
             --primary-dark: #764ba2;
             --gradient: linear-gradient(135deg, #a4befe 0%, #f0b7a4 100%);
             --bg: #eef1f8;
-            --card: #f6f8fc;
+            --card: #ffffff;
             --text: #203040;
             --text-dim: #6273a1;
             --border: #dbe1ec;
@@ -28,7 +28,7 @@
         .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
         .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
         .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem; transition:all 0.2s;}
-        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
+        .nav-menu a:hover { background: rgba(102,126,234,0.12); color:var(--primary);}
         .nav-menu a.active { background: var(--gradient); color:white;}
         @media(max-width:768px){
             .nav-menu{flex-direction:column;}
@@ -51,7 +51,7 @@
         .card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 20px;
+            border-radius: 19px;
             min-width: 300px;
             max-width: 420px;
             flex: 1 1 320px;
@@ -61,14 +61,14 @@
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
-            height: 470px;
-            box-shadow: 0 4px 16px 0 rgba(160,170,220,0.10);
+            height: 480px;
+            box-shadow: 0 3px 14px 0 rgba(180,170,220,0.09);
             transition: box-shadow 0.2s;
         }
         .card-img {
             width:100%; height:150px;
             background: var(--gradient);
-            display: flex; align-items:center; justify-content:center;font-size:4.2rem;
+            display: flex; align-items:center; justify-content:center;font-size:4rem;
         }
         .fav { position:absolute;top:1rem;right:1rem; font-size:1.8rem; z-index:10;}
         .card-body {
@@ -76,12 +76,12 @@
             flex:1 1 auto;
             display: flex; flex-direction: column;
         }
-        .card-title { font-size:1.22rem; font-weight:700; margin-bottom:0.35rem; color:#5b45c3;}
-        .card-time { font-size: 1em; color: #b45309; background:rgba(245,158,11,0.13); border-radius:7px; padding: 2px 10px; margin:0.2em 0 0.36em 0;}
-        .tag {display:inline-block; padding:0.25rem 0.7rem; border-radius:6px; font-size:0.97em;font-weight:600;margin-right:0.3rem;margin-bottom:0.3rem;}
-        .tag-type {background:rgba(126,168,234,0.18); color:#3675fc;}
-        .tag-diet {background:rgba(248,183,86,0.13); color:#b45309; border:1px solid #f59e42;}
-        .card-servings { font-size:1.01em; color:var(--text-dim); margin-bottom:0.18em;}
+        .card-title { font-size:1.17rem; font-weight:700; margin-bottom:0.31rem; color:#5b45c3;}
+        .card-time { font-size: 1em; color: #b45309; background:rgba(245,158,42,0.16); border-radius:7px; padding: 2px 10px; margin:0.19em 0 0.31em 0;}
+        .tag {display:inline-block; padding:0.22rem 0.61rem; border-radius:6px; font-size:0.97em;font-weight:600;margin-right:0.3rem;margin-bottom:0.3rem;}
+        .tag-type {background:#e3eafe; color:#284387; border: 1px solid #b3ccfa;}
+        .tag-diet {background:#ffe9d4; color:#5a2800; border: 1px solid #ffa36c;}
+        .card-servings { font-size:1.01em; color:var(--text-dim);margin-bottom:0.17em;}
         .card-qtys { font-size:1.01em; color:var(--accent);}
         .card-actions {
             margin-top:auto;
@@ -91,9 +91,9 @@
         .planner-select select {
             border-radius: 8px;
             border: 1px solid var(--border);
-            background: #fff;
+            background: #f8faff;
             color: var(--text);
-            padding: 0.52em 0.7em;
+            padding: 0.51em 0.8em;
             font-size: 1em;
             margin-right:0.32em;
             appearance: none;
@@ -336,7 +336,7 @@ function renderGrid(){
             let cardTimeView = `<span class="card-time">Estimated time: ${timeEstimate} mins</span>`;
             let plannerPanel = `
                 <div class="card-actions planner-select" onclick="event.stopPropagation()">
-                    <select id="plannerDay${idx}">
+                    <select id="plannerDay${idx}" aria-label="Choose day to add to planner">
                         <option value="">Day...</option>
                         <option>Sunday</option>
                         <option>Monday</option>
@@ -346,21 +346,21 @@ function renderGrid(){
                         <option>Friday</option>
                         <option>Saturday</option>
                     </select>
-                    <select id="plannerTime${idx}">
+                    <select id="plannerTime${idx}" aria-label="Select meal time">
                         <option value="">Time...</option>
                         <option>Breakfast</option>
                         <option>Lunch</option>
                         <option>Dinner</option>
                         <option>Snack</option>
                     </select>
-                    <button class="btn" onclick="addMealToPlannerDirect(${MEALS.indexOf(m)}, ${idx});event.stopPropagation()">Add to Planner</button>
+                    <button class="btn" onclick="addMealToPlannerDirect(${MEALS.indexOf(m)}, ${idx});event.stopPropagation()" aria-label="Add recipe to planner">Add to Planner</button>
                 </div>
             `;
             return `
             <div class="card">
                 <div class="card-img">${photo}</div>
                 <div class="card-body">
-                    <div class="card-title">${m.title}</div>
+                    <div class="card-title">${escapeHTML(m.title)}</div>
                     ${cardTimeView}
                     ${mealTime} ${dietaryView}
                     ${servingsFront}
@@ -372,8 +372,19 @@ function renderGrid(){
     }
 }
 function ingredientQtyString(ingredient){
-    let cleaned = ingredient.replace(/\b(\w)\s+(\w)\b/g, '$1$2');
-    cleaned = cleaned.replace(/\begg s\b/gi,"eggs").replace(/\bbaco n\b/gi,"bacon").replace(/\bsausag e\b/gi,"sausage");
+    // Fix common split spelling and stray spaces in ingredients (e.g. "egg s", "baco n", "sausag e", "tomat o")
+    let cleaned = ingredient
+        .replace(/\b([a-zA-Z]+)\s([a-zA-Z])\b/g, '$1$2') // single trailing letter attached
+        .replace(/\begg s\b/gi, "eggs")
+        .replace(/\bbaco n\b/gi, "bacon")
+        .replace(/\bsausag e\b/gi, "sausage")
+        .replace(/\btomat o\b/gi, "tomato")
+        .replace(/\bmushroo m\b/gi, "mushroom")
+        .replace(/\bchil i\b/gi, "chili")
+        .replace(/\bchoc olate\b/gi, "chocolate")
+        .replace(/\bonio n\b/gi, "onion")
+        // Add more as you spot them!
+        ;
     let match = cleaned.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
     if(match){
         let qty = match[1], unit = match[2]||"", rest = match[3];
@@ -407,19 +418,18 @@ function addMealToPlannerDirect(mealIdx, idx){
     localStorage.setItem('hubPlanner', JSON.stringify(planner));
     alert(`Added "${MEALS[mealIdx].title}" to planner for ${day} / ${time}`);
 }
-
 function viewMeal(idx){
     let m = MEALS[idx];
     let servings = m.servings||1;
     let timeEstimate = typeof m.time === 'number'
         ? Math.ceil(m.time/10)*10
         : estimateMealTime(m.ing);
-    let dietaryView = m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${d.replace('-',' ')}</span>`).join(''):"";
+    let dietaryView = m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${escapeHTML(d.replace('-',' '))}</span>`).join(''):"";
     let mealTime = m.type
-        ? `<span class="tag tag-type">${(m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1))}</span>`
+        ? `<span class="tag tag-type">${escapeHTML((m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1)))} </span>`
         : '';
     let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photo" style="width:100%;max-width:100%;max-height:180px;border-radius:8px;">` : m.emoji||'🍽️';
-    let urlView = m.url ? `<div style="margin-top:.7em;font-size:.98em;"><a href="${m.url}" target="_blank">${m.url}</a></div>` : '';
+    let urlView = m.url ? `<div style="margin-top:.7em;font-size:.98em;"><a href="${escapeHTML(m.url)}" target="_blank">${escapeHTML(m.url)}</a></div>` : '';
     document.getElementById("viewTitle").textContent = m.title;
     document.getElementById("viewBody").innerHTML = `
         <div class="meal-photo-preview">${photo}</div>
@@ -432,13 +442,12 @@ function viewMeal(idx){
         </div>
         <div style="margin-top:1em;">
             <strong>Instructions:</strong>
-            <p style="white-space:pre-wrap;">${m.instructions||""}</p>
+            <p style="white-space:pre-wrap;">${escapeHTML(m.instructions||"")}</p>
         </div>
         <div style="margin-top:1em;"><strong>Servings:</strong> ${servings} adult${servings>1?'s':''}</div>
     `;
     openModal('view');
 }
-
 function saveRecipe(event){
     event.preventDefault();
     let title = document.getElementById('title').value.trim();
@@ -469,6 +478,12 @@ function saveRecipe(event){
     closeModal('add');
     renderGrid();
     alert('Recipe saved!');
+}
+// Escape HTML for accessibility and safety
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g,
+        function(m) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
 }
 window.addEventListener('DOMContentLoaded',renderGrid);
 </script>
