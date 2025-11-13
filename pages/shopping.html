@@ -2,73 +2,161 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Shopping List - Home Hub</title>
+    <title>Shopping List | Home Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
             --primary: #667eea;
             --primary-dark: #764ba2;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --text-dim: #cbd5e1;
-            --border: #334155;
-            --accent: #f59e42;
+            --gradient: linear-gradient(135deg,#a4befe 0%, #f0b7a4 100%);
+            --bg: #f7f9fc;
+            --card: #fff;
+            --text: #17263a;
+            --text-dim: #6a7fa7;
+            --border: #e3e6f2;
+            --accent: #e37b38;
+            --btn: #f4b586;
+            --btn-hover: #e37b38;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            min-height:100vh;
         }
-        * { box-sizing: border-box; }
-        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem;}
         .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
         .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-        .nav-toggle {display:none;}
-        .nav-menu {display:flex;gap:0.5rem;list-style:none;}
-        .nav-menu a {padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600;font-size:0.95rem; transition:all 0.2s;}
-        .nav-menu a:hover { background: rgba(102,126,234,0.1); color:var(--primary);}
-        .nav-menu a.active { background: var(--gradient); color: white;}
-        @media(max-width:768px){
-            .nav-toggle{display:block;}
-            .nav-menu{position:fixed;top:70px;left:0;right:0;background:var(--card);flex-direction:column;padding:1rem;transform:translateY(-100%);opacity:0;pointer-events:none;transition:all 0.3s;}
-            .nav-menu.active{transform:translateY(0);opacity:1;pointer-events:all;}
-            .nav-menu a{width:100%;}
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
+        .nav-menu a { padding:0.6rem 1.2rem; border-radius:8px; text-decoration:none; color:var(--text-dim); font-weight:600; font-size:0.95rem;}
+        .nav-menu a:hover { background: rgba(102,126,234,0.12); color:var(--primary);}
+        .nav-menu a.active { background: var(--gradient); color:#fff;}
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;}
+        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin: 0;}
+        .top-controls { display: flex; gap: 1.1em; align-items: center; margin-bottom: 1.7em; flex-wrap: wrap;}
+        .shopping-card {
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            margin-bottom:2rem;
+            padding:1.4em 1.9em;
+            box-shadow:0 3px 16px #cfe8fc35;
         }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem;}
-        h1 { font-size:2rem; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0;}
-        .controls { display: flex; gap: 0.7em; margin-bottom: 2em; flex-wrap:wrap;}
-        .btn { padding:0.8rem 1.5rem; border-radius:8px; font-weight:600; cursor:pointer; border:none; background:var(--gradient); color:white; transition:all 0.2s;}
-        .btn:hover{transform:translateY(-2px);}
-        .btn-secondary{ background:var(--card); color:var(--primary); border:1px solid var(--border);}
-        .btn-secondary:hover{ background:var(--primary); color:white;}
-        .shopping-list-section {background:var(--card);border-radius:15px;padding:2rem 1.5rem;border:1px solid var(--border);}
-        .section-title { font-size:1.2rem; font-weight:800; margin-bottom:1.2em; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
-        .add-row {display:flex;gap:0.7em;align-items:center;margin-bottom:1.2em;}
-        .add-row input {padding:0.6em 1em; border-radius:7px; border:1px solid var(--border);font-size:1em; background:var(--bg); color:var(--text);}
-        .add-row .btn {padding:0.6em 1.1em;}
-        ul.shopping-list {list-style:none;margin:0;padding:0;}
-        ul.shopping-list li {display:flex;align-items:center;gap:1em;padding:0.6em 0;border-bottom:1px solid var(--border);}
-        ul.shopping-list li:last-child{border-bottom:none;}
-        .shop-item-qty {margin-left:1.1em;color:var(--accent);}
-        .shop-item-size {margin-left:0.6em;font-size:0.97em;color:var(--text-dim);}
-        .shop-remove {color:#fff;background:#ef4444;border:none;border-radius:7px;padding:0.35em 1.3em;cursor:pointer;margin-left:auto;}
-        .shop-fav {color:#f59e42;font-size:1.3em;margin-right:0.5em;cursor:pointer;}
-        .shop-checked {text-decoration:line-through; color:var(--text-dim);}
-        .shopping-clear {float:right;margin-left:auto;background:#ef4444;color:#fff;padding:0.4em 1.1em;border:none;border-radius:8px;cursor:pointer;margin-bottom:1em;}
-        .empty { color: var(--text-dim); font-size:1.02rem;}
-        @media(max-width:600px){
-            .shopping-list-section {padding:1rem;}
+        .shopping-title {font-size:1.5em;font-weight:800;margin-bottom:1em;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .btn, .btn-primary {
+            padding:0.78em 1.3em;
+            border-radius:8px;
+            font-weight:600;
+            border:none;
+            background: var(--gradient);
+            color:#fff;
+            font-size:1em;
+            transition: background 0.19s;
+            cursor:pointer;
         }
+        .btn:hover { background: linear-gradient(120deg, var(--btn-hover) 0%, #f1d8ff 100%);}
+        .btn-danger {
+            background: linear-gradient(120deg,#e37b38 30%, #fdb6b6 100%);
+            color: #fff;
+        }
+        .btn-danger:hover { background: linear-gradient(90deg,#d51b1b 0%, #ffadad 100%);}
+        .btn-secondary{
+            background:#e3eafe;
+            color:#764ba2;
+            border:1.5px solid var(--border);
+        }
+        .btn-secondary:hover{background:var(--gradient);color:#24213d;}
+        /* List styling */
+        .shopping-list {margin:2em 0;}
+        .shopping-item {
+            display:flex;align-items:center;gap:1.2em;
+            background:#f7f6fb;
+            border:1px solid var(--border);
+            border-radius:8px;
+            padding:0.8em 1.2em;
+            margin-bottom:0.68em;
+            box-shadow:0 1px 4px #e3eaf841;
+        }
+        .shopping-name {
+            font-weight:700;
+            color:#e27c22;
+            font-size:1.11em;
+            flex:1 1 auto;
+        }
+        .shopping-qty {
+            color:#6a7fa7;
+            background:#fff7ef;
+            font-size:1em;
+            border-radius:5px;
+            padding:0.21em 0.64em;
+            font-weight:600;
+        }
+        .shopping-delete {
+            background: linear-gradient(120deg,#e37b38 30%, #fdb6b6 100%);
+            border:none;
+            color:#fff;
+            border-radius:7px;
+            font-size:1.13em;
+            cursor:pointer;
+            padding:0.43em 1.12em;
+            transition:background 0.15s;
+        }
+        .shopping-delete:hover {background: linear-gradient(90deg,#d51b1b 0%, #ffadad 100%);}
+        .input-row {display:flex;gap:0.6em;margin-top:1.5em;margin-bottom:0.5em;}
+        .input-row input[type="text"], .input-row input[type="number"] {
+            font-size:1em;
+            padding:0.54em 1em;
+            border-radius:8px;
+            border:1.2px solid var(--border);
+            background:#f6faff;
+            color:#17263a;
+        }
+        .input-row input[type="text"]:focus, .input-row input[type="number"]:focus {
+            outline:none;
+            border-color: #764ba2;
+            background:#e3eafe;
+        }
+        /* Data management buttons */
+        .data-mgmt-row {
+            display:flex;gap:1.1em;margin-top:2.7em;margin-bottom:0.22em;align-items:center;
+        }
+        .shopping-section-sub {
+            color: var(--primary-dark); font-size:1.08em; font-weight:700; margin-bottom:0.21em; margin-top:1.4em;
+        }
+        /* Cleaning supplies section styling */
+        .cleaning-card {
+            background: #f8f8fd;
+            border: 1.2px solid var(--border);
+            border-radius:15px;
+            padding:1.3em 1.5em;
+            margin-top:2em;
+            box-shadow:0 2px 12px #cfe8fc22;
+        }
+        .cleaning-title {font-size:1.18em;font-weight:800;color:#6a7fa7; margin-bottom:0.5em;}
+        .cleaning-list-item {
+            display:flex;align-items:center;justify-content:space-between;margin-bottom:0.44em;font-size:1.02em;
+            padding:0.18em 0.2em;border-radius:7px;
+            background:#f6faff;
+            color:#e27c22;
+        }
+        .cleaning-list-remove {
+            color:#fff;
+            background: linear-gradient(120deg,#e37b38 30%, #fdb6b6 100%);
+            border:none;
+            border-radius:6px;
+            font-size:0.97em;
+            cursor:pointer;
+            padding:0.14em 0.75em;
+        }
+        .cleaning-list-remove:hover {background: linear-gradient(90deg,#d51b1b 0%, #ffadad 100%);}
+        .empty { color: var(--text-dim); font-size:1.065rem; margin-top:2em; text-align:center;}
     </style>
 </head>
 <body>
-<nav class="nav">
+<nav class="nav" aria-label="Main navigation">
     <div class="nav-content">
         <div class="nav-brand">🏠 Home Hub</div>
-        <button class="nav-toggle" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
         <ul class="nav-menu" id="navMenu">
             <li><a href="../index.html">📊 Dashboard</a></li>
             <li><a href="meals.html">🍽️ Meals</a></li>
@@ -81,160 +169,167 @@
     </div>
 </nav>
 <div class="container">
-    <h1>Shopping List</h1>
-    <div class="controls">
-        <button class="btn" onclick="generateShoppingListFromPlanner()">Merge Weekly Meals</button>
-        <button class="btn" onclick="pullCleaningSupplies()">Pull Cleaning Supplies</button>
-        <button class="shopping-clear" onclick="clearShoppingList()">Clear All</button>
-    </div>
-    <div class="shopping-list-section">
-        <div class="section-title">🛒 Household Shopping List</div>
-        <div class="add-row">
-            <input type="text" id="shopInput" placeholder="Add item..." autocomplete="off">
-            <input type="number" id="shopQty" placeholder="Qty" min="1" style="width:70px;" value="1">
-            <input type="text" id="shopSize" placeholder="Size/Amount (e.g. 500g, 2L, pack)" style="width:110px;">
-            <button class="btn" onclick="addShoppingItem()">Add</button>
+    <div class="shopping-card">
+        <div class="shopping-title">Shopping List</div>
+        <form id="shoppingForm" onsubmit="addShoppingItem(event)">
+            <div class="input-row">
+                <input type="text" id="shoppingInput" aria-label="Add item" placeholder="E.g. Bagels, Eggs..." autocomplete="off" required>
+                <input type="number" id="shoppingQty" aria-label="Quantity" placeholder="Qty" min="1" step="1" value="1">
+                <button class="btn btn-primary" type="submit">Add Item</button>
+            </div>
+        </form>
+        <div class="shopping-list" id="shoppingList"></div>
+        <div class="empty" id="emptyShopping" style="display:none;">No items added yet.</div>
+        <div class="data-mgmt-row">
+            <button class="btn-secondary" onclick="exportShoppingJSON()">⬇️ Export as JSON Backup</button>
+            <button class="btn-secondary" onclick="importShoppingJSON()">⬆️ Import Backup</button>
+            <button class="btn-danger" onclick="clearAll()">🗑️ Clear All</button>
         </div>
-        <ul class="shopping-list" id="shoppingList"></ul>
-        <div class="empty" id="emptyList" style="display:none;">All done! No items in shopping list.</div>
+        <div style="color: var(--text-dim); font-size:0.98em; margin-top:1em;">
+            <em>Clearing will also remove Cleaning Supplies.</em>
+        </div>
+    </div>
+    <div class="cleaning-card">
+        <div class="cleaning-title">Cleaning Supplies List</div>
+        <form id="cleaningForm" onsubmit="addCleaningSupply(event)">
+            <div class="input-row">
+                <input type="text" id="cleaningInput" aria-label="Add supply" placeholder="E.g. Toilet Duck, Spray..." autocomplete="off">
+                <button class="btn btn-primary" type="submit">Add Supply</button>
+            </div>
+        </form>
+        <div id="cleaningList"></div>
+        <div class="empty" id="emptyCleaning" style="display:none;">No cleaning supplies added.</div>
     </div>
 </div>
 <script>
-function getShopping(){
-    return JSON.parse(localStorage.getItem('hubShopping')||'[]');
+// --- Shopping List ---
+function getShopping() {
+    return JSON.parse(localStorage.getItem('hubShopping') || "[]");
 }
-function saveShopping(list){
+function saveShopping(list) {
     localStorage.setItem('hubShopping', JSON.stringify(list));
 }
-function renderShoppingList(){
-    const list = getShopping();
-    const ul = document.getElementById('shoppingList');
-    ul.innerHTML = '';
-    if(list.length===0){
-        document.getElementById('emptyList').style.display='block';
-        return;
-    }
-    document.getElementById('emptyList').style.display='none';
-    list.forEach((item, idx) => {
-        ul.innerHTML += `
-        <li>
-            <span class="shop-fav" onclick="toggleFav(${idx})">${item.fav ? '⭐' : '☆'}</span>
-            <input type="checkbox" ${item.checked ? 'checked':''} onclick="toggleChecked(${idx})">
-            <span class="${item.checked?'shop-checked':''}">${item.name}</span>
-            <span class="shop-item-qty">${item.qty>1?`x${item.qty}`:''}</span>
-            ${item.size ? `<span class="shop-item-size">${item.size}</span>` : ""}
-            <button class="shop-remove" onclick="removeShoppingItem(${idx})">Remove</button>
-        </li>
-        `;
-    });
-}
-function addShoppingItem(){
-    let val = document.getElementById('shopInput').value.trim();
-    let qty = parseInt(document.getElementById('shopQty').value)||1;
-    let size = document.getElementById('shopSize').value.trim();
+function addShoppingItem(event){
+    event.preventDefault();
+    let val = document.getElementById('shoppingInput').value.trim();
+    let qty = parseInt(document.getElementById('shoppingQty').value, 10) || 1;
     if(!val) return;
     let list = getShopping();
-    let existing = list.findIndex(i=>i.name.toLowerCase() === val.toLowerCase() && (i.size||'') === size);
-    if(existing>=0){
-        list[existing].qty += qty;
-    }else{
-        list.push({name: val, qty:qty, size:size, fav:false, checked:false});
+    let idx = list.findIndex(x => x.name.toLowerCase() === val.toLowerCase());
+    if(idx>=0){
+        list[idx].qty = (list[idx].qty||1) + qty;
+    } else {
+        list.push({name:val,qty:qty,checked:false,fav:false});
     }
     saveShopping(list);
     renderShoppingList();
-    document.getElementById('shopInput').value = '';
-    document.getElementById('shopQty').value = 1;
-    document.getElementById('shopSize').value = '';
+    document.getElementById('shoppingForm').reset();
 }
-function removeShoppingItem(idx){
+function renderShoppingList() {
+    const list = getShopping();
+    const div = document.getElementById('shoppingList');
+    if(list.length===0){
+        div.innerHTML = '';
+        document.getElementById('emptyShopping').style.display = 'block';
+        return;
+    }
+    document.getElementById('emptyShopping').style.display = 'none';
+    div.innerHTML = list.map((item,idx)=>
+        `<div class="shopping-item">
+            <span class="shopping-name">${item.name}</span>
+            <span class="shopping-qty">x${item.qty}</span>
+            <button class="shopping-delete" onclick="deleteShoppingItem(${idx})">Remove</button>
+        </div>`
+    ).join('');
+}
+function deleteShoppingItem(idx){
     let list = getShopping();
     list.splice(idx,1);
     saveShopping(list);
     renderShoppingList();
 }
-function toggleChecked(idx){
-    let list = getShopping();
-    list[idx].checked = !list[idx].checked;
-    saveShopping(list);
-    renderShoppingList();
+function exportShoppingJSON(){
+    let data = {
+        shopping: getShopping(),
+        cleaning: getCleaningSupplies()
+    };
+    let blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url; a.download = "home_hub_backup.json";
+    a.click();
 }
-function toggleFav(idx){
-    let list = getShopping();
-    list[idx].fav = !list[idx].fav;
-    saveShopping(list);
-    renderShoppingList();
+function importShoppingJSON(){
+    let input = document.createElement('input');
+    input.type='file'; input.accept='application/json';
+    input.onchange = function(evt){
+        let file = evt.target.files[0];
+        if(!file) return;
+        let reader = new FileReader();
+        reader.onload = function(e){
+            try{
+                let data = JSON.parse(e.target.result);
+                if(data.shopping) saveShopping(data.shopping);
+                if(data.cleaning) saveCleaningSupplies(data.cleaning);
+                renderShoppingList(); renderCleaningSupplies();
+            }catch(er){}
+        };
+        reader.readAsText(file);
+    };
+    input.click();
 }
-function clearShoppingList(){
-    if(confirm("Clear all items from the shopping list?")){
+function clearAll(){
+    if(confirm("Are you sure you want to clear all shopping and cleaning data?")){
         localStorage.removeItem('hubShopping');
+        localStorage.removeItem('hubCleaningEquipment'); // This line clears the cleaning tab supplies!
         renderShoppingList();
+        renderCleaningSupplies();
     }
 }
-function generateShoppingListFromPlanner(){
-    let planner = JSON.parse(localStorage.getItem('hubPlanner')||'[]');
-    let weekIngredients = [];
-    planner.forEach(slotObj=>{
-        Object.values(slotObj.slots||{}).forEach(meal=>{
-            if(meal && meal.ing){
-                weekIngredients.push(...meal.ing);
-            }
-        });
-    });
-    function parseIngredient(ingredient) {
-        let parts = ingredient.trim().split(" ");
-        if (parts.length>=2 && !isNaN(parts[0])) {
-            return {qty:Number(parts[0]), size:parts[1], name:parts.slice(2).join(" ")};
-        }
-        return {name:ingredient.trim(), qty:1, size:""};
-    }
-    let merged = {};
-    weekIngredients.forEach(i => {
-        let {name, qty, size} = parseIngredient(i);
-        let key = (name+"_"+size).toLowerCase();
-        if(name=='') return;
-        if(merged[key]) merged[key].qty += qty;
-        else merged[key]={name, qty, size};
-    });
-    let shopping = getShopping();
-    Object.values(merged).forEach(({name,qty,size}) => {
-        let idx = shopping.findIndex(i=>(i.name.toLowerCase()+"_"+(i.size||"").toLowerCase())=== (name+"_"+size).toLowerCase());
-        if(idx>=0) {
-            shopping[idx].qty = (shopping[idx].qty||1)+qty;
-        } else {
-            shopping.push({name, qty, size, fav:false, checked:false});
-        }
-    });
-    saveShopping(shopping);
-    alert("Weekly meals added to shopping list!");
-    renderShoppingList();
+// --- Cleaning Supplies ---
+function getCleaningSupplies() {
+    return JSON.parse(localStorage.getItem('hubCleaningEquipment') || "[]");
 }
-
-// NEW: Pull Cleaning Supplies
-function pullCleaningSupplies() {
-    // Get equipment/cleaning supplies from cleaning page's localStorage
-    const equipment = JSON.parse(localStorage.getItem('hubCleaningEquipment') || "[]");
-    if(!equipment || !equipment.length){
-        alert("No cleaning supplies found.");
+function saveCleaningSupplies(list) {
+    localStorage.setItem('hubCleaningEquipment', JSON.stringify(list));
+}
+function addCleaningSupply(event){
+    event.preventDefault();
+    let val = document.getElementById('cleaningInput').value.trim();
+    if(!val) return;
+    let list = getCleaningSupplies();
+    if(!list.includes(val)) list.push(val);
+    saveCleaningSupplies(list);
+    renderCleaningSupplies();
+    document.getElementById('cleaningForm').reset();
+}
+function deleteCleaningSupply(idx){
+    let list = getCleaningSupplies();
+    list.splice(idx,1);
+    saveCleaningSupplies(list);
+    renderCleaningSupplies();
+}
+function renderCleaningSupplies(){
+    const list = getCleaningSupplies();
+    const div = document.getElementById('cleaningList');
+    if(list.length===0){
+        div.innerHTML = '';
+        document.getElementById('emptyCleaning').style.display = 'block';
         return;
     }
-    let shopping = getShopping();
-    equipment.forEach(item => {
-        // Support objects with name, size, qty if saved that way; otherwise treat as string
-        let name = typeof item === "object" ? item.name : item;
-        let qty = typeof item === "object" && item.qty ? item.qty : 1;
-        let size = typeof item === "object" && item.size ? item.size : "";
-        let exists = shopping.find(i=>i.name.toLowerCase() === name.toLowerCase() && (i.size||'') === size);
-        if(!exists){
-            shopping.push({ name, qty, size, fav: false, checked: false });
-        }
-    });
-    saveShopping(shopping);
-    renderShoppingList();
-    alert("Cleaning supplies added to Shopping List!");
+    document.getElementById('emptyCleaning').style.display = 'none';
+    div.innerHTML = list.map((item,idx)=>`
+        <div class="cleaning-list-item">
+            <span>${item}</span>
+            <button class="cleaning-list-remove" onclick="deleteCleaningSupply(${idx})">Remove</button>
+        </div>
+    `).join('');
 }
-
-// INIT
-window.addEventListener('DOMContentLoaded',renderShoppingList);
+// --- Page load ---
+window.addEventListener('DOMContentLoaded',()=>{
+    renderShoppingList();
+    renderCleaningSupplies();
+});
 </script>
 </body>
 </html>
