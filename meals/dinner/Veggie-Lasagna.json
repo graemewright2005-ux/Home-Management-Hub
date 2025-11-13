@@ -1,0 +1,21 @@
+{
+    "title": "Veggie Lasagna",
+    "type": "dinner",
+    "diet": ["vegetarian"],
+    "ingredients": [
+        "300g lasagna sheets",
+        "1 courgette",
+        "1 aubergine",
+        "2 red peppers",
+        "500g tomato passata",
+        "300g ricotta cheese",
+        "100g parmesan cheese",
+        "2 tbsp olive oil",
+        "Salt",
+        "Pepper"
+    ],
+    "instructions": "Slice vegetables and sauté in olive oil. Layer lasagna sheets, roasted vegetables, tomato passata, and ricotta in a baking dish. Repeat layers. Top with parmesan. Bake at 190°C for 35–40 minutes until golden and bubbling.",
+    "servings": 4,
+    "photo": "",
+    "url": ""
+}
