@@ -1,0 +1,17 @@
+{
+    "title": "Caprese Salad",
+    "type": "lunch",
+    "diet": ["vegetarian"],
+    "ingredients": [
+        "400g cherry tomatoes",
+        "250g mozzarella cheese",
+        "1 bunch fresh basil",
+        "4 tbsp olive oil",
+        "Salt",
+        "Pepper"
+    ],
+    "instructions": "Slice the tomatoes and mozzarella. Arrange on a plate with basil leaves. Drizzle with olive oil and season with salt and pepper. Serve immediately.",
+    "servings": 4,
+    "photo": "",
+    "url": ""
+}
