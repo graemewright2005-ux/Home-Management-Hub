@@ -1,13 +1,13 @@
 {
-  "name": "saveMealApi.js",
+  "name": "saveMealsApi.js",
   "version": "1.0.0",
-  "main": "saveMealApi.js",
+  "main": "saveMealsApi.js",
   "dependencies": {
     "express": "^4.18.2",
     "body-parser": "^1.20.2",
     "node-fetch": "^2.6.7"
   },
   "scripts": {
-    "start": "node saveMealApi.js"
+    "start": "node saveMealsApi.js"
   }
 }
