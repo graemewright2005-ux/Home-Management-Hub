@@ -9,11 +9,11 @@
             --primary: #667eea;
             --primary-dark: #764ba2;
             --gradient: linear-gradient(135deg, #a4befe 0%, #f0b7a4 100%);
-            --bg: #eef1f8;
-            --card: #ffffff;
-            --text: #203040;
-            --text-dim: #6273a1;
-            --border: #dbe1ec;
+            --bg: #f7f7fa;
+            --card: #fff;
+            --text: #273248;
+            --text-dim: #7987a0;
+            --border: #e3e6f2;
             --accent: #f59e42;
         }
         body {
@@ -21,9 +21,10 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            min-height:100vh;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100;}
+        .nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; position: sticky; top: 0; }
         .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;}
         .nav-brand { font-size: 1.5rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
         .nav-menu { display: flex; gap: 0.5rem; list-style: none;}
@@ -57,13 +58,16 @@
             flex: 1 1 320px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
             height: 480px;
             box-shadow: 0 3px 14px 0 rgba(180,170,220,0.09);
             transition: box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .card[tabindex]:focus {
+            outline: 3px solid var(--primary-dark);
         }
         .card-img {
             width:100%; height:150px;
@@ -145,10 +149,11 @@
         textarea { min-height: 90px; resize: vertical; font-family: inherit;}
         .meal-photo-preview {margin-bottom:0.9em;text-align:center;}
         .meal-photo-preview img {max-width:90%;max-height:150px;border-radius:8px;}
+        .modal-title {font-size:1.3em;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
     </style>
 </head>
 <body>
-<nav class="nav">
+<nav class="nav" aria-label="Main navigation">
     <div class="nav-content">
         <div class="nav-brand">🏠 Home Hub</div>
         <ul class="nav-menu" id="navMenu">
@@ -193,22 +198,22 @@
     </div>
 </div>
 <!-- Manual Add Meal Modal -->
-<div class="modal" id="addModal">
+<div class="modal" id="addModal" role="dialog" aria-modal="true" aria-labelledby="addMealTitle">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Add Recipe</h2>
-            <button class="modal-close" onclick="closeModal('add')">&times;</button>
+            <h2 id="addMealTitle" class="modal-title">Add Recipe</h2>
+            <button class="modal-close" onclick="closeModal('add')" aria-label="Close">&times;</button>
         </div>
         <form id="addForm" onsubmit="saveRecipe(event)">
         <div class="modal-body">
             <div class="form-group">
-                <label>Title</label>
-                <input type="text" id="title" required>
+                <label for="title">Title</label>
+                <input type="text" id="title" required aria-required="true">
             </div>
             <div class="form-group modal-group-row">
                 <div>
-                    <label>Meal Type</label>
-                    <select id="type" required>
+                    <label for="type">Meal Type</label>
+                    <select id="type" required aria-required="true">
                         <option value="">Select type</option>
                         <option value="breakfast">Breakfast</option>
                         <option value="lunch">Lunch</option>
@@ -217,8 +222,8 @@
                     </select>
                 </div>
                 <div>
-                    <label>Dietary requirements</label>
-                    <select id="diet" multiple>
+                    <label for="diet">Dietary requirements</label>
+                    <select id="diet" multiple aria-label="Select dietary requirements">
                         <option value="meat">Meat</option>
                         <option value="vegetarian">Vegetarian</option>
                         <option value="vegan">Vegan</option>
@@ -227,26 +232,26 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Ingredients & Amounts (e.g. "2 eggs, 125g flour, 200ml milk")</label>
-                <textarea id="ingredients" required></textarea>
+                <label for="ingredients">Ingredients & Amounts (e.g. "2 eggs, 125g flour, 200ml milk")</label>
+                <textarea id="ingredients" required aria-required="true"></textarea>
                 <small>Ingredient units accepted: g, kg, ml, l, quantity (use e.g. "2 eggs" for quantity).</small>
             </div>
             <div class="form-group">
-                <label>Method / Instructions</label>
-                <textarea id="instructions" required></textarea>
+                <label for="instructions">Method / Instructions</label>
+                <textarea id="instructions" required aria-required="true"></textarea>
             </div>
             <div class="form-group modal-group-row">
                 <div>
-                    <label>Servings (adults)</label>
-                    <input type="number" id="servings" min="1" value="1" required>
+                    <label for="servings">Servings (adults)</label>
+                    <input type="number" id="servings" min="1" value="1" required aria-required="true">
                 </div>
                 <div>
-                    <label>Recipe URL (optional)</label>
+                    <label for="urlInput">Recipe URL (optional)</label>
                     <input type="url" id="urlInput" placeholder="e.g. https://www.bbcgoodfood.com/recipes/slow-cooker-ratatouille">
                 </div>
             </div>
             <div class="form-group">
-                <label>Optional Recipe Photo</label>
+                <label for="photoInput">Optional Recipe Photo</label>
                 <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
                 <div class="meal-photo-preview" id="photoPreview"></div>
             </div>
@@ -259,11 +264,11 @@
     </div>
 </div>
 <!-- Meal View Modal -->
-<div class="modal" id="viewModal">
+<div class="modal" id="viewModal" role="dialog" aria-modal="true" aria-labelledby="mealDetailsTitle">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="viewTitle"></h2>
-            <button class="modal-close" onclick="closeModal('view')">&times;</button>
+            <h2 id="mealDetailsTitle" class="modal-title"></h2>
+            <button class="modal-close" onclick="closeModal('view')" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body" id="viewBody"></div>
         <div class="modal-footer">
@@ -282,7 +287,7 @@ function previewPhoto(event){
     const reader = new FileReader();
     reader.onload = function(e){
         photoDataUrl = e.target.result;
-        document.getElementById("photoPreview").innerHTML = `<img src="${photoDataUrl}" alt="Recipe photo">`;
+        document.getElementById("photoPreview").innerHTML = `<img src="${photoDataUrl}" alt="Recipe image preview">`;
     };
     reader.readAsDataURL(file);
 }
@@ -295,7 +300,6 @@ function closeModal(id){
         photoDataUrl='';
     }
 }
-
 function filterMeals(){
     renderGrid();
 }
@@ -325,10 +329,10 @@ function renderGrid(){
         mealsFiltered.map((m,idx)=>{
             let servingsFront = `<div class="card-servings">Serves: ${m.servings||1} adult${(m.servings||1)>1?'s':''}</div>`;
             let qtysView = m.ing && m.ing.length ? m.ing.map(i=>`<span>${ingredientQtyString(i)}</span>`).join(', ') : '';
-            let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photocard" style="width:100%;height:100%;object-fit:cover;">` : m.emoji||'🍽️';
-            let dietaryView = m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${d.replace('-',' ')}</span>`).join(''):"";
+            let photo = m.photo ? `<img src="${m.photo}" alt="${escapeHTML(m.title)} recipe photo">` : m.emoji||'🍽️';
+            let dietaryView = m.diet && m.diet.length ? m.diet.map(d=>`<span class="tag tag-diet">${escapeHTML(d.replace('-',' '))}</span>`).join(''):"";
             let mealTime = m.type
-                ? `<span class="tag tag-type">${(m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1))}</span>`
+                ? `<span class="tag tag-type">${escapeHTML((m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1)))} </span>`
                 : '';
             let timeEstimate = typeof m.time === 'number'
                 ? Math.ceil(m.time/10)*10
@@ -357,7 +361,7 @@ function renderGrid(){
                 </div>
             `;
             return `
-            <div class="card">
+            <div class="card" tabindex="0" aria-label="View details for ${escapeHTML(m.title)}" onclick="viewMeal(${MEALS.indexOf(m)})">
                 <div class="card-img">${photo}</div>
                 <div class="card-body">
                     <div class="card-title">${escapeHTML(m.title)}</div>
@@ -383,14 +387,33 @@ function ingredientQtyString(ingredient){
         .replace(/\bchil i\b/gi, "chili")
         .replace(/\bchoc olate\b/gi, "chocolate")
         .replace(/\bonio n\b/gi, "onion")
-        // Add more as you spot them!
-        ;
+        .replace(/\b([A-Za-z]+)\s([A-Za-z]+)\b/g, function(_, a, b){
+            // Attempt fix for other split words where possible (if a known food item)
+            const fixes = {
+                'egg s': 'eggs',
+                'baco n': 'bacon',
+                'sausag e': 'sausage',
+                'tomat o': 'tomato',
+                'mushroo m': 'mushroom',
+                'chil i': 'chili',
+                'choc olate': 'chocolate',
+                'onio n': 'onion'
+            };
+            let word = a + " " + b;
+            // Only fix exactly known splits to avoid accidental joining
+            return fixes[word.toLowerCase()] || word;
+        });
     let match = cleaned.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?\s*(.+)/);
     if(match){
         let qty = match[1], unit = match[2]||"", rest = match[3];
         return `${qty} ${unit} ${rest}`.trim();
     }
     return cleaned;
+}
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g,
+        function(m) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
 }
 function estimateMealTime(ingredients) {
     let timeTotal = 0;
@@ -428,9 +451,9 @@ function viewMeal(idx){
     let mealTime = m.type
         ? `<span class="tag tag-type">${escapeHTML((m.type||"").charAt(0).toUpperCase()+((m.type||"").slice(1)))} </span>`
         : '';
-    let photo = m.photo ? `<img src="${m.photo}" alt="Recipe photo" style="width:100%;max-width:100%;max-height:180px;border-radius:8px;">` : m.emoji||'🍽️';
+    let photo = m.photo ? `<img src="${m.photo}" alt="${escapeHTML(m.title)} recipe" style="width:100%;max-width:100%;max-height:180px;border-radius:8px;">` : m.emoji||'🍽️';
     let urlView = m.url ? `<div style="margin-top:.7em;font-size:.98em;"><a href="${escapeHTML(m.url)}" target="_blank">${escapeHTML(m.url)}</a></div>` : '';
-    document.getElementById("viewTitle").textContent = m.title;
+    document.getElementById("mealDetailsTitle").textContent = m.title;
     document.getElementById("viewBody").innerHTML = `
         <div class="meal-photo-preview">${photo}</div>
         ${mealTime} ${dietaryView}
@@ -478,12 +501,6 @@ function saveRecipe(event){
     closeModal('add');
     renderGrid();
     alert('Recipe saved!');
-}
-// Escape HTML for accessibility and safety
-function escapeHTML(str) {
-    if (!str) return '';
-    return str.replace(/[&<>"']/g,
-        function(m) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
 }
 window.addEventListener('DOMContentLoaded',renderGrid);
 </script>
