@@ -20,6 +20,7 @@ function slugify(text) {
 }
 
 app.post("/api/save-meal", async (req, res) => {
+  console.log("POST /api/save-meal invoked");
   try {
     const meal = req.body;
     const mealType = meal.type.toLowerCase();
