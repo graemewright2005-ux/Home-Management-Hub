@@ -1,3 +1,4 @@
+console.log("GITHUB_PAT present:", !!process.env.GITHUB_PAT);
 process.on('uncaughtException', function (err) { console.error('Uncaught:', err); });
 process.on('unhandledRejection', function (reason, p) { console.error('Unhandled Rejection:', reason); });
 const express = require("express");
