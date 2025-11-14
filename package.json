@@ -8,6 +8,6 @@
     "node-fetch": "^2.6.7"
   },
   "scripts": {
-    "start": "node saveMealsApi.js"
+    "start": "node server.js"
   }
 }
